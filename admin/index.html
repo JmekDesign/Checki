@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Checki — Staff</title>
+  <link rel="stylesheet" href="./app.css">
+</head>
+<body>
+  <div class="toast" id="toast"></div>
+
+  <!-- Confirm modal -->
+  <div class="modalBack hide" id="confirmBack">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="modalTitle" id="confirmTitle">Confirm</div>
+      <div class="modalText" id="confirmText">—</div>
+      <div class="modalBtns">
+        <button class="btn" id="confirmCancel">Cancel</button>
+        <button class="btn primary" id="confirmOk">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="brand"><b>Checki — Staff</b></div>
+      <div class="topRight">
+        <button class="btn compact hide" id="btnAllChecks">All checks</button>
+        <button class="btn danger hide" id="btnLogout">Logout</button>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="card" id="screenLogin">
+      <div class="h1">Login</div>
+      <div class="muted">Staff interface (MVP).</div>
+      <div class="hr"></div>
+      <div class="row">
+        <input class="inp" id="login" placeholder="login" value="" />
+        <input class="inp" id="password" placeholder="password" value="" type="password" />
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" id="btnLogin">Login</button>
+      </div>
+    </div>
+
+    <!-- OPEN CHECKS -->
+    <div class="card cardless hide" id="screenOpen">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <div class="h1" style="margin-bottom:4px">Open checks</div>
+          <div class="muted">Newest first</div>
+        </div>
+        <button class="btn primary" id="btnNewCheck">New check</button>
+      </div>
+      <div class="hr"></div>
+      <input class="inp" id="openSearch" placeholder='Search…' />
+      <div style="height:10px"></div>
+      <div class="list" id="openList"></div>
+      <div class="muted" id="openHint" style="margin-top:10px"></div>
+    </div>
+
+    <!-- ARCHIVE -->
+    <div class="card cardless hide" id="screenArchive">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <div class="h1" style="margin-bottom:4px">Archive</div>
+          <div class="muted">Closed checks</div>
+        </div>
+        <button class="btn" id="btnBackOpenFromArchive">← Back</button>
+      </div>
+      <div class="hr"></div>
+
+      <div class="row" style="gap:10px; align-items:center">
+        <input class="inp" id="archSearch" placeholder="Search name or number…" />
+      </div>
+
+      <div class="row" style="gap:10px; align-items:center; margin-top:10px">
+        <input class="smallInp" id="archFrom" placeholder="From (YYYY-MM-DD)" />
+        <input class="smallInp" id="archTo" placeholder="To (YYYY-MM-DD)" />
+        <button class="btn" id="btnArchApply">Apply</button>
+      </div>
+
+      <div class="hr" style="margin-top:12px"></div>
+      <div class="list" id="archList"></div>
+      <div class="muted" id="archHint" style="margin-top:10px"></div>
+
+      <div class="row" style="justify-content:space-between; margin-top:12px">
+        <button class="btn" id="btnArchPrev">← Prev</button>
+        <div class="muted" id="archPager">—</div>
+        <button class="btn" id="btnArchNext">Next →</button>
+      </div>
+    </div>
+
+    <!-- NEW CHECK -->
+    <div class="card hide" id="screenNew">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <div class="h1" style="margin-bottom:4px">New check</div>
+          <div class="muted">Guest / table</div>
+        </div>
+        <button class="btn" id="btnBackOpen">← Back</button>
+      </div>
+      <div class="hr"></div>
+      <input class="inp" id="guestName" placeholder='Example: "Table 7 / Ira"' />
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" id="btnCreateCheck">Open check</button>
+      </div>
+    </div>
+
+    <!-- CHECK -->
+    <div class="card hide" id="screenCheck">
+      <div class="row" style="justify-content:space-between; align-items:flex-start">
+        <div style="min-width:0">
+          <div class="h1" id="checkTitle" style="margin-bottom:4px">Check</div>
+          <div class="muted" id="checkMeta">—</div>
+          <div class="muted" id="checkTotal" style="margin-top:6px">Total: —</div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center">
+          <button class="btn danger" id="btnCloseCheck">Close</button>
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+      <div class="list" id="itemsList"></div>
+      <div class="muted" id="itemsHint" style="margin-top:10px">Empty. Add items below.</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom hide" id="bottomBar">
+    <div class="inner">
+      <div class="suggestBox" id="suggestBox"></div>
+
+      <div class="addRow1">
+        <input class="inp" id="itemName" placeholder='Add item… (type any fragment)' autocomplete="off" />
+      </div>
+
+      <div class="addRow2">
+        <div class="qtyCtl" title="Quantity">
+          <button class="btn" id="btnQtyDec">–</button>
+          <strong id="qtyVal" style="min-width:16px;text-align:center;display:inline-block">1</strong>
+          <button class="btn" id="btnQtyInc">+</button>
+        </div>
+
+        <input class="smallInp" id="itemPrice" inputmode="decimal" placeholder="Price/1" />
+        <input class="totalBox" id="itemTotal" placeholder="Total" readonly />
+        <button class="btn primary" id="btnAddItem">Add</button>
+      </div>
+
+      <div class="muted hide" id="addMsg" style="margin-top:6px"></div>
+      <div class="chips" id="quickChips"></div>
+    </div>
+  </div>
+
+  <script defer src="./main.js"></script>
+</body>
+</html>

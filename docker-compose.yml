@@ -1,0 +1,83 @@
+services:
+  # TEMP for app/admin
+  checki-app:
+    restart: unless-stopped
+    image: traefik/whoami:v1.10.1
+    networks:
+      - n8n_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=n8n_default"
+      - "traefik.http.services.checki_app_svc.loadbalancer.server.port=80"
+
+      - "traefik.http.routers.checki_app.rule=Host(`checki.ge`)"
+      - "traefik.http.routers.checki_app.entrypoints=websecure"
+      - "traefik.http.routers.checki_app.tls=true"
+      - "traefik.http.routers.checki_app.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.checki_app.service=checki_app_svc"
+  checki-admin:
+    restart: unless-stopped
+    image: nginx:alpine
+    volumes:
+      - ./admin:/usr/share/nginx/html:ro
+    networks:
+      - n8n_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=n8n_default"
+      - "traefik.http.services.checki_admin_svc.loadbalancer.server.port=80"
+      - "traefik.http.routers.checki_admin.rule=Host(`admin.checki.ge`)"
+      - "traefik.http.routers.checki_admin.entrypoints=websecure"
+      - "traefik.http.routers.checki_admin.tls=true"
+      - "traefik.http.routers.checki_admin.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.checki_admin.service=checki_admin_svc"
+
+  checki-db:
+    restart: unless-stopped
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: checki
+      POSTGRES_USER: checki
+      POSTGRES_PASSWORD: checki
+    volumes:
+      - checki_db:/var/lib/postgresql/data
+    networks:
+      - n8n_default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U checki -d checki"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  checki-api:
+    restart: unless-stopped
+    build:
+      context: ./backend
+    environment:
+      DB_HOST: checki-db
+      DB_PORT: "5432"
+      DB_NAME: checki
+      DB_USER: checki
+      DB_PASSWORD: checki
+    depends_on:
+      checki-db:
+        condition: service_healthy
+    networks:
+      - n8n_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=n8n_default"
+      - "traefik.http.services.checki_api_svc.loadbalancer.server.port=8000"
+
+      - "traefik.http.routers.checki_api.rule=Host(`api.checki.ge`)"
+      - "traefik.http.routers.checki_api.entrypoints=websecure"
+      - "traefik.http.routers.checki_api.tls=true"
+      - "traefik.http.routers.checki_api.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.checki_api.service=checki_api_svc"
+
+volumes:
+  checki_db:
+
+networks:
+  n8n_default:
+    external: true

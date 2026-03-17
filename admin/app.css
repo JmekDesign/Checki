@@ -1,0 +1,296 @@
+:root{
+      --bg:#0b0d10; --card:#12151b; --muted:#9aa4b2; --text:#e8eef6;
+      --line:#232a35; --accent:#49d17c; --danger:#ff5a6a;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --r:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#090b0f, #0b0d10 60%);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    }
+
+    /* Bottom space so list scrolls above bottom bar */
+    .wrap{max-width:720px;margin:0 auto;padding:16px 14px 220px}
+
+    /* header: title + (All checks) + logout */
+    .top{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      position:sticky; top:0; z-index:20;
+      padding:12px 14px; margin:-16px -14px 14px;
+      background:rgba(11,13,16,.88); backdrop-filter: blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .brand b{font-size:18px}
+    .topRight{display:flex; gap:10px; align-items:center}
+
+    .btn{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:rgba(73,209,124,.16); border-color:rgba(73,209,124,.32)}
+    .btn.danger{background:rgba(255,90,106,.14); border-color:rgba(255,90,106,.28)}
+    .btn.compact{padding:8px 10px; border-radius:12px}
+    .btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .hide{display:none!important}
+
+    .card{
+      background:rgba(18,21,27,.9);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--r);
+      padding:14px;
+      box-shadow:var(--shadow);
+    }
+
+    /* Remove the “underlay card” for the check screen (more space) */
+    #screenCheck.card{
+      background:transparent;
+      border:none;
+      box-shadow:none;
+      padding:0;
+    }
+
+    .h1{font-size:22px;margin:2px 0 10px}
+    .muted{color:var(--muted); font-size:13px}
+    .hr{height:1px;background:rgba(255,255,255,.08); margin:12px 0}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .inp{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:12px 12px;
+      font-size:16px;
+      outline:none;
+    }
+
+    .list{display:flex; flex-direction:column; gap:10px}
+    .item{
+      display:flex; justify-content:space-between; gap:12px; align-items:center;
+      padding:12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+    }
+    .kbd{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font-size:12px;
+      color:#cbd5e1;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      padding:4px 8px;
+      border-radius:10px;
+      white-space:nowrap;
+    }
+
+    /* toast */
+    .toast{
+      position:fixed; left:50%; transform:translateX(-50%);
+      bottom:148px;
+      background:rgba(0,0,0,.75);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      display:none;
+      z-index:80;
+      max-width:min(92vw,720px)
+    }
+
+    /* confirm modal */
+    .modalBack{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background:rgba(0,0,0,.55);
+      backdrop-filter: blur(8px);
+      z-index:120;
+    }
+    .modal{
+      width:min(92vw, 520px);
+      background:rgba(18,21,27,.96);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+    .modalTitle{
+      font-size:16px;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+    .modalText{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+      margin-bottom:12px;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .modalBtns{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    /* bottom bar */
+    .bottom{
+      position:fixed; left:0; right:0; bottom:0; z-index:30;
+      padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+      background:rgba(11,13,16,.92); backdrop-filter: blur(10px);
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+    .bottom .inner{max-width:720px;margin:0 auto}
+
+    /* suggestions: above input, do NOT overlay the input */
+    .suggestBox{
+      display:none;
+      background:rgba(10,12,16,.96);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      box-shadow: var(--shadow);
+      max-height:34vh;
+      overflow:auto;
+      padding:8px;
+      margin-bottom:10px;
+    }
+    .suggestItem{
+      display:flex; justify-content:space-between; gap:10px; align-items:center;
+      padding:10px 10px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.03);
+      cursor:pointer;
+      margin:6px 0;
+    }
+    .suggestItem b{font-size:14px}
+    .suggestItem small{color:var(--muted)}
+
+    /* add form: row1 + row2; row2 should fit on mobile */
+    .addRow1{display:flex; gap:10px; align-items:center}
+    .addRow2{display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:nowrap}
+
+    .smallInp{
+      width:90px;
+      border-radius:14px; border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06); color:var(--text);
+      padding:12px 10px; font-size:16px; outline:none;
+    }
+    .totalBox{
+      width:102px;
+      border-radius:14px; border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03); color:var(--text);
+      padding:12px 10px; font-size:16px; outline:none;
+    }
+
+    /* Make +/- groups “clean”: remove surrounding pill/box */
+    .qtyCtl{
+      display:flex; align-items:center; gap:8px;
+      background:transparent;
+      border:none;
+      padding:0;
+      flex:0 0 auto;
+    }
+    .qtyCtl button{width:34px;height:34px;border-radius:10px;padding:0}
+
+    /* quick chips: horizontal scroll */
+    .chips{
+      display:flex; gap:8px;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      padding:8px 0 2px;
+      margin-top:10px;
+    }
+    .chips::-webkit-scrollbar{display:none}
+    .chip{
+      flex:0 0 auto;
+      font-size:13px; padding:8px 10px; border-radius:999px; cursor:pointer;
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:var(--text);
+      white-space:nowrap;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .chip:active{transform:translateY(1px)}
+
+    /* check rows */
+    .lineLeft{min-width:0; display:flex; flex-direction:column; gap:4px}
+    .lineTitle{display:flex; align-items:baseline; gap:10px; min-width:0}
+    .lineTitle b{font-size:16px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+    .lineMeta{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .lineMeta span{font-size:12px; color:var(--muted)}
+    .lineRight{display:flex; align-items:center; gap:10px}
+    .lineTotal{font-size:16px; font-weight:800; white-space:nowrap}
+
+    /* screenOpen: remove underlay card (same idea as check screen) */
+    .card.cardless{background:transparent;border:none;box-shadow:none;padding:0}
+    .card.cardless .hr{margin-left:0;margin-right:0}
+
+    /* compact on small screens */
+    @media (max-width: 420px){
+      .wrap{padding-bottom:230px}
+      .qtyCtl{gap:6px}
+      .qtyCtl button{width:30px;height:30px;border-radius:10px}
+      .smallInp{width:74px;padding:11px 8px;font-size:15px}
+      .totalBox{width:84px;padding:11px 8px;font-size:15px}
+      #btnAddItem{padding:11px 10px;font-size:14px;border-radius:12px}
+      .toast{bottom:156px}
+    }
+  
+    .flashRow{
+      animation: flashRow 900ms ease-out 1;
+      border-radius: 14px;
+    }
+    @keyframes flashRow{
+      0%   { box-shadow: 0 0 0 0 rgba(255,255,255,.0); background: rgba(255,255,255,0); }
+      20%  { box-shadow: 0 0 0 2px rgba(255,255,255,.45); background: rgba(255,255,255,0.10); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,.0); background: rgba(255,255,255,0); }
+    }
+
+/* price required highlight */
+#itemPrice.needPrice{
+  border-color: rgba(255,80,80,.9);
+  box-shadow: 0 0 0 2px rgba(255,80,80,.25);
+}\n\n/* === ARCHIVE + READONLY STYLES === */
+.archItem{ opacity: .78; }
+.archItem:hover{ opacity: .95; }
+.archItem b{ font-weight: 700; }
+
+.chk-readonly #bottomBar{ display:none !important; }
+.chk-readonly #itemsList{ opacity:.92; }
+
+/* блокируем кнопки внутри списка позиций */
+.chk-readonly #itemsList button,
+.chk-readonly #itemsList .btn{
+  opacity:.45;
+  pointer-events:none !important;
+}
+
+/* но: кнопка "← Back" (бывшая Close) должна работать */
+.chk-readonly #btnCloseCheck{
+  opacity:1 !important;
+  pointer-events:auto !important;
+}
+
+/* УБРАТЬ +/- В АРХИВНОМ ЧЕКЕ, НО ОСТАВИТЬ ЧИСЛО */
+.chk-readonly .qtyCtl button{ display:none !important; }
+.chk-readonly .qtyCtl{ gap:0 !important; }
+.chk-readonly .qtyCtl strong{ min-width:auto !important; display:inline-block; }\n
