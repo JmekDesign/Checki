@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import contextlib
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException
 
 from ..core.security import require_user
 from ..core.utils import short_check_number
-from ..db.conn import db_conn
+from ..db.conn import db_conn, db_release
 from ..schemas.checks import CheckCreateIn, CheckOpenIn
 
 router = APIRouter()
@@ -62,8 +61,7 @@ def check_open(
             "number": short_check_number(check_id),
         }
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)
 
 
 # Staff UI compat: POST /api/checks {guest:"..."}
@@ -115,8 +113,7 @@ def checks_open(
             )
         return {"ok": True, "items": items, "checks": items}
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)
 
 
 # Staff UI compat: GET /api/checks -> same as /api/checks/open

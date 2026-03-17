@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import contextlib
 import time
 import uuid
 from typing import Any
@@ -9,7 +8,7 @@ from fastapi import APIRouter, Header, HTTPException
 
 from ..core.config import SESSION_TTL_HOURS
 from ..core.security import hash_password, require_user
-from ..db.conn import db_conn
+from ..db.conn import db_conn, db_release
 from ..schemas.auth import LoginIn
 
 router = APIRouter()
@@ -56,8 +55,7 @@ def login(payload: LoginIn) -> dict[str, Any]:
             },
         }
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)
 
 
 @router.post("/api/auth/logout")
@@ -80,8 +78,7 @@ def logout(
         conn.commit()
         return {"ok": True}
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)
 
 
 @router.get("/api/auth/me")

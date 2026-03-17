@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import contextlib
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException
 
 from ..core.security import require_user
 from ..core.utils import normalize_key
-from ..db.conn import db_conn
+from ..db.conn import db_conn, db_release
 from ..schemas.guests import GuestUpsertIn
 
 router = APIRouter()
@@ -54,5 +53,4 @@ def guest_upsert(
         conn.commit()
         return {"ok": True, "guest_id": str(guest_id), "name": name}
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)

@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import contextlib
 import os
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
 from ..core.security import hash_password
-from ..db.conn import db_conn
+from ..db.conn import db_conn, db_release
 from ..schemas.bootstrap import BootstrapIn
 
 router = APIRouter()
@@ -55,5 +54,4 @@ def bootstrap(payload: BootstrapIn) -> dict[str, Any]:
         conn.commit()
         return {"ok": True, "venue_id": str(venue_id), "manager_user_id": str(user_id)}
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)

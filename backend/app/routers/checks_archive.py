@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import contextlib
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException, Query
 
 from ..core.security import require_user
 from ..core.utils import short_check_number
-from ..db.conn import db_conn
+from ..db.conn import db_conn, db_release
 
 router = APIRouter()
 
@@ -92,5 +91,4 @@ def checks_archive(
             "offset": offset,
         }
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)

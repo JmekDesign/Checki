@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import contextlib
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException, Request
 
 from ..core.security import require_user
-from ..db.conn import db_conn
+from ..db.conn import db_conn, db_release
 
 router = APIRouter()
 
@@ -55,5 +54,4 @@ async def check_close(
         conn.commit()
         return {"ok": True, "check_id": check_id, "status": "closed"}
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)

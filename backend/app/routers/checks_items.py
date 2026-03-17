@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import contextlib
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 from uuid import UUID
@@ -10,7 +9,7 @@ from fastapi import APIRouter, Header, HTTPException, Query
 from ..core.parsers import parse_smart_line
 from ..core.security import require_user
 from ..core.utils import normalize_key, short_check_number
-from ..db.conn import db_conn
+from ..db.conn import db_conn, db_release
 from ..schemas.checks import AddLineIn, ItemAddIn
 
 router = APIRouter()
@@ -222,8 +221,7 @@ def check_item_add(
         conn.commit()
         return {"ok": True, "item_id": str(item_id), "line_total": float(line_total)}
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)
 
 
 # Staff UI compat: POST /api/checks/{id}/add_line
@@ -314,8 +312,7 @@ def check_get(
         }
         return {"ok": True, "check": check_obj}
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)
 
 
 @router.post("/api/checks/{check_id}/items/{item_id}/qty")
@@ -402,5 +399,4 @@ def check_item_qty_change(
                 "delta_total": float(delta_total),
             }
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)

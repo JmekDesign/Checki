@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import contextlib
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException, Query
 
 from ..core.security import require_user
 from ..core.utils import normalize_key
-from ..db.conn import db_conn
+from ..db.conn import db_conn, db_release
 from ..schemas.products import ProductUpsertIn
 
 router = APIRouter()
@@ -67,8 +66,7 @@ def product_upsert(
             "category": category,
         }
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)
 
 
 @router.get("/api/products")
@@ -124,5 +122,4 @@ def products_list(
 
         return {"ok": True, "items": items}
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)

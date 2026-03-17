@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import contextlib
 import hashlib
 from typing import TypedDict
 
 from fastapi import HTTPException
 
-from ..db.conn import db_conn
+from ..db.conn import db_conn, db_release
 from .config import AUTH_SALT
 
 
@@ -54,5 +53,4 @@ def require_user(authorization: str | None) -> UserContext:
             name=name,
         )
     finally:
-        with contextlib.suppress(Exception):
-            conn.close()
+        db_release(conn)
