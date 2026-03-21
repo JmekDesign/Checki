@@ -38,7 +38,7 @@ services:
     environment:
       POSTGRES_DB: checki
       POSTGRES_USER: checki
-      POSTGRES_PASSWORD: checki
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - checki_db:/var/lib/postgresql/data
     networks:
@@ -53,12 +53,12 @@ services:
     restart: unless-stopped
     build:
       context: ./backend
+    env_file: .env
     environment:
       DB_HOST: checki-db
       DB_PORT: "5432"
       DB_NAME: checki
       DB_USER: checki
-      DB_PASSWORD: checki
     depends_on:
       checki-db:
         condition: service_healthy

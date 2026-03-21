@@ -15,16 +15,16 @@ logs:
 
 # Quality
 test:
-	pytest tests/ -v
+	.venv/bin/pytest tests/ -v
 
 lint:
-	ruff check backend/app/
+	.venv/bin/ruff check backend/app/
 
 typecheck:
-	mypy --strict backend/app/
+	.venv/bin/mypy --strict backend/app/
 
 lint-fix:
-	ruff check --fix backend/app/ && ruff format backend/app/
+	.venv/bin/ruff check --fix backend/app/ && .venv/bin/ruff format backend/app/
 
 # Database
 db-shell:
