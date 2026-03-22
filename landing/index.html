@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Checki — Smart bar tabs for modern venues</title>
+  <meta name="description" content="Open tabs, add items, close with payment — all from your phone. No cash register, no hardware." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0f1116;
+      --surface:  #161b24;
+      --border:   rgba(255,255,255,.10);
+      --text:     #f0f2f5;
+      --muted:    #7a8497;
+      --accent:   #49d17c;
+      --accent2:  #2eb865;
+      --danger:   #ff5a6a;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(15,17,22,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 20px; font-weight: 800; letter-spacing: -.5px; color: var(--text); }
+    .logo span { color: var(--accent); }
+    .navCta {
+      background: var(--accent); color: #0f1116;
+      padding: 8px 18px; border-radius: 10px; font-weight: 700; font-size: 14px;
+      transition: background .15s;
+    }
+    .navCta:hover { background: var(--accent2); }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 24px; max-width: 680px; margin: 0 auto; }
+
+    /* ── HERO ── */
+    .hero { padding-top: 96px; padding-bottom: 64px; text-align: center; }
+    .heroBadge {
+      display: inline-block;
+      background: rgba(73,209,124,.12); border: 1px solid rgba(73,209,124,.25);
+      color: var(--accent); font-size: 12px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 999px; margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(32px, 8vw, 52px);
+      font-weight: 800; line-height: 1.1; letter-spacing: -.03em;
+      margin-bottom: 20px;
+    }
+    h1 em { color: var(--accent); font-style: normal; }
+    .heroSub {
+      font-size: clamp(16px, 4vw, 19px); color: var(--muted);
+      max-width: 480px; margin: 0 auto 36px;
+    }
+    .heroCta {
+      display: inline-block;
+      background: var(--accent); color: #0f1116;
+      padding: 14px 32px; border-radius: 14px;
+      font-size: 16px; font-weight: 700;
+      transition: background .15s, transform .1s;
+    }
+    .heroCta:hover { background: var(--accent2); transform: translateY(-1px); }
+    .heroNote { margin-top: 14px; font-size: 13px; color: var(--muted); }
+
+    /* ── SCREEN MOCKUP ── */
+    .mockup {
+      margin: 0 auto 0;
+      max-width: 320px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 20px 16px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.5);
+    }
+    .mockupBar {
+      display: flex; gap: 6px; margin-bottom: 14px;
+    }
+    .mockupTab {
+      flex: 1; padding: 8px; border-radius: 10px; text-align: center;
+      font-size: 13px; font-weight: 600;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .mockupTab.active {
+      background: rgba(73,209,124,.12);
+      border-color: rgba(73,209,124,.3);
+      color: var(--accent);
+    }
+    .mockupItem {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; border-radius: 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .mockupItem b { font-size: 14px; }
+    .mockupItem small { display: block; color: var(--muted); font-size: 12px; }
+    .mockupPrice { font-size: 15px; font-weight: 700; color: var(--accent); }
+    .mockupTotal {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0 4px;
+      border-top: 1px solid var(--border);
+      margin-top: 6px;
+    }
+    .mockupTotal span { color: var(--muted); font-size: 13px; }
+    .mockupTotal strong { font-size: 20px; font-weight: 800; color: var(--accent); }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: flex; flex-direction: column; gap: 32px; }
+    .step { display: flex; gap: 20px; align-items: flex-start; }
+    .stepNum {
+      flex: 0 0 40px; height: 40px; border-radius: 12px;
+      background: rgba(73,209,124,.12); border: 1px solid rgba(73,209,124,.25);
+      color: var(--accent); font-size: 18px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stepText h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .stepText p  { font-size: 15px; color: var(--muted); }
+
+    /* ── FEATURES ── */
+    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 480px) { .features { grid-template-columns: 1fr; } }
+    .feature {
+      padding: 20px; border-radius: 16px;
+      background: var(--surface); border: 1px solid var(--border);
+    }
+    .featureIcon { font-size: 26px; margin-bottom: 10px; }
+    .feature h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .feature p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* ── SECTION TITLE ── */
+    .sectionLabel {
+      font-size: 12px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    h2 { font-size: clamp(24px, 6vw, 36px); font-weight: 800; letter-spacing: -.02em; margin-bottom: 40px; }
+
+    /* ── REGISTER FORM ── */
+    .formCard {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px 28px;
+    }
+    .formTitle  { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .formSubtitle { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    .formGroup { margin-bottom: 14px; }
+    .formGroup label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--muted); }
+    .formGroup input {
+      width: 100%;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color .15s;
+      -webkit-appearance: none;
+    }
+    .formGroup input:focus { border-color: rgba(73,209,124,.5); }
+    .formGroup input::placeholder { color: var(--muted); }
+    .formDivider {
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted);
+      margin: 20px 0 16px; padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .btnSubmit {
+      width: 100%; padding: 14px;
+      background: var(--accent); color: #0f1116;
+      border: none; border-radius: 14px;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      margin-top: 8px;
+      transition: background .15s, transform .1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btnSubmit:hover  { background: var(--accent2); }
+    .btnSubmit:active { transform: translateY(1px); }
+    .btnSubmit:disabled { opacity: .5; cursor: default; transform: none; }
+    .formMsg { margin-top: 14px; font-size: 14px; text-align: center; }
+    .formMsg.ok  { color: var(--accent); }
+    .formMsg.err { color: var(--danger); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Checki<span>.</span></div>
+  <a class="navCta" href="#register">Get started free</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="heroBadge">Early access · Free MVP</div>
+  <h1>Bar tabs.<br><em>Finally simple.</em></h1>
+  <p class="heroSub">Open a tab, add drinks, close with payment — all from your phone in seconds. No cash register, no special hardware, no training needed.</p>
+  <a class="heroCta" href="#register">Start free today</a>
+  <p class="heroNote">No credit card · No commitment · Cancel anytime</p>
+</section>
+
+<!-- MOCKUP -->
+<div style="padding: 0 24px 80px; max-width: 680px; margin: 0 auto">
+  <div class="mockup">
+    <div class="mockupBar">
+      <div class="mockupTab active">Check #14</div>
+      <div class="mockupTab">Table 3</div>
+    </div>
+    <div class="mockupItem">
+      <div><b>Hoegaarden</b><small>Beer · ×2</small></div>
+      <div class="mockupPrice">14.00 ₾</div>
+    </div>
+    <div class="mockupItem">
+      <div><b>Negroni</b><small>Cocktails · ×1</small></div>
+      <div class="mockupPrice">18.00 ₾</div>
+    </div>
+    <div class="mockupItem">
+      <div><b>Jameson</b><small>Whisky · ×1</small></div>
+      <div class="mockupPrice">22.00 ₾</div>
+    </div>
+    <div class="mockupTotal">
+      <span>Total</span>
+      <strong>54.00 ₾</strong>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="sectionLabel">How it works</div>
+  <h2>Three steps, done.</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="stepNum">1</div>
+      <div class="stepText">
+        <h3>Open a tab</h3>
+        <p>Staff opens a check in 5 seconds — just type the table or guest name. No login screen, no menus to navigate.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="stepNum">2</div>
+      <div class="stepText">
+        <h3>Add items as you go</h3>
+        <p>Type any fragment of the name — Checki finds it instantly. Quick-pick chips for your bestsellers. Prices auto-fill from the catalog.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="stepNum">3</div>
+      <div class="stepText">
+        <h3>Close with payment</h3>
+        <p>Choose cash, card or split — the check is closed in one tap. Manager gets the full picture in analytics instantly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section>
+  <div class="sectionLabel">Features</div>
+  <h2>Everything a bar needs.</h2>
+  <div class="features">
+    <div class="feature">
+      <div class="featureIcon">📱</div>
+      <h3>Works on any phone</h3>
+      <p>No app install. Open the link, log in, start working. iOS and Android.</p>
+    </div>
+    <div class="feature">
+      <div class="featureIcon">⚡</div>
+      <h3>Instant catalog</h3>
+      <p>Start typing — the right product appears. New items added automatically on the fly.</p>
+    </div>
+    <div class="feature">
+      <div class="featureIcon">🤖</div>
+      <h3>AI normalization</h3>
+      <p>Typos, mixed languages, abbreviations — AI cleans up your catalog automatically in the background.</p>
+    </div>
+    <div class="feature">
+      <div class="featureIcon">📊</div>
+      <h3>Real-time analytics</h3>
+      <p>Revenue, top products, payment methods — all live. Export PDF report in one tap.</p>
+    </div>
+    <div class="feature">
+      <div class="featureIcon">👥</div>
+      <h3>Multi-staff</h3>
+      <p>Unlimited staff accounts. Manager controls who has access and what they see.</p>
+    </div>
+    <div class="feature">
+      <div class="featureIcon">🔒</div>
+      <h3>Secure by design</h3>
+      <p>Each venue sees only its own data. Token-based sessions with expiry.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+  <div class="sectionLabel">Get started</div>
+  <h2>Create your venue.</h2>
+  <div class="formCard">
+    <div class="formTitle">Sign up free</div>
+    <div class="formSubtitle">Takes 30 seconds. No credit card needed.</div>
+
+    <div class="formGroup">
+      <label>Venue name</label>
+      <input id="fVenueName" type="text" placeholder="Bar Panorama" autocomplete="organization" />
+    </div>
+    <div class="formGroup">
+      <label>Your name</label>
+      <input id="fManagerName" type="text" placeholder="Alex" autocomplete="name" />
+    </div>
+    <div class="formGroup">
+      <label>Email</label>
+      <input id="fEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+    </div>
+    <div class="formGroup">
+      <label>Phone <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+      <input id="fPhone" type="tel" placeholder="+995 555 000 000" autocomplete="tel" />
+    </div>
+
+    <div class="formDivider">Login credentials</div>
+
+    <div class="formGroup">
+      <label>Login</label>
+      <input id="fLogin" type="text" placeholder="alex_bar" autocomplete="username" autocapitalize="none" />
+    </div>
+    <div class="formGroup">
+      <label>Password</label>
+      <input id="fPassword" type="password" placeholder="min 6 characters" autocomplete="new-password" />
+    </div>
+
+    <button class="btnSubmit" id="btnRegister">Create account →</button>
+    <div class="formMsg" id="formMsg"></div>
+  </div>
+</section>
+
+<footer>
+  © 2025 Checki · <a href="mailto:hello@checki.ge">hello@checki.ge</a>
+</footer>
+
+<script>
+  const API = "https://api.checki.ge";
+  const ADMIN = "https://admin.checki.ge";
+
+  document.getElementById("btnRegister").onclick = async () => {
+    const venueName   = document.getElementById("fVenueName").value.trim();
+    const managerName = document.getElementById("fManagerName").value.trim();
+    const email       = document.getElementById("fEmail").value.trim();
+    const phone       = document.getElementById("fPhone").value.trim();
+    const login       = document.getElementById("fLogin").value.trim();
+    const password    = document.getElementById("fPassword").value;
+    const btn = document.getElementById("btnRegister");
+    const msg = document.getElementById("formMsg");
+
+    msg.textContent = "";
+    msg.className = "formMsg";
+
+    if (!venueName)   return showErr("Enter your venue name");
+    if (!managerName) return showErr("Enter your name");
+    if (!email)       return showErr("Enter your email");
+    if (!login)       return showErr("Choose a login");
+    if (password.length < 6) return showErr("Password must be at least 6 characters");
+
+    btn.disabled = true;
+    btn.textContent = "Creating…";
+
+    try {
+      const resp = await fetch(API + "/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ venue_name: venueName, manager_name: managerName, login, password, email, phone: phone || null }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        showErr(data.detail || "Something went wrong");
+        return;
+      }
+      msg.className = "formMsg ok";
+      msg.innerHTML = "✓ Account created! <a href='" + ADMIN + "'>Open Checki →</a>";
+      btn.textContent = "Done!";
+    } catch (e) {
+      showErr("Network error — try again");
+    } finally {
+      if (btn.textContent !== "Done!") {
+        btn.disabled = false;
+        btn.textContent = "Create account →";
+      }
+    }
+
+    function showErr(text) {
+      msg.className = "formMsg err";
+      msg.textContent = text;
+      btn.disabled = false;
+      btn.textContent = "Create account →";
+    }
+  };
+</script>
+</body>
+</html>

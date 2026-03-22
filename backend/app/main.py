@@ -22,6 +22,7 @@ from .routers.guests import router as guests_router
 from .routers.health import router as health_router
 from .routers.products import router as products_router
 from .routers.products_mgmt import router as products_mgmt_router
+from .routers.register import router as register_router
 from .routers.reports import router as reports_router
 from .routers.staff import router as staff_router
 from .routers.venue import router as venue_router
@@ -50,6 +51,7 @@ app.add_middleware(
 )
 
 app.include_router(health_router)
+app.include_router(register_router)
 app.include_router(auth_router)
 app.include_router(bootstrap_router)
 app.include_router(guests_router)

@@ -1,20 +1,20 @@
 services:
-  # TEMP for app/admin
-  checki-app:
+  checki-landing:
     restart: unless-stopped
-    image: traefik/whoami:v1.10.1
+    image: nginx:alpine
+    volumes:
+      - ./landing:/usr/share/nginx/html:ro
     networks:
       - n8n_default
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=n8n_default"
-      - "traefik.http.services.checki_app_svc.loadbalancer.server.port=80"
-
-      - "traefik.http.routers.checki_app.rule=Host(`checki.ge`)"
-      - "traefik.http.routers.checki_app.entrypoints=websecure"
-      - "traefik.http.routers.checki_app.tls=true"
-      - "traefik.http.routers.checki_app.tls.certresolver=mytlschallenge"
-      - "traefik.http.routers.checki_app.service=checki_app_svc"
+      - "traefik.http.services.checki_landing_svc.loadbalancer.server.port=80"
+      - "traefik.http.routers.checki_landing.rule=Host(`checki.ge`)"
+      - "traefik.http.routers.checki_landing.entrypoints=websecure"
+      - "traefik.http.routers.checki_landing.tls=true"
+      - "traefik.http.routers.checki_landing.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.checki_landing.service=checki_landing_svc"
   checki-admin:
     restart: unless-stopped
     image: nginx:alpine
