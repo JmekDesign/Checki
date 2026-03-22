@@ -345,7 +345,90 @@
   padding:14px 0 6px;
 }
 
-/* ── date input: native picker styling ── */
-input[type="date"].inp{
-  color-scheme: dark;
-}\n
+/* ── date picker buttons ── */
+.dpBtn {
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  border-color: rgba(255,255,255,.10);
+}
+.dpBtn:not(:empty) { color: var(--text); }
+
+/* ── date picker popup ── */
+.dpPopup {
+  position: fixed;
+  z-index: 300;
+  display: none;
+  background: rgba(15,17,22,.98);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.7);
+  padding: 14px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dpHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.dpTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+.dpNav {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+.dpNav:hover { background: rgba(255,255,255,.07); color: var(--text); }
+
+.dpGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.dpDow {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 4px 0 6px;
+}
+.dpDay {
+  text-align: center;
+  font-size: 13px;
+  padding: 7px 2px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--text);
+  transition: background .1s;
+  -webkit-tap-highlight-color: transparent;
+}
+.dpDay:hover:not(.dpFuture) { background: rgba(255,255,255,.09); }
+.dpFuture {
+  color: rgba(255,255,255,.18);
+  cursor: default;
+}
+.dpToday {
+  border: 1px solid rgba(255,255,255,.22);
+}
+.dpRange {
+  background: rgba(73,209,124,.13);
+  border-radius: 0;
+}
+.dpSel {
+  background: var(--accent) !important;
+  color: #0a0c10 !important;
+  font-weight: 700;
+  border-radius: 10px !important;
+}

@@ -54,6 +54,7 @@ window.CHK = window.CHK || {};
     else if (q === "week")   { from.value = daysAgo(6);     to.value = today(); }
     else if (q === "month")  { from.value = startOfMonth(); to.value = today(); }
     else                     { from.value = "";              to.value = ""; }
+    window.CHK?.datepicker?.updateButtons?.();
   }
 
   /* ── query strings ── */

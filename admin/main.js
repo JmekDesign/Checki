@@ -16,6 +16,7 @@
       await load("./api.js");
       await load("./ui.js");
       await load("./archive.js");
+      await load("./datepicker.js");
       await load("./app.js"); // legacy (will be removed gradually)
     }catch(err){
       console.error(err);
