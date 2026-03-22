@@ -19,7 +19,7 @@ logs:
 # Deploy
 deploy:
 	git push origin master
-	ssh $(SERVER) "cd $(SERVER_DIR) && git pull && docker compose build checki-api && bash api_restart.sh"
+	ssh $(SERVER) "cd $(SERVER_DIR) && git pull && docker compose build checki-api && docker compose up -d checki-api && bash api_wait.sh"
 
 # Quality
 test:
