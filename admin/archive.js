@@ -105,17 +105,14 @@ window.CHK = window.CHK || {};
       .join(", ") || "—";
 
     el.innerHTML = `
-      <div class="archStatCard">
-        <div class="archStatVal">${s.check_count}</div>
-        <div class="archStatLabel">Checks</div>
-      </div>
-      <div class="archStatCard">
-        <div class="archStatVal">${money(s.total_revenue)} ₾</div>
-        <div class="archStatLabel">Revenue</div>
-      </div>
-      <div class="archStatCard">
-        <div class="archStatVal">${money(s.avg_check)} ₾</div>
-        <div class="archStatLabel">Avg check</div>
+      <div class="archStatCard" style="grid-column:span 2">
+        <div class="archStatRow">
+          <div><div class="archStatVal">${s.check_count}</div><div class="archStatLabel">Checks</div></div>
+          <div class="archStatDivider"></div>
+          <div><div class="archStatVal">${money(s.total_revenue)} ₾</div><div class="archStatLabel">Revenue</div></div>
+          <div class="archStatDivider"></div>
+          <div><div class="archStatVal">${money(s.avg_check)} ₾</div><div class="archStatLabel">Avg</div></div>
+        </div>
       </div>
       <div class="archStatCard" style="grid-column:span 2">
         <div class="archStatLabel" style="margin-bottom:4px">Top items</div>

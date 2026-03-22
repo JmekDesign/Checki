@@ -319,6 +319,22 @@
   line-height:1.4;
 }
 
+/* ── Archive: stats row (3 values in one card) ── */
+.archStatRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  text-align:center;
+  gap:8px;
+}
+.archStatRow > div{ flex:1; }
+.archStatDivider{
+  width:1px;
+  height:32px;
+  background:var(--line);
+  flex:none !important;
+}
+
 /* ── Archive: day group label ── */
 .archDayLabel{
   font-size:12px;
