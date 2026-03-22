@@ -40,9 +40,9 @@ def super_venues(
                 (SELECT login FROM users
                  WHERE venue_id = v.id AND role = 'manager'
                  ORDER BY created_at ASC LIMIT 1) AS manager_login,
-                -- staff count
+                -- staff count (all venue users: manager + staff)
                 (SELECT COUNT(*) FROM users
-                 WHERE venue_id = v.id AND role = 'staff') AS staff_count,
+                 WHERE venue_id = v.id) AS staff_count,
                 -- total checks
                 (SELECT COUNT(*) FROM checks
                  WHERE venue_id = v.id) AS check_count,
