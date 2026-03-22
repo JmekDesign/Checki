@@ -21,8 +21,10 @@ window.CHK = window.CHK || {};
     const r = await api("/api/products?active_only=false&limit=500", { method: "GET" });
     products = Array.isArray(r.items) ? r.items : [];
     render();
-    // silently kick off background normalization for any un-normalized products
-    api("/api/products/normalize-all", { method: "POST" }).catch(() => {});
+    // silently kick off background normalization; reload after delay to show updated names
+    api("/api/products/normalize-all", { method: "POST" })
+      .then((r) => { if (r && r.queued > 0) setTimeout(() => load(), 9000); })
+      .catch(() => {});
   }
 
   /* ── render grouped by category ── */
@@ -107,6 +109,7 @@ window.CHK = window.CHK || {};
         </div>
         <div class="modalBtns">
           <button class="btn" id="cmCancel">Cancel</button>
+          ${isEdit ? `<button class="btn danger" id="cmDelete">Delete</button>` : ""}
           <button class="btn primary" id="cmOk">${esc(okText)}</button>
         </div>
       </div>
@@ -115,6 +118,20 @@ window.CHK = window.CHK || {};
     $("cmCancel").onclick = () => back.classList.add("hide");
     back.onclick = (e) => { if (e.target === back) back.classList.add("hide"); };
     $("cmName").focus();
+
+    if (isEdit) {
+      $("cmDelete").onclick = async () => {
+        if (!CHK.confirm) { if (!window.confirm(`Delete "${p.name}"?`)) return; }
+        else if (!(await CHK.confirm({ title: "Delete product", text: `Delete "${p.name}"?`, okText: "Delete", danger: true }))) return;
+        try {
+          await api(`/api/products/${p.id}`, { method: "DELETE" });
+          back.classList.add("hide");
+          await load();
+        } catch (e) {
+          CHK.toast?.("Error: " + (e.message || String(e)));
+        }
+      };
+    }
 
     $("cmOk").onclick = async () => {
       const name = ($("cmName").value || "").trim();

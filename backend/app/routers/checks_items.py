@@ -214,7 +214,9 @@ def check_item_add(
                 )
             else:
                 cur.execute(
-                    "insert into products (venue_id, name, search_key, last_price, category) values (%s,%s,%s,%s,%s);",
+                    "insert into products"
+                    " (venue_id, name, search_key, last_price, category, needs_normalization)"
+                    " values (%s,%s,%s,%s,%s, TRUE);",
                     (venue_id, name_snapshot, key, price, "Other"),
                 )
 
@@ -283,15 +285,17 @@ def check_get(
 
         cur.execute(
             """
-            select id, name_snapshot, price_snapshot, qty, line_total
-            from check_items
-            where check_id=%s
-            order by created_at asc;
+            select ci.id, ci.name_snapshot, ci.price_snapshot, ci.qty, ci.line_total,
+                   coalesce(p.category, 'Other')
+            from check_items ci
+            left join products p on p.id = ci.product_id
+            where ci.check_id=%s
+            order by ci.created_at asc;
             """,
             (str(check_id),),
         )
         items = []
-        for iid, name, price, qty, line_total in cur.fetchall():
+        for iid, name, price, qty, line_total, category in cur.fetchall():
             items.append(
                 {
                     "id": str(iid),
@@ -299,6 +303,7 @@ def check_get(
                     "price": float(price),
                     "qty": int(qty),
                     "line_total": float(line_total),
+                    "category": category,
                 }
             )
 

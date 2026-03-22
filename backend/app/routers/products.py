@@ -163,17 +163,47 @@ def products_normalize_all(
     try:
         cur = conn.cursor()
         cur.execute(
-            "SELECT COUNT(*) FROM products WHERE venue_id = %s AND needs_normalization = TRUE;",
+            "UPDATE products SET needs_normalization = TRUE WHERE venue_id = %s"
+            " AND needs_normalization = FALSE;",
             (venue_id,),
         )
-        row = cur.fetchone()
-        count: int = int(row[0]) if row else 0
+        count: int = cur.rowcount
+        conn.commit()
     finally:
         db_release(conn)
 
-    if count:
-        background_tasks.add_task(normalize_all_bg, venue_id)
+    background_tasks.add_task(normalize_all_bg, venue_id)
     return {"ok": True, "queued": count}
+
+
+@router.delete("/api/products/{product_id}")
+def product_delete(
+    product_id: UUID,
+    authorization: str | None = Header(default=None, alias="Authorization"),
+) -> dict[str, Any]:
+    user = _require_manager(authorization)
+    venue_id = user["venue_id"]
+    if not venue_id:
+        raise HTTPException(status_code=400, detail="user has no venue")
+
+    conn = db_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT id FROM products WHERE id = %s AND venue_id = %s;",
+            (str(product_id), venue_id),
+        )
+        if not cur.fetchone():
+            raise HTTPException(status_code=404, detail="product not found")
+        cur.execute(
+            "DELETE FROM products WHERE id = %s AND venue_id = %s;",
+            (str(product_id), venue_id),
+        )
+        conn.commit()
+        return {"ok": True}
+    finally:
+        with contextlib.suppress(Exception):
+            db_release(conn)
 
 
 @router.patch("/api/products/{product_id}")

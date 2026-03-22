@@ -228,6 +228,7 @@
       const price = Number(it.price_snapshot ?? it.price ?? 0);
       const lt = Number(it.line_total ?? (price*q));
 
+      const category = it.category || "";
       const el = document.createElement("div");
       el.className = "item";
       el.setAttribute("data-item-id", String(itemId));
@@ -238,6 +239,7 @@
             <span>${escapeHtml(String(q))}</span>
             <span>×</span>
             <span>${escapeHtml(fmtMoney(price))} ₾</span>
+            ${category && category !== "Other" ? `<span class="muted" style="font-size:11px">${escapeHtml(category)}</span>` : ""}
           </div>
         </div>
 
