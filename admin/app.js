@@ -189,6 +189,7 @@
       show("screenOpen");
     }catch(e){ toast("Close error: " + e.message); }
   };
+  const _closeCheckHandler = $("btnCloseCheck").onclick;
 
   async function openCheck(id){
     currentCheckId = id;
@@ -629,9 +630,9 @@
         btnClose.textContent = "← Back";
         btnClose.onclick = async ()=>{ await _gotoArchive(); };
       }else{
-        // when opening a normal (non-archive) check, app.js will set correct handler itself
-        try{ btnClose.classList.add("danger"); }catch(e){}
-        // do not force text/onclick here to avoid fighting legacy logic
+        btnClose.textContent = "Close";
+        btnClose.classList.add("danger");
+        if(typeof _closeCheckHandler === "function") btnClose.onclick = _closeCheckHandler;
       }
     }
 
