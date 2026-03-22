@@ -27,6 +27,9 @@ window.CHK = window.CHK || {};
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`;
   }
+  function currentMonthName() {
+    return new Date().toLocaleDateString("en-US", { month: "long" });
+  }
   function labelDate(isoStr) {
     const d = new Date(isoStr);
     const now = new Date();
@@ -50,10 +53,11 @@ window.CHK = window.CHK || {};
     const from = $("archFrom");
     const to = $("archTo");
     if (!from || !to) return;
-    if (q === "today")       { from.value = today();        to.value = today(); }
-    else if (q === "week")   { from.value = daysAgo(6);     to.value = today(); }
-    else if (q === "month")  { from.value = startOfMonth(); to.value = today(); }
-    else                     { from.value = "";              to.value = ""; }
+    if (q === "today")        { from.value = today();        to.value = today(); }
+    else if (q === "week")    { from.value = daysAgo(6);     to.value = today(); }
+    else if (q === "month")   { from.value = daysAgo(29);    to.value = today(); }
+    else if (q === "curmonth"){ from.value = startOfMonth(); to.value = today(); }
+    else                      { from.value = "";              to.value = ""; }
     window.CHK?.datepicker?.updateButtons?.();
   }
 
@@ -257,7 +261,13 @@ window.CHK = window.CHK || {};
     if (next) next.onclick = async () => { offset += limit;                       await load().catch((e) => CHK.toast?.("Archive: " + (e.message || e))); };
   }
 
-  function init() { try { bind(); } catch (_) {} }
+  function init() {
+    try {
+      const btnCurMonth = $("btnCurMonth");
+      if (btnCurMonth) btnCurMonth.textContent = currentMonthName();
+      bind();
+    } catch (_) {}
+  }
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
