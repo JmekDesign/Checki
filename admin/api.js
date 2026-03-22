@@ -38,8 +38,15 @@ window.CHK = window.CHK || {};
     else localStorage.removeItem("checki_user");
   }
 
+  async function apiFetch(path, opts) {
+    const token = getToken();
+    const headers = token ? { "Authorization": "Bearer " + token } : {};
+    return fetch(API_BASE + path, Object.assign({ headers }, opts || {}));
+  }
+
   window.CHK.API_BASE = API_BASE;
   window.CHK.api = api;
+  window.CHK.apiFetch = apiFetch;
   window.CHK.getToken = getToken;
   window.CHK.setToken = setToken;
   window.CHK.getUserProfile = getUserProfile;

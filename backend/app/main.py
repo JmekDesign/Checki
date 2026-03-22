@@ -21,6 +21,7 @@ from .routers.checks_open import router as checks_open_router
 from .routers.guests import router as guests_router
 from .routers.health import router as health_router
 from .routers.products import router as products_router
+from .routers.reports import router as reports_router
 from .routers.staff import router as staff_router
 from .routers.venue import router as venue_router
 
@@ -54,6 +55,7 @@ app.include_router(guests_router)
 app.include_router(products_router)
 app.include_router(checks_open_router)
 app.include_router(checks_archive_router)
+app.include_router(reports_router)
 app.include_router(checks_items_router)
 app.include_router(checks_close_router)
 app.include_router(staff_router)

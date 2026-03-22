@@ -203,7 +203,10 @@ window.CHK = window.CHK || {};
     const search  = $("archSearch");
     const fromInp = $("archFrom");
     const toInp   = $("archTo");
-    const resetBtn = $("btnArchReset");
+    const resetBtn  = $("btnArchReset");
+    const shareBtn  = $("btnArchShare");
+
+    if (shareBtn) shareBtn.onclick = () => shareReport();
 
     if (back) {
       back.onclick = () => {
@@ -262,10 +265,41 @@ window.CHK = window.CHK || {};
     init();
   }
 
+  /* ── share / download PDF report ── */
+  async function shareReport() {
+    const btn = $("btnArchShare");
+    if (btn) { btn.disabled = true; btn.textContent = "…"; }
+    try {
+      const from = ($("archFrom")?.value || "").trim();
+      const to   = ($("archTo")?.value   || "").trim();
+      const p = new URLSearchParams();
+      if (from) p.set("from", from);
+      if (to)   p.set("to",   to);
+      const resp = await CHK.apiFetch("/api/checks/archive/report?" + p.toString());
+      if (!resp.ok) throw new Error("Report error " + resp.status);
+      const blob = await resp.blob();
+      const fname = "checki-report.pdf";
+      const file = new File([blob], fname, { type: "application/pdf" });
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: "Checki Report" });
+      } else {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = fname;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+      }
+    } catch (e) {
+      CHK.toast?.("Report: " + (e.message || String(e)));
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = "Share"; }
+    }
+  }
+
   CHK.archive = CHK.archive || {};
-  // Full load: resets filters to "week" (called when navigating TO archive fresh)
+  // Full load: resets filters to "today" (called when navigating TO archive fresh)
   CHK.archive.load = async () => {
-    setQuick("week");
+    setQuick("today");
     offset = 0;
     await load();
   };
