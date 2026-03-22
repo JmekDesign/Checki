@@ -163,15 +163,16 @@ def products_normalize_all(
     try:
         cur = conn.cursor()
         cur.execute(
-            "UPDATE products SET needs_normalization = TRUE WHERE venue_id = %s;",
+            "SELECT COUNT(*) FROM products WHERE venue_id = %s AND needs_normalization = TRUE;",
             (venue_id,),
         )
-        count: int = cur.rowcount
-        conn.commit()
+        row = cur.fetchone()
+        count: int = int(row[0]) if row else 0
     finally:
         db_release(conn)
 
-    background_tasks.add_task(normalize_all_bg, venue_id)
+    if count:
+        background_tasks.add_task(normalize_all_bg, venue_id)
     return {"ok": True, "queued": count}
 
 
