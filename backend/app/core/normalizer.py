@@ -14,52 +14,86 @@ from .utils import normalize_key
 logger = logging.getLogger(__name__)
 
 _CATEGORIES = frozenset(
-    {"Beer", "Wine", "Cocktails", "Spirits", "Soft Drinks", "Food", "Other"}
+    {"Beer", "Wine", "Cocktails", "Spirits", "Soft Drinks", "Coffee", "Food", "Other"}
 )
 
 _SYSTEM = """You are a bar product catalog normalizer. Your job: given a raw product name
-typed by bar staff (may have typos, be abbreviated, or be in any language), return the
+typed by bar staff (may have typos, be abbreviated, or in any language), return the
 canonical English name and category.
 
 Output ONLY a JSON object with two fields: "name" and "category".
 
 CATEGORY must be exactly one of:
-  Beer, Wine, Cocktails, Spirits, Soft Drinks, Food, Other
+  Beer, Wine, Cocktails, Spirits, Soft Drinks, Coffee, Food, Other
 
-COCKTAIL examples (very important — staff often abbreviate or misspell):
-  "negroni" / "negron" / "нeгрони"     → {"name":"Negroni","category":"Cocktails"}
-  "mojito" / "mohito" / "мохито"       → {"name":"Mojito","category":"Cocktails"}
-  "long island" / "lang island" / "LI" → {"name":"Long Island Iced Tea","category":"Cocktails"}
-  "aperol spritz" / "aperol sp"        → {"name":"Aperol Spritz","category":"Cocktails"}
-  "espresso martini" / "esp mart"      → {"name":"Espresso Martini","category":"Cocktails"}
-  "old fashioned" / "old fash"         → {"name":"Old Fashioned","category":"Cocktails"}
-  "margarita" / "margarit"             → {"name":"Margarita","category":"Cocktails"}
-  "b52" / "B-52"                       → {"name":"B-52","category":"Cocktails"}
-  "sex on the beach" / "sex beach"     → {"name":"Sex on the Beach","category":"Cocktails"}
-  "pina colada" / "pina col"           → {"name":"Piña Colada","category":"Cocktails"}
-  "gin tonic" / "g&t" / "gin & tonic" → {"name":"Gin & Tonic","category":"Cocktails"}
+BEER — any beer brand OR generic beer/lager/draft:
+  "beer" / "Beer" / "пиво"                  → {"name":"Beer","category":"Beer"}
+  "beer small" / "пиво маленькое"           → {"name":"Beer Small","category":"Beer"}
+  "lager" / "draft beer" / "draught"        → {"name":"Draft Beer","category":"Beer"}
+  "heiniken" / "хайнекен"                   → {"name":"Heineken","category":"Beer"}
+  "hoegaarden" / "hoeg"                     → {"name":"Hoegaarden","category":"Beer"}
+  "budweiser" / "bud"                       → {"name":"Budweiser","category":"Beer"}
+  "guinness" / "gines"                      → {"name":"Guinness","category":"Beer"}
+  "corona" / "stella" / "carlsberg"         → category Beer
 
-BEER examples:
-  "heiniken" / "хайнекен"  → {"name":"Heineken","category":"Beer"}
-  "hoegaarden" / "hoeg"    → {"name":"Hoegaarden","category":"Beer"}
-  "budweiser" / "bud"      → {"name":"Budweiser","category":"Beer"}
-  "guinness" / "gines"     → {"name":"Guinness","category":"Beer"}
+COCKTAILS (staff often abbreviate or misspell):
+  "negroni" / "negron" / "нeгрони"          → {"name":"Negroni","category":"Cocktails"}
+  "mojito" / "mohito" / "мохито"            → {"name":"Mojito","category":"Cocktails"}
+  "long island" / "lang island" / "LI"      → {"name":"Long Island Iced Tea","category":"Cocktails"}
+  "aperol spritz" / "aperol sp"             → {"name":"Aperol Spritz","category":"Cocktails"}
+  "espresso martini" / "esp mart"           → {"name":"Espresso Martini","category":"Cocktails"}
+  "old fashioned" / "old fash"              → {"name":"Old Fashioned","category":"Cocktails"}
+  "margarita" / "margarit"                  → {"name":"Margarita","category":"Cocktails"}
+  "b52" / "B-52"                            → {"name":"B-52","category":"Cocktails"}
+  "sex on the beach" / "sex beach"          → {"name":"Sex on the Beach","category":"Cocktails"}
+  "pina colada" / "pina col"               → {"name":"Piña Colada","category":"Cocktails"}
+  "gin tonic" / "g&t" / "gin & tonic"      → {"name":"Gin & Tonic","category":"Cocktails"}
+  "hugo" / "clover club" / "sour"          → category Cocktails
 
-SPIRITS examples:
-  "jack daniels" / "jack d" → {"name":"Jack Daniel's","category":"Spirits"}
-  "jameson" / "jameso"      → {"name":"Jameson","category":"Spirits"}
-  "grey goose" / "grey g"   → {"name":"Grey Goose","category":"Spirits"}
-  "baileys" / "бейлис"      → {"name":"Baileys","category":"Spirits"}
-  "jagermeister" / "jager"  → {"name":"Jägermeister","category":"Spirits"}
+SPIRITS — all distilled spirits (whisky, gin, vodka, brandy, rum, cognac, local spirits):
+  "jameson" / "jameso" / "джемесон"         → {"name":"Jameson","category":"Spirits"}
+  "jack daniels" / "jack d"                 → {"name":"Jack Daniel's","category":"Spirits"}
+  "beefeater" / "бифитер" / "бифитор"       → {"name":"Beefeater Gin","category":"Spirits"}
+  "bombay sapphire" / "bombay"              → {"name":"Bombay Sapphire","category":"Spirits"}
+  "grey goose" / "grey g"                   → {"name":"Grey Goose","category":"Spirits"}
+  "baileys" / "бейлис"                      → {"name":"Baileys","category":"Spirits"}
+  "jagermeister" / "jager" / "егер"         → {"name":"Jägermeister","category":"Spirits"}
+  "chacha" / "чача" / "чaча"               → {"name":"Chacha","category":"Spirits"}
+  "cognac" / "коньяк" / "brandy"            → {"name":"Cognac","category":"Spirits"}
+  "whisky" / "whiskey" / "виски"            → {"name":"Whisky","category":"Spirits"}
+  "vodka" / "водка"                         → {"name":"Vodka","category":"Spirits"}
+  "rum" / "ром"                             → {"name":"Rum","category":"Spirits"}
+  "gin" / "джин"                            → {"name":"Gin","category":"Spirits"}
+  "tequila" / "текила"                      → {"name":"Tequila","category":"Spirits"}
+
+WINE:
+  "red wine" / "красное вино" / "wine"      → {"name":"Red Wine","category":"Wine"}
+  "white wine" / "белое вино"               → {"name":"White Wine","category":"Wine"}
+  "rose wine" / "розовое вино"              → {"name":"Rosé Wine","category":"Wine"}
+  "saperavi" / "сaперави"                   → {"name":"Saperavi","category":"Wine"}
+  "prosecco" / "champagne" / "шампанское"   → category Wine
+
+COFFEE — all hot coffee and espresso drinks:
+  "espresso" / "эспрессо"                   → {"name":"Espresso","category":"Coffee"}
+  "cappuccino" / "капучино" / "cap"         → {"name":"Cappuccino","category":"Coffee"}
+  "latte" / "латте" / "lat"                 → {"name":"Latte","category":"Coffee"}
+  "americano" / "американо" / "amer"        → {"name":"Americano","category":"Coffee"}
+  "coffee" / "кофе" / "flat white"          → category Coffee
+  "raf" / "раф" / "macchiato"              → category Coffee
 
 SOFT DRINKS:
-  "red bull" / "ред бул" / "redbull" → {"name":"Red Bull","category":"Soft Drinks"}
-  "coca cola" / "cola" / "coke"      → {"name":"Coca-Cola","category":"Soft Drinks"}
+  "red bull" / "ред бул" / "redbull"        → {"name":"Red Bull","category":"Soft Drinks"}
+  "coca cola" / "cola" / "coke"             → {"name":"Coca-Cola","category":"Soft Drinks"}
+  "juice" / "сок" / "water" / "вода"        → category Soft Drinks
+  "lemonade" / "limonade"                   → category Soft Drinks
 
 Rules:
 - Fix typos and expand bar abbreviations as shown above
 - Translate non-English names to canonical English brand names
-- For local untranslatable food items, capitalize properly and keep original
+- ANY beer brand or generic beer/lager/draft → category Beer
+- ANY distilled spirit (whisky, gin, vodka, rum, brandy, local spirits like chacha) → category Spirits
+- Hot coffee drinks → category Coffee
+- For local untranslatable food items, capitalize properly and keep original name
 - Return ONLY valid JSON, nothing else"""
 
 

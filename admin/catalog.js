@@ -120,16 +120,29 @@ window.CHK = window.CHK || {};
     $("cmName").focus();
 
     if (isEdit) {
-      $("cmDelete").onclick = async () => {
-        if (!CHK.confirm) { if (!window.confirm(`Delete "${p.name}"?`)) return; }
-        else if (!(await CHK.confirm({ title: "Delete product", text: `Delete "${p.name}"?`, okText: "Delete", danger: true }))) return;
-        try {
-          await api(`/api/products/${p.id}`, { method: "DELETE" });
-          back.classList.add("hide");
-          await load();
-        } catch (e) {
-          CHK.toast?.("Error: " + (e.message || String(e)));
-        }
+      $("cmDelete").onclick = () => {
+        // replace modal content with inline confirm — no nested modals
+        back.innerHTML = `
+          <div class="modal" style="width:min(92vw,420px)">
+            <div class="modalTitle" style="color:var(--danger)">Delete product?</div>
+            <div style="margin-bottom:18px;font-size:15px">${esc(p.name)}</div>
+            <div class="modalBtns">
+              <button class="btn" id="cmDelCancel">Cancel</button>
+              <button class="btn danger" id="cmDelConfirm">Yes, delete</button>
+            </div>
+          </div>
+        `;
+        $("cmDelCancel").onclick = () => openEditModal(p);
+        $("cmDelConfirm").onclick = async () => {
+          try {
+            await api(`/api/products/${p.id}`, { method: "DELETE" });
+            back.classList.add("hide");
+            await load();
+          } catch (e) {
+            CHK.toast?.("Error: " + (e.message || String(e)));
+            openEditModal(p);
+          }
+        };
       };
     }
 
