@@ -1,58 +1,87 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Checki — Smart bar tabs for modern venues</title>
-  <meta name="description" content="Open tabs, add items, close with payment — all from your phone. No cash register, no hardware." />
+
+  <!-- SEO -->
+  <title>Checki — Управление баром с телефона</title>
+  <meta name="description" content="Открывайте чеки, добавляйте позиции, закрывайте с оплатой — всё с телефона. Без кассового аппарата, без сложных программ." />
+  <meta name="keywords" content="bar management, чеки бар, управление баром, pos система, checki" />
+  <link rel="canonical" href="https://checki.ge/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://checki.ge/" />
+  <meta property="og:title"       content="Checki — Управление баром с телефона" />
+  <meta property="og:description" content="Открывайте чеки, добавляйте позиции, закрывайте с оплатой — всё с телефона. Без кассового аппарата." />
+  <meta property="og:site_name"   content="Checki" />
+
+  <!-- Google Analytics 4 — replace G-XXXXXXXXXX with your Measurement ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0f1116;
-      --surface:  #161b24;
-      --border:   rgba(255,255,255,.10);
-      --text:     #f0f2f5;
-      --muted:    #7a8497;
-      --accent:   #49d17c;
-      --accent2:  #2eb865;
-      --danger:   #ff5a6a;
+      --bg:      #0f1116;
+      --surface: #161b24;
+      --border:  rgba(255,255,255,.10);
+      --text:    #f0f2f5;
+      --muted:   #7a8497;
+      --accent:  #49d17c;
+      --accent2: #2eb865;
+      --danger:  #ff5a6a;
     }
 
     html { scroll-behavior: smooth; }
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: var(--bg); color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
     }
-
     a { color: var(--accent); text-decoration: none; }
 
     /* ── NAV ── */
     nav {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 24px;
+      padding: 14px 24px;
       background: rgba(15,17,22,.92);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
+      gap: 12px;
     }
-    .logo { font-size: 20px; font-weight: 800; letter-spacing: -.5px; color: var(--text); }
+    .logo { font-size: 20px; font-weight: 800; letter-spacing: -.5px; color: var(--text); flex: none; }
     .logo span { color: var(--accent); }
+    .navRight { display: flex; align-items: center; gap: 10px; }
+    .langSwitch { display: flex; gap: 4px; }
+    .langBtn {
+      background: none; border: 1px solid transparent;
+      color: var(--muted); font-size: 12px; font-weight: 700;
+      padding: 4px 8px; border-radius: 8px; cursor: pointer;
+      letter-spacing: .04em; transition: all .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .langBtn.active, .langBtn:hover { color: var(--text); border-color: var(--border); }
     .navCta {
       background: var(--accent); color: #0f1116;
-      padding: 8px 18px; border-radius: 10px; font-weight: 700; font-size: 14px;
-      transition: background .15s;
+      padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 13px;
+      white-space: nowrap; transition: background .15s; flex: none;
     }
     .navCta:hover { background: var(--accent2); }
 
     /* ── SECTIONS ── */
-    section { padding: 80px 24px; max-width: 680px; margin: 0 auto; }
+    section { padding: 72px 24px; max-width: 680px; margin: 0 auto; }
 
     /* ── HERO ── */
-    .hero { padding-top: 96px; padding-bottom: 64px; text-align: center; }
+    .hero { padding-top: 88px; padding-bottom: 56px; text-align: center; }
     .heroBadge {
       display: inline-block;
       background: rgba(73,209,124,.12); border: 1px solid rgba(73,209,124,.25);
@@ -60,151 +89,113 @@
       letter-spacing: .08em; text-transform: uppercase;
       padding: 5px 12px; border-radius: 999px; margin-bottom: 24px;
     }
-    h1 {
-      font-size: clamp(32px, 8vw, 52px);
-      font-weight: 800; line-height: 1.1; letter-spacing: -.03em;
-      margin-bottom: 20px;
-    }
+    h1 { font-size: clamp(30px, 8vw, 50px); font-weight: 800; line-height: 1.1; letter-spacing: -.03em; margin-bottom: 20px; }
     h1 em { color: var(--accent); font-style: normal; }
-    .heroSub {
-      font-size: clamp(16px, 4vw, 19px); color: var(--muted);
-      max-width: 480px; margin: 0 auto 36px;
-    }
+    .heroSub { font-size: clamp(15px, 4vw, 18px); color: var(--muted); max-width: 480px; margin: 0 auto 32px; }
     .heroCta {
-      display: inline-block;
-      background: var(--accent); color: #0f1116;
-      padding: 14px 32px; border-radius: 14px;
-      font-size: 16px; font-weight: 700;
+      display: inline-block; background: var(--accent); color: #0f1116;
+      padding: 14px 32px; border-radius: 14px; font-size: 16px; font-weight: 700;
       transition: background .15s, transform .1s;
     }
     .heroCta:hover { background: var(--accent2); transform: translateY(-1px); }
-    .heroNote { margin-top: 14px; font-size: 13px; color: var(--muted); }
+    .heroNote { margin-top: 12px; font-size: 13px; color: var(--muted); }
 
-    /* ── SCREEN MOCKUP ── */
+    /* ── MOCKUP ── */
     .mockup {
-      margin: 0 auto 0;
-      max-width: 320px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 20px 16px;
+      max-width: 320px; margin: 0 auto;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 24px; padding: 20px 16px;
       box-shadow: 0 32px 80px rgba(0,0,0,.5);
     }
-    .mockupBar {
-      display: flex; gap: 6px; margin-bottom: 14px;
-    }
+    .mockupBar { display: flex; gap: 6px; margin-bottom: 14px; }
     .mockupTab {
       flex: 1; padding: 8px; border-radius: 10px; text-align: center;
-      font-size: 13px; font-weight: 600;
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--border);
-      color: var(--muted);
+      font-size: 12px; font-weight: 600;
+      background: rgba(255,255,255,.05); border: 1px solid var(--border); color: var(--muted);
     }
-    .mockupTab.active {
-      background: rgba(73,209,124,.12);
-      border-color: rgba(73,209,124,.3);
-      color: var(--accent);
-    }
+    .mockupTab.active { background: rgba(73,209,124,.12); border-color: rgba(73,209,124,.3); color: var(--accent); }
     .mockupItem {
       display: flex; justify-content: space-between; align-items: center;
       padding: 10px 12px; border-radius: 12px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid var(--border);
-      margin-bottom: 8px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border); margin-bottom: 8px;
     }
     .mockupItem b { font-size: 14px; }
     .mockupItem small { display: block; color: var(--muted); font-size: 12px; }
     .mockupPrice { font-size: 15px; font-weight: 700; color: var(--accent); }
     .mockupTotal {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 0 4px;
-      border-top: 1px solid var(--border);
-      margin-top: 6px;
+      padding: 12px 0 4px; border-top: 1px solid var(--border); margin-top: 6px;
     }
     .mockupTotal span { color: var(--muted); font-size: 13px; }
     .mockupTotal strong { font-size: 20px; font-weight: 800; color: var(--accent); }
 
-    /* ── HOW IT WORKS ── */
-    .steps { display: flex; flex-direction: column; gap: 32px; }
-    .step { display: flex; gap: 20px; align-items: flex-start; }
+    /* ── STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 28px; }
+    .step { display: flex; gap: 18px; align-items: flex-start; }
     .stepNum {
       flex: 0 0 40px; height: 40px; border-radius: 12px;
       background: rgba(73,209,124,.12); border: 1px solid rgba(73,209,124,.25);
-      color: var(--accent); font-size: 18px; font-weight: 800;
+      color: var(--accent); font-size: 17px; font-weight: 800;
       display: flex; align-items: center; justify-content: center;
     }
-    .stepText h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-    .stepText p  { font-size: 15px; color: var(--muted); }
+    .stepText h3 { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+    .stepText p  { font-size: 14px; color: var(--muted); }
 
     /* ── FEATURES ── */
-    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 480px) { .features { grid-template-columns: 1fr; } }
     .feature {
-      padding: 20px; border-radius: 16px;
+      padding: 18px; border-radius: 16px;
       background: var(--surface); border: 1px solid var(--border);
     }
-    .featureIcon { font-size: 26px; margin-bottom: 10px; }
-    .feature h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .featureIcon { font-size: 24px; margin-bottom: 8px; }
+    .feature h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
     .feature p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
 
-    /* ── SECTION TITLE ── */
+    /* ── SECTION LABELS ── */
     .sectionLabel {
-      font-size: 12px; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
     }
-    h2 { font-size: clamp(24px, 6vw, 36px); font-weight: 800; letter-spacing: -.02em; margin-bottom: 40px; }
+    h2 { font-size: clamp(22px, 6vw, 34px); font-weight: 800; letter-spacing: -.02em; margin-bottom: 36px; }
 
-    /* ── REGISTER FORM ── */
+    /* ── FORM ── */
     .formCard {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 32px 28px;
+      border-radius: 20px; padding: 28px 24px;
     }
-    .formTitle  { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
-    .formSubtitle { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
-    .formGroup { margin-bottom: 14px; }
-    .formGroup label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--muted); }
+    .formTitle    { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .formSubtitle { font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+    .formGroup { margin-bottom: 12px; }
+    .formGroup label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--muted); }
     .formGroup input {
-      width: 100%;
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text);
-      font-size: 15px;
-      padding: 12px 14px;
-      outline: none;
-      transition: border-color .15s;
-      -webkit-appearance: none;
+      width: 100%; background: rgba(255,255,255,.05); border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text); font-size: 15px; padding: 11px 13px;
+      outline: none; transition: border-color .15s; -webkit-appearance: none;
     }
     .formGroup input:focus { border-color: rgba(73,209,124,.5); }
     .formGroup input::placeholder { color: var(--muted); }
     .formDivider {
-      font-size: 11px; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--muted);
-      margin: 20px 0 16px; padding-top: 20px;
-      border-top: 1px solid var(--border);
+      font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted); margin: 18px 0 14px; padding-top: 18px; border-top: 1px solid var(--border);
     }
     .btnSubmit {
-      width: 100%; padding: 14px;
-      background: var(--accent); color: #0f1116;
-      border: none; border-radius: 14px;
-      font-size: 16px; font-weight: 700; cursor: pointer;
-      margin-top: 8px;
-      transition: background .15s, transform .1s;
+      width: 100%; padding: 14px; background: var(--accent); color: #0f1116;
+      border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer;
+      margin-top: 6px; transition: background .15s, transform .1s;
       -webkit-tap-highlight-color: transparent;
     }
     .btnSubmit:hover  { background: var(--accent2); }
     .btnSubmit:active { transform: translateY(1px); }
     .btnSubmit:disabled { opacity: .5; cursor: default; transform: none; }
-    .formMsg { margin-top: 14px; font-size: 14px; text-align: center; }
+    .formMsg { margin-top: 12px; font-size: 14px; text-align: center; min-height: 20px; }
     .formMsg.ok  { color: var(--accent); }
     .formMsg.err { color: var(--danger); }
 
     /* ── FOOTER ── */
     footer {
-      padding: 32px 24px;
-      text-align: center;
-      font-size: 13px;
-      color: var(--muted);
+      padding: 28px 24px; text-align: center;
+      font-size: 13px; color: var(--muted);
       border-top: 1px solid var(--border);
     }
   </style>
@@ -213,39 +204,46 @@
 
 <nav>
   <div class="logo">Checki<span>.</span></div>
-  <a class="navCta" href="#register">Попробовать бесплатно</a>
+  <div class="navRight">
+    <div class="langSwitch">
+      <button class="langBtn active" data-lang="ru">RU</button>
+      <button class="langBtn" data-lang="en">EN</button>
+      <button class="langBtn" data-lang="ka">KA</button>
+    </div>
+    <a class="navCta" href="#register" data-i="nav_cta">Попробовать бесплатно</a>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="heroBadge">Бесплатный доступ · Открытое бета-тестирование</div>
-  <h1>Управляй баром<br><em>с телефона.</em></h1>
-  <p class="heroSub">Чеки, каталог, выручка — всё в одном месте. Без кассового аппарата, без обучения, без лишних кнопок. Просто открыл — и работаешь.</p>
-  <a class="heroCta" href="#register">Начать бесплатно</a>
-  <p class="heroNote">Без карты · Без обязательств · Работает на любом смартфоне</p>
+  <div class="heroBadge" data-i="badge">Бесплатный доступ · Открытое бета-тестирование</div>
+  <h1 data-i="hero_h1">Управляй баром<br><em data-i="hero_em">с телефона.</em></h1>
+  <p class="heroSub" data-i="hero_sub">Чеки, каталог, выручка — всё в одном месте. Без кассового аппарата, без обучения, без лишних кнопок. Просто открыл — и работаешь.</p>
+  <a class="heroCta" href="#register" data-i="hero_cta">Начать бесплатно</a>
+  <p class="heroNote" data-i="hero_note">Без карты · Без обязательств · Работает на любом смартфоне</p>
 </section>
 
 <!-- MOCKUP -->
-<div style="padding: 0 24px 80px; max-width: 680px; margin: 0 auto">
+<div style="padding: 0 24px 72px; max-width: 680px; margin: 0 auto">
   <div class="mockup">
     <div class="mockupBar">
-      <div class="mockupTab active">Чек #14 · Стол 4</div>
-      <div class="mockupTab">Открытые</div>
+      <div class="mockupTab active" data-i="mock_tab1">Чек #14 · Стол 4</div>
+      <div class="mockupTab" data-i="mock_tab2">Открытые</div>
     </div>
     <div class="mockupItem">
-      <div><b>Hoegaarden</b><small>Пиво · ×2</small></div>
+      <div><b>Hoegaarden</b><small data-i="mock_beer">Пиво · ×2</small></div>
       <div class="mockupPrice">14.00 ₾</div>
     </div>
     <div class="mockupItem">
-      <div><b>Негрони</b><small>Коктейли · ×1</small></div>
+      <div><b>Negroni</b><small data-i="mock_cocktail">Коктейли · ×1</small></div>
       <div class="mockupPrice">18.00 ₾</div>
     </div>
     <div class="mockupItem">
-      <div><b>Jameson</b><small>Виски · ×1</small></div>
+      <div><b>Jameson</b><small data-i="mock_whisky">Виски · ×1</small></div>
       <div class="mockupPrice">22.00 ₾</div>
     </div>
     <div class="mockupTotal">
-      <span>Итого</span>
+      <span data-i="mock_total">Итого</span>
       <strong>54.00 ₾</strong>
     </div>
   </div>
@@ -253,28 +251,28 @@
 
 <!-- PROBLEM -->
 <section>
-  <div class="sectionLabel">Зачем это нужно</div>
-  <h2>Маленькому бару не нужна большая касса.</h2>
+  <div class="sectionLabel" data-i="prob_label">Зачем это нужно</div>
+  <h2 data-i="prob_h2">Маленькому бару не нужна большая касса.</h2>
   <div class="steps">
     <div class="step">
       <div class="stepNum">💸</div>
       <div class="stepText">
-        <h3>Кассовые системы стоят дорого</h3>
-        <p>Оборудование, лицензии, обслуживание — для небольшого бара это лишние расходы. Checki работает прямо в браузере телефона, который у тебя уже есть.</p>
+        <h3 data-i="prob1_h">Кассовые системы стоят дорого</h3>
+        <p data-i="prob1_p">Оборудование, лицензии, обслуживание — для небольшого бара это лишние расходы. Checki работает прямо в браузере телефона, который у тебя уже есть.</p>
       </div>
     </div>
     <div class="step">
       <div class="stepNum">😤</div>
       <div class="stepText">
-        <h3>Сложные программы тормозят работу</h3>
-        <p>Пока бармен разбирается в меню системы — гость ждёт. Checki обучается за 5 минут: открыл чек, написал название, нажал добавить.</p>
+        <h3 data-i="prob2_h">Сложные программы тормозят работу</h3>
+        <p data-i="prob2_p">Пока бармен разбирается в меню системы — гость ждёт. Checki обучается за 5 минут: открыл чек, написал название, нажал добавить.</p>
       </div>
     </div>
     <div class="step">
       <div class="stepNum">📋</div>
       <div class="stepText">
-        <h3>Бумага и Excel не дают картину</h3>
-        <p>Никогда не знаешь что продаётся, какая выручка сегодня и какой официант работал. Checki показывает это в реальном времени.</p>
+        <h3 data-i="prob3_h">Бумага и Excel не дают картину</h3>
+        <p data-i="prob3_p">Никогда не знаешь что продаётся, какая выручка сегодня и какой официант работал. Checki показывает это в реальном времени.</p>
       </div>
     </div>
   </div>
@@ -282,28 +280,28 @@
 
 <!-- HOW IT WORKS -->
 <section>
-  <div class="sectionLabel">Как это работает</div>
-  <h2>Три шага — и чек закрыт.</h2>
+  <div class="sectionLabel" data-i="how_label">Как это работает</div>
+  <h2 data-i="how_h2">Три шага — и чек закрыт.</h2>
   <div class="steps">
     <div class="step">
       <div class="stepNum">1</div>
       <div class="stepText">
-        <h3>Открыть чек</h3>
-        <p>Введи имя гостя или номер стола — чек открыт. Никаких лишних экранов, никаких подтверждений.</p>
+        <h3 data-i="how1_h">Открыть чек</h3>
+        <p data-i="how1_p">Введи имя гостя или номер стола — чек открыт. Никаких лишних экранов, никаких подтверждений.</p>
       </div>
     </div>
     <div class="step">
       <div class="stepNum">2</div>
       <div class="stepText">
-        <h3>Добавить позиции</h3>
-        <p>Начни вводить название — Checki сам найдёт нужное из каталога и подставит цену. Быстрые кнопки для самых популярных позиций — одно касание.</p>
+        <h3 data-i="how2_h">Добавить позиции</h3>
+        <p data-i="how2_p">Начни вводить название — Checki найдёт нужное из каталога и подставит цену. Быстрые кнопки для топовых позиций — одно касание.</p>
       </div>
     </div>
     <div class="step">
       <div class="stepNum">3</div>
       <div class="stepText">
-        <h3>Закрыть с оплатой</h3>
-        <p>Выбери способ оплаты — наличные, карта — и чек закрыт. Менеджер видит всё в аналитике мгновенно.</p>
+        <h3 data-i="how3_h">Закрыть с оплатой</h3>
+        <p data-i="how3_p">Выбери способ оплаты — наличные или карта — чек закрыт. Менеджер видит всё в аналитике мгновенно.</p>
       </div>
     </div>
   </div>
@@ -311,79 +309,79 @@
 
 <!-- FEATURES -->
 <section>
-  <div class="sectionLabel">Возможности</div>
-  <h2>Всё что нужно — ничего лишнего.</h2>
+  <div class="sectionLabel" data-i="feat_label">Возможности</div>
+  <h2 data-i="feat_h2">Всё что нужно — ничего лишнего.</h2>
   <div class="features">
     <div class="feature">
       <div class="featureIcon">📱</div>
-      <h3>Только телефон</h3>
-      <p>Никакого специального оборудования. Открой ссылку в браузере — и можно работать. iOS и Android.</p>
+      <h3 data-i="f1_h">Только телефон</h3>
+      <p data-i="f1_p">Никакого оборудования. Открой ссылку в браузере — и можно работать. iOS и Android.</p>
     </div>
     <div class="feature">
       <div class="featureIcon">🧠</div>
-      <h3>Умный каталог</h3>
-      <p>Новая позиция добавляется автоматически при первом вводе. ИИ исправляет опечатки и расставляет категории сам — в фоне, не мешая работе.</p>
+      <h3 data-i="f2_h">Умный каталог</h3>
+      <p data-i="f2_p">Новая позиция добавляется сама при первом вводе. ИИ исправляет опечатки и расставляет категории — в фоне, не мешая работе.</p>
     </div>
     <div class="feature">
       <div class="featureIcon">✏️</div>
-      <h3>Каталог под себя</h3>
-      <p>Менеджер редактирует позиции, ставит цены, помечает звёздочкой самые популярные — они появляются как быстрые кнопки у барменов.</p>
+      <h3 data-i="f3_h">Каталог под себя</h3>
+      <p data-i="f3_p">Менеджер редактирует позиции, цены, помечает звёздочкой популярные — они появляются как быстрые кнопки у барменов.</p>
     </div>
     <div class="feature">
       <div class="featureIcon">📊</div>
-      <h3>Аналитика и отчёты</h3>
-      <p>Выручка, топ позиций, разбивка по способу оплаты — за любой период. Экспорт PDF-отчёта одной кнопкой.</p>
+      <h3 data-i="f4_h">Аналитика и отчёты</h3>
+      <p data-i="f4_p">Выручка, топ позиций, разбивка по оплате — за любой период. Экспорт PDF-отчёта одной кнопкой.</p>
     </div>
     <div class="feature">
       <div class="featureIcon">👥</div>
-      <h3>Команда без возни</h3>
-      <p>Менеджер создаёт аккаунты для персонала за минуту. У каждого свой доступ — у барменов чеки, у менеджера всё.</p>
+      <h3 data-i="f5_h">Команда без возни</h3>
+      <p data-i="f5_p">Менеджер создаёт аккаунты для персонала за минуту. У каждого свой уровень доступа.</p>
     </div>
     <div class="feature">
       <div class="featureIcon">🔒</div>
-      <h3>Данные только ваши</h3>
-      <p>Каждое заведение видит только свои чеки и каталог. Токенная авторизация, данные изолированы.</p>
+      <h3 data-i="f6_h">Данные только ваши</h3>
+      <p data-i="f6_p">Каждое заведение видит только свои чеки и каталог. Токенная авторизация, данные изолированы.</p>
     </div>
   </div>
 </section>
 
 <!-- REGISTER -->
 <section id="register">
-  <div class="sectionLabel">Начать</div>
-  <h2>Зарегистрируй заведение.</h2>
+  <div class="sectionLabel" data-i="reg_label">Начать</div>
+  <h2 data-i="reg_h2">Зарегистрируй заведение.</h2>
   <div class="formCard">
-    <div class="formTitle">Бесплатный доступ</div>
-    <div class="formSubtitle">Займёт 30 секунд. Карта не нужна.</div>
+    <div class="formTitle" data-i="reg_title">Бесплатный доступ</div>
+    <div class="formSubtitle" data-i="reg_sub">Займёт 30 секунд. Карта не нужна.</div>
 
     <div class="formGroup">
-      <label>Название заведения</label>
-      <input id="fVenueName" type="text" placeholder="Бар Панорама" autocomplete="organization" />
+      <label data-i="lbl_venue">Название заведения</label>
+      <input id="fVenueName" type="text" data-ph="ph_venue" autocomplete="organization" />
     </div>
     <div class="formGroup">
-      <label>Ваше имя</label>
-      <input id="fManagerName" type="text" placeholder="Алекс" autocomplete="name" />
+      <label data-i="lbl_name">Ваше имя</label>
+      <input id="fManagerName" type="text" data-ph="ph_name" autocomplete="name" />
     </div>
     <div class="formGroup">
       <label>Email</label>
       <input id="fEmail" type="email" placeholder="you@example.com" autocomplete="email" />
     </div>
     <div class="formGroup">
-      <label>Телефон <span style="color:var(--muted);font-weight:400">(необязательно)</span></label>
-      <input id="fPhone" type="tel" placeholder="+995 555 000 000" autocomplete="tel" />
+      <label data-i="lbl_phone"></label>
+      <input id="fPhone" type="tel" data-ph="ph_phone" autocomplete="tel" />
     </div>
 
-    <div class="formDivider">Данные для входа</div>
+    <div class="formDivider" data-i="div_creds">Данные для входа</div>
 
     <div class="formGroup">
-      <label>Логин</label>
-      <input id="fLogin" type="text" placeholder="alex_bar" autocomplete="username" autocapitalize="none" />
+      <label data-i="lbl_login">Логин</label>
+      <input id="fLogin" type="text" data-ph="ph_login" autocomplete="username" autocapitalize="none" />
     </div>
     <div class="formGroup">
-      <label>Пароль</label>
-      <input id="fPassword" type="password" placeholder="минимум 6 символов" autocomplete="new-password" />
+      <label data-i="lbl_pass">Пароль</label>
+      <input id="fPassword" type="password" data-ph="ph_pass" autocomplete="new-password" />
     </div>
 
-    <button class="btnSubmit" id="btnRegister">Создать аккаунт →</button>
+    <button class="btnSubmit" id="btnRegister" data-i="btn_reg">Создать аккаунт →</button>
     <div class="formMsg" id="formMsg"></div>
   </div>
 </section>
@@ -393,61 +391,305 @@
 </footer>
 
 <script>
-  const API = "https://api.checki.ge";
-  const ADMIN = "https://admin.checki.ge";
+const API   = "https://api.checki.ge";
+const ADMIN = "https://admin.checki.ge";
 
-  document.getElementById("btnRegister").onclick = async () => {
-    const venueName   = document.getElementById("fVenueName").value.trim();
-    const managerName = document.getElementById("fManagerName").value.trim();
-    const email       = document.getElementById("fEmail").value.trim();
-    const phone       = document.getElementById("fPhone").value.trim();
-    const login       = document.getElementById("fLogin").value.trim();
-    const password    = document.getElementById("fPassword").value;
-    const btn = document.getElementById("btnRegister");
-    const msg = document.getElementById("formMsg");
+/* ── i18n ── */
+const T = {
+  ru: {
+    nav_cta:     "Попробовать бесплатно",
+    badge:       "Бесплатный доступ · Открытое бета-тестирование",
+    hero_h1:     "Управляй баром",
+    hero_em:     "с телефона.",
+    hero_sub:    "Чеки, каталог, выручка — всё в одном месте. Без кассового аппарата, без обучения, без лишних кнопок. Просто открыл — и работаешь.",
+    hero_cta:    "Начать бесплатно",
+    hero_note:   "Без карты · Без обязательств · Работает на любом смартфоне",
+    mock_tab1:   "Чек #14 · Стол 4",
+    mock_tab2:   "Открытые",
+    mock_beer:   "Пиво · ×2",
+    mock_cocktail: "Коктейли · ×1",
+    mock_whisky: "Виски · ×1",
+    mock_total:  "Итого",
+    prob_label:  "Зачем это нужно",
+    prob_h2:     "Маленькому бару не нужна большая касса.",
+    prob1_h:     "Кассовые системы стоят дорого",
+    prob1_p:     "Оборудование, лицензии, обслуживание — для небольшого бара это лишние расходы. Checki работает прямо в браузере телефона, который у тебя уже есть.",
+    prob2_h:     "Сложные программы тормозят работу",
+    prob2_p:     "Пока бармен разбирается в меню системы — гость ждёт. Checki обучается за 5 минут: открыл чек, написал название, нажал добавить.",
+    prob3_h:     "Бумага и Excel не дают картину",
+    prob3_p:     "Никогда не знаешь что продаётся, какая выручка сегодня и какой официант работал. Checki показывает это в реальном времени.",
+    how_label:   "Как это работает",
+    how_h2:      "Три шага — и чек закрыт.",
+    how1_h:      "Открыть чек",
+    how1_p:      "Введи имя гостя или номер стола — чек открыт. Никаких лишних экранов, никаких подтверждений.",
+    how2_h:      "Добавить позиции",
+    how2_p:      "Начни вводить название — Checki найдёт нужное из каталога и подставит цену. Быстрые кнопки для топовых позиций — одно касание.",
+    how3_h:      "Закрыть с оплатой",
+    how3_p:      "Выбери способ оплаты — наличные или карта — чек закрыт. Менеджер видит всё в аналитике мгновенно.",
+    feat_label:  "Возможности",
+    feat_h2:     "Всё что нужно — ничего лишнего.",
+    f1_h: "Только телефон",      f1_p: "Никакого оборудования. Открой ссылку в браузере — и можно работать. iOS и Android.",
+    f2_h: "Умный каталог",       f2_p: "Новая позиция добавляется сама при первом вводе. ИИ исправляет опечатки и расставляет категории — в фоне, не мешая работе.",
+    f3_h: "Каталог под себя",    f3_p: "Менеджер редактирует позиции, цены, помечает звёздочкой популярные — они появляются как быстрые кнопки у барменов.",
+    f4_h: "Аналитика и отчёты",  f4_p: "Выручка, топ позиций, разбивка по оплате — за любой период. Экспорт PDF-отчёта одной кнопкой.",
+    f5_h: "Команда без возни",   f5_p: "Менеджер создаёт аккаунты для персонала за минуту. У каждого свой уровень доступа.",
+    f6_h: "Данные только ваши",  f6_p: "Каждое заведение видит только свои чеки и каталог. Токенная авторизация, данные изолированы.",
+    reg_label:   "Начать",
+    reg_h2:      "Зарегистрируй заведение.",
+    reg_title:   "Бесплатный доступ",
+    reg_sub:     "Займёт 30 секунд. Карта не нужна.",
+    lbl_venue:   "Название заведения",
+    lbl_name:    "Ваше имя",
+    lbl_phone:   "Телефон (необязательно)",
+    lbl_login:   "Логин",
+    lbl_pass:    "Пароль",
+    div_creds:   "Данные для входа",
+    btn_reg:     "Создать аккаунт →",
+    ph_venue:    "Бар Панорама",
+    ph_name:     "Алекс",
+    ph_phone:    "+995 555 000 000",
+    ph_login:    "alex_bar",
+    ph_pass:     "минимум 6 символов",
+    err_venue:   "Введите название заведения",
+    err_name:    "Введите ваше имя",
+    err_email:   "Введите email",
+    err_login:   "Придумайте логин",
+    err_pass:    "Пароль — минимум 6 символов",
+    err_taken:   "Этот логин уже занят",
+    err_net:     "Ошибка сети — попробуйте ещё раз",
+    ok_msg:      "✓ Готово! ",
+    ok_link:     "Открыть Checki →",
+    loading:     "Создаём…",
+  },
+  en: {
+    nav_cta:     "Get started free",
+    badge:       "Free access · Open beta",
+    hero_h1:     "Run your bar",
+    hero_em:     "from your phone.",
+    hero_sub:    "Tabs, catalog, revenue — all in one place. No cash register, no training, no complicated buttons. Just open and work.",
+    hero_cta:    "Start for free",
+    hero_note:   "No card · No commitment · Works on any smartphone",
+    mock_tab1:   "Tab #14 · Table 4",
+    mock_tab2:   "Open tabs",
+    mock_beer:   "Beer · ×2",
+    mock_cocktail: "Cocktails · ×1",
+    mock_whisky: "Whisky · ×1",
+    mock_total:  "Total",
+    prob_label:  "Why it exists",
+    prob_h2:     "Small bars don't need big POS systems.",
+    prob1_h:     "POS systems are expensive",
+    prob1_p:     "Hardware, licenses, maintenance — unnecessary costs for a small bar. Checki runs right in the browser of the phone you already have.",
+    prob2_h:     "Complex software slows you down",
+    prob2_p:     "While the bartender navigates menus — the guest waits. Staff learns Checki in 5 minutes: open a tab, type the name, add.",
+    prob3_h:     "Paper and Excel give no picture",
+    prob3_p:     "You never know what's selling, today's revenue, or which staff member is performing. Checki shows it all in real time.",
+    how_label:   "How it works",
+    how_h2:      "Three steps, tab closed.",
+    how1_h:      "Open a tab",
+    how1_p:      "Type the guest name or table number — tab is open. No extra screens, no confirmations.",
+    how2_h:      "Add items",
+    how2_p:      "Start typing the name — Checki finds it in the catalog and fills the price. Quick-tap chips for top items — one touch.",
+    how3_h:      "Close with payment",
+    how3_p:      "Choose cash or card — tab closed. Manager sees everything in analytics instantly.",
+    feat_label:  "Features",
+    feat_h2:     "Everything you need — nothing you don't.",
+    f1_h: "Just a phone",         f1_p: "No special hardware. Open the link in a browser — and go. iOS and Android.",
+    f2_h: "Smart catalog",        f2_p: "New items are added automatically on first entry. AI fixes typos and sets categories in the background — without interrupting work.",
+    f3_h: "Editable catalog",     f3_p: "Manager edits items, prices, stars the popular ones — they appear as quick-pick chips for bartenders.",
+    f4_h: "Analytics & reports",  f4_p: "Revenue, top products, payment breakdown — for any period. Export PDF report in one tap.",
+    f5_h: "Team without hassle",  f5_p: "Manager creates staff accounts in a minute. Each person has their own access level.",
+    f6_h: "Your data only",       f6_p: "Each venue sees only its own tabs and catalog. Token-based auth, fully isolated.",
+    reg_label:   "Get started",
+    reg_h2:      "Register your venue.",
+    reg_title:   "Free access",
+    reg_sub:     "Takes 30 seconds. No card needed.",
+    lbl_venue:   "Venue name",
+    lbl_name:    "Your name",
+    lbl_phone:   "Phone (optional)",
+    lbl_login:   "Login",
+    lbl_pass:    "Password",
+    div_creds:   "Login credentials",
+    btn_reg:     "Create account →",
+    ph_venue:    "Bar Panorama",
+    ph_name:     "Alex",
+    ph_phone:    "+995 555 000 000",
+    ph_login:    "alex_bar",
+    ph_pass:     "min 6 characters",
+    err_venue:   "Enter your venue name",
+    err_name:    "Enter your name",
+    err_email:   "Enter your email",
+    err_login:   "Choose a login",
+    err_pass:    "Password must be at least 6 characters",
+    err_taken:   "This login is already taken",
+    err_net:     "Network error — please try again",
+    ok_msg:      "✓ Done! ",
+    ok_link:     "Open Checki →",
+    loading:     "Creating…",
+  },
+  ka: {
+    nav_cta:     "უფასოდ სცადე",
+    badge:       "უფასო წვდომა · ღია ბეტა",
+    hero_h1:     "მართე ბარი",
+    hero_em:     "ტელეფონიდან.",
+    hero_sub:    "ჩეკები, კატალოგი, შემოსავალი — ყველაფერი ერთ ადგილას. საკასო აპარატის, სწავლების და რთული ღილაკების გარეშე.",
+    hero_cta:    "დაიწყე უფასოდ",
+    hero_note:   "ბარათის გარეშე · ვალდებულების გარეშე · ნებისმიერ სმარტფონზე",
+    mock_tab1:   "ჩეკი #14 · მაგიდა 4",
+    mock_tab2:   "გახსნილი",
+    mock_beer:   "ლუდი · ×2",
+    mock_cocktail: "კოქტეილი · ×1",
+    mock_whisky: "ვისკი · ×1",
+    mock_total:  "სულ",
+    prob_label:  "რატომ არის საჭირო",
+    prob_h2:     "პატარა ბარს არ სჭირდება დიდი საკასო სისტემა.",
+    prob1_h:     "საკასო სისტემები ძვირია",
+    prob1_p:     "აღჭურვილობა, ლიცენზიები, მომსახურება — პატარა ბარისთვის ეს ზედმეტი ხარჯებია. Checki მუშაობს პირდაპირ ბრაუზერში, ტელეფონზე, რომელიც უკვე გაქვს.",
+    prob2_h:     "რთული პროგრამები ანელებს მუშაობას",
+    prob2_p:     "სანამ ბარმენი სისტემის მენიუს ეჩვევა — სტუმარი ელოდება. Checki 5 წუთში ისწავლება: გახსენი ჩეკი, დაწერე სახელი, დაამატე.",
+    prob3_h:     "ქაღალდი და Excel სრულ სურათს არ იძლევა",
+    prob3_p:     "არასდროს იცი რა იყიდება, რა შემოსავალია დღეს. Checki ამას რეალურ დროში გვიჩვენებს.",
+    how_label:   "როგორ მუშაობს",
+    how_h2:      "სამი ნაბიჯი — ჩეკი დახურულია.",
+    how1_h:      "გახსენი ჩეკი",
+    how1_p:      "შეიყვანე სტუმრის სახელი ან მაგიდის ნომერი — ჩეკი გახსნილია. ზედმეტი ეკრანების გარეშე.",
+    how2_h:      "დაამატე პოზიციები",
+    how2_p:      "დაიწყე სახელის შეყვანა — Checki კატალოგიდან მოძებნის და ფასს ავტომატურად ჩასვამს.",
+    how3_h:      "დახურე გადახდით",
+    how3_p:      "აირჩიე გადახდის მეთოდი — ნაღდი ან ბარათი — ჩეკი დახურულია. მენეჯერი ყველაფერს ანალიტიკაში ხედავს.",
+    feat_label:  "შესაძლებლობები",
+    feat_h2:     "ყველაფერი რაც საჭიროა — ზედმეტი არაფერი.",
+    f1_h: "მხოლოდ ტელეფონი",    f1_p: "არანაირი სპეციალური აღჭურვილობა. გახსენი ბმული ბრაუზერში — მუშაობა შეგიძლია. iOS და Android.",
+    f2_h: "ჭკვიანი კატალოგი",   f2_p: "ახალი პოზიცია ავტომატურად ემატება პირველი შეყვანისას. AI ასწორებს შეცდომებს ფონურ რეჟიმში.",
+    f3_h: "რედაქტირებადი კატალოგი", f3_p: "მენეჯერი არედაქტირებს პოზიციებს, ფასებს, ვარსკვლავით ნიშნავს პოპულარულებს.",
+    f4_h: "ანალიტიკა და ანგარიშები", f4_p: "შემოსავალი, ტოპ პოზიციები, გადახდების სტრუქტურა. PDF ანგარიში ერთი ღილაკით.",
+    f5_h: "გუნდი პრობლემის გარეშე", f5_p: "მენეჯერი პერსონალისთვის ანგარიშებს წუთში ქმნის.",
+    f6_h: "მხოლოდ შენი მონაცემები", f6_p: "თითოეული დაწესებულება მხოლოდ საკუთარ ჩეკებსა და კატალოგს ხედავს.",
+    reg_label:   "დაწყება",
+    reg_h2:      "დაარეგისტრირე დაწესებულება.",
+    reg_title:   "უფასო წვდომა",
+    reg_sub:     "30 წამი დასჭირდება. ბარათი არ არის საჭირო.",
+    lbl_venue:   "დაწესებულების სახელი",
+    lbl_name:    "შენი სახელი",
+    lbl_phone:   "ტელეფონი (არასავალდებულო)",
+    lbl_login:   "ლოგინი",
+    lbl_pass:    "პაროლი",
+    div_creds:   "შესვლის მონაცემები",
+    btn_reg:     "ანგარიშის შექმნა →",
+    ph_venue:    "ბარი პანორამა",
+    ph_name:     "ალექსი",
+    ph_phone:    "+995 555 000 000",
+    ph_login:    "alex_bar",
+    ph_pass:     "მინიმუმ 6 სიმბოლო",
+    err_venue:   "შეიყვანე დაწესებულების სახელი",
+    err_name:    "შეიყვანე შენი სახელი",
+    err_email:   "შეიყვანე email",
+    err_login:   "აირჩიე ლოგინი",
+    err_pass:    "პაროლი — მინიმუმ 6 სიმბოლო",
+    err_taken:   "ეს ლოგინი უკვე დაკავებულია",
+    err_net:     "ქსელის შეცდომა — კვლავ სცადე",
+    ok_msg:      "✓ მზადაა! ",
+    ok_link:     "Checki-ს გახსნა →",
+    loading:     "იქმნება…",
+  },
+};
 
-    msg.textContent = "";
-    msg.className = "formMsg";
+let lang = localStorage.getItem("checki_lang") || "en";
+if (!T[lang]) lang = "en";
 
-    if (!venueName)   return showErr("Введите название заведения");
-    if (!managerName) return showErr("Введите ваше имя");
-    if (!email)       return showErr("Введите email");
-    if (!login)       return showErr("Придумайте логин");
-    if (password.length < 6) return showErr("Пароль — минимум 6 символов");
+function applyLang(l) {
+  lang = l;
+  localStorage.setItem("checki_lang", l);
+  const t = T[l];
+  document.documentElement.lang = l;
 
-    btn.disabled = true;
-    btn.textContent = "Создаём…";
-
-    try {
-      const resp = await fetch(API + "/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ venue_name: venueName, manager_name: managerName, login, password, email, phone: phone || null }),
-      });
-      const data = await resp.json();
-      if (!resp.ok) {
-        showErr(data.detail || "Something went wrong");
-        return;
-      }
-      msg.className = "formMsg ok";
-      msg.innerHTML = "✓ Готово! <a href='" + ADMIN + "'>Открыть Checki →</a>";
-      btn.textContent = "Готово!";
-    } catch (e) {
-      showErr("Ошибка сети — попробуйте ещё раз");
-    } finally {
-      if (btn.textContent !== "Done!") {
-        btn.disabled = false;
-        btn.textContent = "Создать аккаунт →";
+  document.querySelectorAll("[data-i]").forEach(el => {
+    const key = el.dataset.i;
+    if (t[key] !== undefined) {
+      if (el.tagName === "H1") {
+        // h1 contains an <em> child — update separately
+        el.childNodes[0].textContent = t[key] + " ";
+      } else {
+        el.textContent = t[key];
       }
     }
+  });
 
-    function showErr(text) {
-      msg.className = "formMsg err";
-      msg.textContent = text;
-      btn.disabled = false;
-      btn.textContent = "Create account →";
+  // em inside h1
+  const em = document.querySelector("h1 em");
+  if (em && t.hero_em) em.textContent = t.hero_em;
+
+  // placeholders
+  document.querySelectorAll("[data-ph]").forEach(el => {
+    const key = el.dataset.ph;
+    if (t[key]) el.placeholder = t[key];
+  });
+
+  // lang buttons
+  document.querySelectorAll(".langBtn").forEach(b => {
+    b.classList.toggle("active", b.dataset.lang === l);
+  });
+
+  // page title + meta
+  document.title = l === "ru" ? "Checki — Управление баром с телефона"
+                 : l === "ka" ? "Checki — მართე ბარი ტელეფონიდან"
+                 : "Checki — Run your bar from your phone";
+}
+
+document.querySelectorAll(".langBtn").forEach(btn => {
+  btn.onclick = () => applyLang(btn.dataset.lang);
+});
+
+applyLang(lang);
+
+/* ── Registration ── */
+document.getElementById("btnRegister").onclick = async () => {
+  const t           = T[lang];
+  const venueName   = document.getElementById("fVenueName").value.trim();
+  const managerName = document.getElementById("fManagerName").value.trim();
+  const email       = document.getElementById("fEmail").value.trim();
+  const phone       = document.getElementById("fPhone").value.trim();
+  const login       = document.getElementById("fLogin").value.trim();
+  const password    = document.getElementById("fPassword").value;
+  const btn = document.getElementById("btnRegister");
+  const msg = document.getElementById("formMsg");
+
+  msg.textContent = ""; msg.className = "formMsg";
+
+  if (!venueName)       return showErr(t.err_venue);
+  if (!managerName)     return showErr(t.err_name);
+  if (!email)           return showErr(t.err_email);
+  if (!login)           return showErr(t.err_login);
+  if (password.length < 6) return showErr(t.err_pass);
+
+  btn.disabled = true;
+  btn.textContent = t.loading;
+
+  try {
+    const resp = await fetch(API + "/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ venue_name: venueName, manager_name: managerName, login, password, email, phone: phone || null }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+      showErr(data.detail === "login already taken" ? t.err_taken : (data.detail || t.err_net));
+      return;
     }
-  };
+    msg.className = "formMsg ok";
+    msg.innerHTML = t.ok_msg + "<a href='" + ADMIN + "'>" + t.ok_link + "</a>";
+    btn.textContent = "✓";
+    if (typeof gtag !== "undefined") gtag("event", "sign_up", { method: "landing" });
+  } catch (_) {
+    showErr(t.err_net);
+  }
+
+  function showErr(text) {
+    msg.className = "formMsg err";
+    msg.textContent = text;
+    btn.disabled = false;
+    btn.textContent = T[lang].btn_reg;
+  }
+};
 </script>
 </body>
 </html>
