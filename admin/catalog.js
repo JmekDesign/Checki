@@ -68,7 +68,7 @@ window.CHK = window.CHK || {};
           </div>
           <div style="display:flex;align-items:center;gap:12px">
             <span class="lineTotal" style="font-size:15px">${p.last_price != null ? money(p.last_price) + " ₾" : "—"}</span>
-            <button class="btnStar" data-pid="${esc(p.id)}" title="Quick pick" style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px 4px;line-height:1">${p.is_favorite ? "★" : "☆"}</button>
+            <button class="btnStar" data-pid="${esc(p.id)}" title="Quick pick" style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px 4px;line-height:1;color:${p.is_favorite ? "var(--accent)" : "var(--muted, #555)"}">${p.is_favorite ? "★" : "☆"}</button>
             <div class="vActiveDot ${p.active ? "vDotOn" : "vDotOff"}"></div>
             <span class="muted" style="font-size:18px">›</span>
           </div>
@@ -84,6 +84,7 @@ window.CHK = window.CHK || {};
             });
             p.is_favorite = newFav;
             starBtn.textContent = newFav ? "★" : "☆";
+            starBtn.style.color = newFav ? "var(--accent)" : "var(--muted, #555)";
           } catch (err) {
             CHK.toast?.("Error: " + (err.message || String(err)));
           }
