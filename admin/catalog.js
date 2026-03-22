@@ -75,6 +75,7 @@ window.CHK = window.CHK || {};
         `;
         el.querySelector(".btnStar").onclick = async (e) => {
           e.stopPropagation();
+          const starBtn = e.currentTarget; // capture before await — currentTarget becomes null after async
           const newFav = !p.is_favorite;
           try {
             await api(`/api/products/${p.id}`, {
@@ -82,7 +83,7 @@ window.CHK = window.CHK || {};
               body: JSON.stringify({ is_favorite: newFav }),
             });
             p.is_favorite = newFav;
-            e.currentTarget.textContent = newFav ? "★" : "☆";
+            starBtn.textContent = newFav ? "★" : "☆";
           } catch (err) {
             CHK.toast?.("Error: " + (err.message || String(err)));
           }
