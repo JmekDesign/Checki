@@ -93,4 +93,28 @@ def me(
     authorization: str | None = Header(default=None, alias="Authorization"),
 ) -> dict[str, Any]:
     user = require_user(authorization)
-    return {"ok": True, "user": user}
+    venue_name = ""
+    venue_id = user["venue_id"]
+    if venue_id:
+        conn = db_conn()
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT COALESCE(name, '') FROM venues WHERE id = %s;",
+                (venue_id,),
+            )
+            row = cur.fetchone()
+            if row:
+                venue_name = str(row[0])
+        finally:
+            db_release(conn)
+    return {
+        "ok": True,
+        "user": {
+            "user_id": user["user_id"],
+            "venue_id": user["venue_id"],
+            "role": user["role"],
+            "name": user["name"],
+            "venue_name": venue_name,
+        },
+    }

@@ -136,13 +136,21 @@
   }
 
   async function closeCheckInline(c) {
+    const id    = c.id || c.check_id;
     const num   = c.number ?? c.check_number ?? "";
     const guest = c.guest_name_snapshot ?? c.guest ?? c.guest_name ?? "—";
-    const total = Number(c.total ?? c.check_total ?? c.total_amount ?? 0);
-    const method = await chkPayConfirm({ number: num, guest, total, items: [] });
+    let total   = Number(c.total ?? c.check_total ?? c.total_amount ?? 0);
+    let items   = [];
+    // Fetch full check to show items in receipt
+    try {
+      const r = await api(`/api/checks/${id}`, {method:"GET"});
+      const chk = r.check || r;
+      total = Number(chk.total ?? total);
+      items = chk.items || chk.lines || [];
+    } catch(_) {}
+    const method = await chkPayConfirm({ number: num, guest, total, items });
     if (method === null) return;
     try {
-      const id = c.id || c.check_id;
       await api(`/api/checks/${id}/close`, { method:"POST", body:JSON.stringify({ payment_method: method }) });
       toast("Check closed");
       await loadOpen().catch(()=>{});
@@ -551,6 +559,11 @@
   (async ()=>{
     try{
       if(token){
+        // Refresh profile from server so venue_name is always current
+        try{
+          const me = await api("/api/auth/me", {method:"GET"});
+          if(me.user && window.CHK.setUserProfile) window.CHK.setUserProfile(me.user);
+        }catch(_){}
         await loadOpen();
         show("screenOpen", token);
       } else {
