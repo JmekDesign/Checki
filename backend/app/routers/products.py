@@ -4,8 +4,9 @@ import contextlib
 from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Header, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Header, HTTPException, Query
 
+from ..core.normalizer import normalize_product_bg
 from ..core.security import UserContext, require_user
 from ..core.utils import normalize_key
 from ..db.conn import db_conn, db_release
@@ -24,6 +25,7 @@ def _require_manager(authorization: str | None) -> UserContext:
 @router.post("/api/products/upsert")
 def product_upsert(
     payload: ProductUpsertIn,
+    background_tasks: BackgroundTasks,
     authorization: str | None = Header(default=None, alias="Authorization"),
 ) -> dict[str, Any]:
     user = require_user(authorization)
@@ -45,6 +47,7 @@ def product_upsert(
             (venue_id, key),
         )
         row = cur.fetchone()
+        is_new = row is None
         if row:
             product_id = row[0]
             if payload.price is not None:
@@ -59,8 +62,9 @@ def product_upsert(
                 )
         else:
             cur.execute(
-                "insert into products (venue_id, name, search_key, last_price, category)"
-                " values (%s,%s,%s,%s,%s) returning id;",
+                "insert into products"
+                " (venue_id, name, search_key, last_price, category, needs_normalization)"
+                " values (%s,%s,%s,%s,%s, TRUE) returning id;",
                 (venue_id, name, key, payload.price, category),
             )
             row_ins = cur.fetchone()
@@ -68,6 +72,11 @@ def product_upsert(
             product_id = row_ins[0]
 
         conn.commit()
+
+        # Normalize new products in the background — no latency on the check flow
+        if is_new:
+            background_tasks.add_task(normalize_product_bg, str(product_id), name, venue_id)
+
         return {
             "ok": True,
             "product_id": str(product_id),
