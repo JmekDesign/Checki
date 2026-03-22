@@ -265,7 +265,8 @@ def check_get(
         cur = conn.cursor()
         cur.execute(
             """
-            select id, venue_id, status, opened_at, guest_name_snapshot, total
+            select id, venue_id, status, opened_at, guest_name_snapshot, total,
+                   shift_number, shift_date
             from checks
             where id=%s;
             """,
@@ -274,7 +275,9 @@ def check_get(
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="check not found")
-        cid, check_venue_id, status, opened_at, guest_name_snapshot, total = row
+        cid, check_venue_id, status, opened_at, guest_name_snapshot, total, shift_num, shift_dt = (
+            row
+        )
         if str(check_venue_id) != str(venue_id):
             raise HTTPException(status_code=403, detail="forbidden")
 
@@ -303,7 +306,9 @@ def check_get(
         check_obj = {
             "id": cid_str,
             "check_id": cid_str,
-            "number": short_check_number(cid_str),
+            "shift_number": shift_num,
+            "shift_date": shift_dt.isoformat() if shift_dt else None,
+            "number": str(shift_num) if shift_num is not None else short_check_number(cid_str),
             "status": status,
             "opened_at": opened_at.isoformat() if opened_at else None,
             "guest_name_snapshot": guest_name_snapshot,

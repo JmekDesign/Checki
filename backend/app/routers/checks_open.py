@@ -1,15 +1,67 @@
 from __future__ import annotations
 
+import contextlib
+from datetime import UTC, date, datetime
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException
 
 from ..core.security import require_user
-from ..core.utils import short_check_number
 from ..db.conn import db_conn, db_release
 from ..schemas.checks import CheckCreateIn, CheckOpenIn
 
 router = APIRouter()
+
+SHIFT_GAP_HOURS = 6
+
+
+def _resolve_shift_date(venue_id: str, cur: Any) -> date:  # noqa: ANN401
+    """Return the shift date for a new check (same shift or new one)."""
+    cur.execute(
+        """
+        SELECT closed_at, shift_date
+        FROM checks
+        WHERE venue_id = %s AND status = 'closed' AND shift_date IS NOT NULL
+        ORDER BY closed_at DESC NULLS LAST
+        LIMIT 1
+        """,
+        (venue_id,),
+    )
+    row = cur.fetchone()
+    now_utc = datetime.now(UTC)
+
+    if row is None:
+        return now_utc.date()
+
+    last_closed_at, last_shift_date = row
+    if last_closed_at is None:
+        return now_utc.date()
+
+    gap_seconds = (now_utc - last_closed_at).total_seconds()
+    if gap_seconds > SHIFT_GAP_HOURS * 3600:
+        return now_utc.date()
+    return date.fromisoformat(str(last_shift_date))
+
+
+def _next_shift_number(venue_id: str, shift_date: date, cur: Any) -> int:  # noqa: ANN401
+    """Return the next sequential number within the given shift."""
+    cur.execute(
+        "SELECT COUNT(*) FROM checks WHERE venue_id = %s AND shift_date = %s",
+        (venue_id, shift_date),
+    )
+    row = cur.fetchone()
+    assert row is not None
+    return int(row[0]) + 1
+
+
+def _fmt_number(shift_number: int | None, shift_date: date | str | None) -> str:
+    """Format check number for API response."""
+    if shift_number is None:
+        return "?"
+    if shift_date:
+        d = date.fromisoformat(str(shift_date))
+        return f"{shift_number} · {d.strftime('%-d %b')}"
+    return str(shift_number)
 
 
 @router.post("/api/checks/open")
@@ -32,7 +84,8 @@ def check_open(
 
         if guest_id:
             cur.execute(
-                "select name from guests where id=%s and venue_id=%s;", (guest_id, venue_id)
+                "SELECT name FROM guests WHERE id=%s AND venue_id=%s;",
+                (guest_id, venue_id),
             )
             r = cur.fetchone()
             if not r:
@@ -42,13 +95,18 @@ def check_open(
             if payload.guest_name:
                 guest_name_snapshot = payload.guest_name.strip() or None
 
+        shift_date = _resolve_shift_date(venue_id, cur)
+        shift_number = _next_shift_number(venue_id, shift_date, cur)
+
         cur.execute(
             """
-            insert into checks (venue_id, status, guest_id, guest_name_snapshot, opened_by)
-            values (%s, 'open', %s, %s, %s)
-            returning id;
+            INSERT INTO checks
+                (venue_id, status, guest_id, guest_name_snapshot, opened_by,
+                 shift_date, shift_number)
+            VALUES (%s, 'open', %s, %s, %s, %s, %s)
+            RETURNING id;
             """,
-            (venue_id, guest_id, guest_name_snapshot, user_id),
+            (venue_id, guest_id, guest_name_snapshot, user_id, shift_date, shift_number),
         )
         row_ins = cur.fetchone()
         assert row_ins is not None
@@ -58,10 +116,13 @@ def check_open(
             "ok": True,
             "check_id": check_id,
             "id": check_id,
-            "number": short_check_number(check_id),
+            "shift_number": shift_number,
+            "shift_date": shift_date.isoformat(),
+            "number": str(shift_number),
         }
     finally:
-        db_release(conn)
+        with contextlib.suppress(Exception):
+            db_release(conn)
 
 
 # Staff UI compat: POST /api/checks {guest:"..."}
@@ -90,22 +151,24 @@ def checks_open(
         cur = conn.cursor()
         cur.execute(
             """
-            select id, opened_at, guest_name_snapshot, total
-            from checks
-            where venue_id=%s and status='open'
-            order by opened_at desc
-            limit 50;
+            SELECT id, opened_at, guest_name_snapshot, total, shift_number, shift_date
+            FROM checks
+            WHERE venue_id=%s AND status='open'
+            ORDER BY opened_at DESC
+            LIMIT 50;
             """,
             (venue_id,),
         )
         items = []
-        for cid, opened_at, gname, total in cur.fetchall():
+        for cid, opened_at, gname, total, shift_num, shift_dt in cur.fetchall():
             cid_str = str(cid)
             items.append(
                 {
                     "id": cid_str,
                     "check_id": cid_str,
-                    "number": short_check_number(cid_str),
+                    "shift_number": shift_num,
+                    "shift_date": shift_dt.isoformat() if shift_dt else None,
+                    "number": str(shift_num) if shift_num is not None else cid_str[:6],
                     "opened_at": opened_at.isoformat(),
                     "guest_name_snapshot": gname,
                     "total": float(total or 0),
@@ -113,7 +176,8 @@ def checks_open(
             )
         return {"ok": True, "items": items, "checks": items}
     finally:
-        db_release(conn)
+        with contextlib.suppress(Exception):
+            db_release(conn)
 
 
 # Staff UI compat: GET /api/checks -> same as /api/checks/open

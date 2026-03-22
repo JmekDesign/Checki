@@ -6,7 +6,6 @@ from typing import Any
 from fastapi import APIRouter, Header, HTTPException, Query
 
 from ..core.security import require_user
-from ..core.utils import short_check_number
 from ..db.conn import db_conn, db_release
 
 router = APIRouter()
@@ -64,7 +63,8 @@ def checks_archive(
     where_sql = " AND ".join(where)
 
     list_sql = f"""
-        SELECT c.id, c.number, c.guest_name_snapshot, c.closed_at, c.total, c.payment_method
+        SELECT c.id, c.guest_name_snapshot, c.closed_at, c.total, c.payment_method,
+               c.shift_number, c.shift_date
         FROM checks c
         WHERE {where_sql}
         ORDER BY c.closed_at DESC NULLS LAST
@@ -83,13 +83,15 @@ def checks_archive(
 
         cur.execute(list_sql, tuple(params + [limit, offset]))
         items = []
-        for cid, number, gname, closed_at, total, payment_method in cur.fetchall():
+        for cid, gname, closed_at, total, payment_method, shift_num, shift_dt in cur.fetchall():
             cid_str = str(cid)
             items.append(
                 {
                     "id": cid_str,
                     "check_id": cid_str,
-                    "number": str(number) if number is not None else short_check_number(cid_str),
+                    "shift_number": shift_num,
+                    "shift_date": shift_dt.isoformat() if shift_dt else None,
+                    "number": str(shift_num) if shift_num is not None else cid_str[:6],
                     "guest_name_snapshot": gname,
                     "closed_at": closed_at.isoformat() if closed_at else None,
                     "total": float(total or 0),
