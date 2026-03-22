@@ -86,28 +86,6 @@ def quickpicks(
                         "last_price": float(row[2]) if row[2] is not None else None,
                     })
 
-        # 3. Still not enough? Fill with any active products alphabetically
-        remaining = 15 - len(items)
-        if remaining > 0:
-            cur.execute(
-                """
-                SELECT id, name, last_price
-                FROM products
-                WHERE venue_id = %s AND active = TRUE AND id != ALL(%s)
-                ORDER BY name ASC
-                LIMIT %s;
-                """,
-                (venue_id, list(seen_ids) or ["00000000-0000-0000-0000-000000000000"], remaining),
-            )
-            for row in cur.fetchall():
-                pid = str(row[0])
-                if pid not in seen_ids:
-                    items.append({
-                        "id": pid,
-                        "name": row[1],
-                        "last_price": float(row[2]) if row[2] is not None else None,
-                    })
-
         return {"ok": True, "items": items}
     finally:
         db_release(conn)
