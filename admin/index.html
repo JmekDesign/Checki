@@ -71,20 +71,34 @@
       </div>
       <div class="hr"></div>
 
-      <div class="row" style="gap:10px; align-items:center">
-        <input class="inp" id="archSearch" placeholder="Search name or number…" />
+      <!-- Search -->
+      <input class="inp" id="archSearch" placeholder="Search: guest, item, amount…" style="margin-bottom:10px" />
+
+      <!-- Quick date filters -->
+      <div class="row" style="gap:8px; flex-wrap:wrap; margin-bottom:10px">
+        <button class="btn archQuick" data-q="today">Today</button>
+        <button class="btn archQuick" data-q="week">Week</button>
+        <button class="btn archQuick" data-q="month">Month</button>
+        <button class="btn archQuick" data-q="all">All</button>
       </div>
 
-      <div class="row" style="gap:10px; align-items:center; margin-top:10px">
-        <input class="smallInp" id="archFrom" placeholder="From (YYYY-MM-DD)" />
-        <input class="smallInp" id="archTo" placeholder="To (YYYY-MM-DD)" />
-        <button class="btn" id="btnArchApply">Apply</button>
+      <!-- Date range -->
+      <div class="row" style="gap:8px; align-items:center; margin-bottom:4px">
+        <input class="inp" type="date" id="archFrom" style="flex:1" />
+        <span class="muted">—</span>
+        <input class="inp" type="date" id="archTo" style="flex:1" />
       </div>
 
       <div class="hr" style="margin-top:12px"></div>
-      <div class="list" id="archList"></div>
-      <div class="muted" id="archHint" style="margin-top:10px"></div>
 
+      <!-- Stats dashboard -->
+      <div id="archStats" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px"></div>
+
+      <!-- Check list grouped by day -->
+      <div id="archList"></div>
+      <div class="muted" id="archHint" style="margin-top:10px;text-align:center"></div>
+
+      <!-- Pager -->
       <div class="row" style="justify-content:space-between; margin-top:12px">
         <button class="btn" id="btnArchPrev">← Prev</button>
         <div class="muted" id="archPager">—</div>

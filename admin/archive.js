@@ -1,144 +1,261 @@
-/* Archive module (closed checks) */
+/* Archive module — date range, stats dashboard, grouped list */
 window.CHK = window.CHK || {};
 
-(function(){
+(function () {
   const CHK = window.CHK;
-
-  const api = (...args)=>{
-    if(typeof CHK.api !== "function") throw new Error("CHK.api not ready");
-    return CHK.api(...args);
+  const api = (...a) => CHK.api(...a);
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) =>
+    (s || "").toString().replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+    );
+  const money = (x) => {
+    const n = Number(x || 0);
+    return isFinite(n) ? n.toFixed(2).replace(/\.00$/, "") : "0";
   };
-  const $ = (id)=> (typeof CHK.$ === "function" ? CHK.$(id) : document.getElementById(id));
-  const toast = (m)=> (typeof CHK.toast === "function" ? CHK.toast(m) : console.log(m));
 
-  let limit = 20;
+  let limit = 30;
   let offset = 0;
   let total = 0;
   let items = [];
 
-  function fmtMoney(x){
-    const n = Number(x||0);
-    if(!isFinite(n)) return "0";
-    return n.toFixed(2).replace(/\.00$/,"");
+  /* ── date helpers ── */
+  function toISO(d) { return d.toISOString().slice(0, 10); }
+  function today() { return toISO(new Date()); }
+  function daysAgo(n) { const d = new Date(); d.setDate(d.getDate() - n); return toISO(d); }
+  function startOfMonth() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`;
   }
-  function escapeHtml(s){
-    return (s||"").toString().replace(/[&<>"']/g, (c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;", "\"":"&quot;","'":"&#39;" }[c]));
+  function labelDate(isoStr) {
+    const d = new Date(isoStr);
+    const now = new Date();
+    const diff = Math.floor(
+      (Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) -
+        Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())) / 86400000
+    );
+    if (diff === 0) return "Today";
+    if (diff === 1) return "Yesterday";
+    return d.toLocaleDateString(undefined, {
+      day: "numeric", month: "long",
+      year: diff > 300 ? "numeric" : undefined,
+    });
   }
 
-  function qs(){
-    const q = ($("archSearch")?.value || "").trim();
-    const from = ($("archFrom")?.value || "").trim();
-    const to = ($("archTo")?.value || "").trim();
+  /* ── quick filter chips ── */
+  function setQuick(q) {
+    document.querySelectorAll(".archQuick").forEach((b) => b.classList.remove("primary"));
+    const btn = document.querySelector(`.archQuick[data-q="${q}"]`);
+    if (btn) btn.classList.add("primary");
+    const from = $("archFrom");
+    const to = $("archTo");
+    if (!from || !to) return;
+    if (q === "today")       { from.value = today();        to.value = today(); }
+    else if (q === "week")   { from.value = daysAgo(6);     to.value = today(); }
+    else if (q === "month")  { from.value = startOfMonth(); to.value = today(); }
+    else                     { from.value = "";              to.value = ""; }
+  }
+
+  /* ── query strings ── */
+  function qs() {
+    const q    = ($("archSearch")?.value || "").trim();
+    const from = ($("archFrom")?.value   || "").trim();
+    const to   = ($("archTo")?.value     || "").trim();
+    const p = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (q)    p.set("q",    q);
+    if (from) p.set("from", from);
+    if (to)   p.set("to",   to);
+    return "?" + p.toString();
+  }
+  function statsQs() {
+    const q    = ($("archSearch")?.value || "").trim();
+    const from = ($("archFrom")?.value   || "").trim();
+    const to   = ($("archTo")?.value     || "").trim();
     const p = new URLSearchParams();
-    p.set("limit", String(limit));
-    p.set("offset", String(offset));
-    if(q) p.set("q", q);
-    if(from) p.set("from", from);
-    if(to) p.set("to", to);
+    if (q)    p.set("q",    q);
+    if (from) p.set("from", from);
+    if (to)   p.set("to",   to);
     return "?" + p.toString();
   }
 
-  async function load(){
-    const r = await api("/api/checks/archive" + qs(), {method:"GET"});
-    items = Array.isArray(r.items) ? r.items : [];
-    total = Number(r.total ?? items.length ?? 0);
-    limit = Number(r.limit ?? limit);
-    offset = Number(r.offset ?? offset);
-    render();
+  /* ── load ── */
+  async function load() {
+    const [listRes, statsRes] = await Promise.all([
+      api("/api/checks/archive" + qs(),        { method: "GET" }),
+      api("/api/checks/archive/stats" + statsQs(), { method: "GET" }),
+    ]);
+
+    items  = Array.isArray(listRes.items) ? listRes.items : [];
+    total  = Number(listRes.total  ?? items.length);
+    limit  = Number(listRes.limit  ?? limit);
+    offset = Number(listRes.offset ?? offset);
+
+    renderStats(statsRes);
+    renderList();
   }
 
-  function render(){
-    const list = $("archList");
-    const hint = $("archHint");
-    const pager = $("archPager");
-    const prev = $("btnArchPrev");
-    const next = $("btnArchNext");
+  /* ── stats cards ── */
+  function renderStats(s) {
+    const el = $("archStats");
+    if (!el) return;
+    if (!s || !s.ok) { el.innerHTML = ""; return; }
 
-    if(!list) return;
+    const top = (s.top_products || []).slice(0, 3)
+      .map((p) => `${esc(p.name)} ×${Math.round(p.qty)}`)
+      .join(", ") || "—";
+
+    el.innerHTML = `
+      <div class="archStatCard">
+        <div class="archStatVal">${s.check_count}</div>
+        <div class="archStatLabel">Checks</div>
+      </div>
+      <div class="archStatCard">
+        <div class="archStatVal">${money(s.total_revenue)} ₾</div>
+        <div class="archStatLabel">Revenue</div>
+      </div>
+      <div class="archStatCard">
+        <div class="archStatVal">${money(s.avg_check)} ₾</div>
+        <div class="archStatLabel">Avg check</div>
+      </div>
+      <div class="archStatCard" style="grid-column:span 2">
+        <div class="archStatLabel" style="margin-bottom:4px">Top items</div>
+        <div class="archStatTop">${esc(top)}</div>
+      </div>
+    `;
+  }
+
+  /* ── grouped list by day ── */
+  function renderList() {
+    const list  = $("archList");
+    const hint  = $("archHint");
+    const prev  = $("btnArchPrev");
+    const next  = $("btnArchNext");
+    const pager = $("archPager");
+
+    if (!list) return;
     list.innerHTML = "";
 
-    if(!items.length){
-      if(hint) hint.textContent = "No closed checks for this filter.";
-    } else {
-      if(hint) hint.textContent = "";
+    if (!items.length) {
+      if (hint)  hint.textContent  = "No closed checks for this filter.";
+      if (pager) pager.textContent = "—";
+      if (prev)  prev.disabled = true;
+      if (next)  next.disabled = true;
+      return;
     }
+    if (hint) hint.textContent = "";
 
-    items.forEach(c=>{
-      const id = c.id || c.check_id;
-      const num = (c.number ?? "").toString();
-      const guest = c.guest_name_snapshot ?? "—";
-      const total0 = Number(c.total ?? 0);
-      const closed = c.closed_at ? new Date(c.closed_at).toLocaleString() : "";
-      const pay = c.payment_method ? String(c.payment_method) : "";
+    /* group by calendar day */
+    const groups = [];
+    let curDay = null, curGroup = null;
+    items.forEach((c) => {
+      const day = c.closed_at ? c.closed_at.slice(0, 10) : "unknown";
+      if (day !== curDay) {
+        curDay = day;
+        curGroup = { day, checks: [] };
+        groups.push(curGroup);
+      }
+      curGroup.checks.push(c);
+    });
 
-      const el = document.createElement("div");
-      el.className = "item archItem";
-      el.style.cursor = "pointer";
-      el.innerHTML = `
-        <div style="min-width:0">
-          <b>#${escapeHtml(num)} • ${escapeHtml(guest)}</b>
-          <div><small>${escapeHtml(closed)} ${pay ? "• " + escapeHtml(pay) : ""}</small></div>
-        </div>
-        <div class="lineTotal">${escapeHtml(fmtMoney(total0))} ₾</div>
-      `;
-      el.onclick = ()=>{
-        if(typeof CHK.openCheck === "function"){
-          CHK.openCheck(id, { readonly:true, backTo:"archive" });
-        } else {
-          toast("Open check is not ready yet");
-        }
-      };
-      list.appendChild(el);
+    groups.forEach(({ day, checks }) => {
+      const dayEl = document.createElement("div");
+      dayEl.className = "archDayLabel";
+      dayEl.textContent = day === "unknown" ? "Unknown date" : labelDate(day);
+      list.appendChild(dayEl);
+
+      checks.forEach((c) => {
+        const id    = c.id || c.check_id;
+        const num   = (c.number ?? "").toString();
+        const guest = c.guest_name_snapshot || "—";
+        const time  = c.closed_at
+          ? new Date(c.closed_at).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
+          : "";
+        const pay = c.payment_method ? ` · ${c.payment_method}` : "";
+
+        const el = document.createElement("div");
+        el.className = "item archItem";
+        el.innerHTML = `
+          <div style="min-width:0">
+            <b>#${esc(num)} · ${esc(guest)}</b>
+            <div><small class="muted">${esc(time)}${esc(pay)}</small></div>
+          </div>
+          <div class="lineTotal">${esc(money(c.total))} ₾</div>
+        `;
+        el.onclick = () => {
+          if (typeof CHK.openCheck === "function") {
+            CHK.openCheck(id, { readonly: true, backTo: "archive" });
+          }
+        };
+        list.appendChild(el);
+      });
     });
 
     const from = offset + 1;
-    const to = Math.min(offset + limit, total || (offset + items.length));
-    if(pager) pager.textContent = (total ? `${from}-${to} of ${total}` : `${from}-${to}`);
-
-    if(prev) prev.disabled = (offset <= 0);
-    if(next) next.disabled = (total ? (offset + limit >= total) : (items.length < limit));
+    const to   = Math.min(offset + limit, total || offset + items.length);
+    if (pager) pager.textContent = total ? `${from}–${to} of ${total}` : `${from}–${to}`;
+    if (prev)  prev.disabled = offset <= 0;
+    if (next)  next.disabled = total ? offset + limit >= total : items.length < limit;
   }
 
-  function bind(){
-    const back = $("btnBackOpenFromArchive");
-    const apply = $("btnArchApply");
-    const prev = $("btnArchPrev");
-    const next = $("btnArchNext");
-    const search = $("archSearch");
+  /* ── bind events ── */
+  function bind() {
+    const back    = $("btnBackOpenFromArchive");
+    const prev    = $("btnArchPrev");
+    const next    = $("btnArchNext");
+    const search  = $("archSearch");
+    const fromInp = $("archFrom");
+    const toInp   = $("archTo");
 
-    if(back) back.onclick = async ()=>{
-      try{ document.body.classList.remove("chk-readonly"); }catch(e){}
-      if(typeof CHK.show === "function") CHK.show("screenOpen", (typeof CHK.getToken==="function" ? CHK.getToken() : ""));
-      // open checks list reload is handled by app.js normally; do not force here
+    if (back) {
+      back.onclick = () => {
+        try { document.body.classList.remove("chk-readonly"); } catch (_) {}
+        if (typeof CHK.show === "function") CHK.show("screenOpen", CHK.getToken?.() || "");
+      };
+    }
+
+    document.querySelectorAll(".archQuick").forEach((btn) => {
+      btn.onclick = async () => {
+        setQuick(btn.dataset.q);
+        offset = 0;
+        await load().catch((e) => CHK.toast?.("Archive: " + (e.message || e)));
+      };
+    });
+
+    const onDateChange = async () => {
+      document.querySelectorAll(".archQuick").forEach((b) => b.classList.remove("primary"));
+      offset = 0;
+      await load().catch((e) => CHK.toast?.("Archive: " + (e.message || e)));
     };
+    if (fromInp) fromInp.addEventListener("change", onDateChange);
+    if (toInp)   toInp.addEventListener("change",   onDateChange);
 
-    if(apply) apply.onclick = async ()=>{ offset = 0; await load().catch(e=>toast("Archive: " + (e.message||e))); };
-    if(prev) prev.onclick = async ()=>{ offset = Math.max(0, offset - limit); await load().catch(e=>toast("Archive: " + (e.message||e))); };
-    if(next) next.onclick = async ()=>{ offset = offset + limit; await load().catch(e=>toast("Archive: " + (e.message||e))); };
-
-    if(search){
+    if (search) {
       let t = null;
-      search.addEventListener("input", ()=>{
-        if(t) clearTimeout(t);
-        t = setTimeout(async ()=>{
+      search.addEventListener("input", () => {
+        clearTimeout(t);
+        t = setTimeout(async () => {
           offset = 0;
-          await load().catch(e=>toast("Archive: " + (e.message||e)));
-        }, 250);
+          await load().catch((e) => CHK.toast?.("Archive: " + (e.message || e)));
+        }, 300);
       });
     }
+
+    if (prev) prev.onclick = async () => { offset = Math.max(0, offset - limit); await load().catch((e) => CHK.toast?.("Archive: " + (e.message || e))); };
+    if (next) next.onclick = async () => { offset += limit;                       await load().catch((e) => CHK.toast?.("Archive: " + (e.message || e))); };
   }
 
-  function init(){
-    try{ bind(); }catch(e){}
-  }
+  function init() { try { bind(); } catch (_) {} }
 
-  // IMPORTANT: script is loaded dynamically; DOMContentLoaded may have already fired
-  if(document.readyState === "loading"){
+  if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
   } else {
     init();
   }
 
   CHK.archive = CHK.archive || {};
-  CHK.archive.load = async ()=>{ await load(); };
+  CHK.archive.load = async () => {
+    setQuick("week");
+    offset = 0;
+    await load();
+  };
 })();
