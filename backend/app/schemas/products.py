@@ -14,6 +14,7 @@ class ProductUpdateIn(BaseModel):
     price: float | None = None
     category: str | None = None
     active: bool | None = None
+    is_favorite: bool | None = None
 
 
 class ProductOut(BaseModel):

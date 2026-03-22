@@ -68,10 +68,25 @@ window.CHK = window.CHK || {};
           </div>
           <div style="display:flex;align-items:center;gap:12px">
             <span class="lineTotal" style="font-size:15px">${p.last_price != null ? money(p.last_price) + " ₾" : "—"}</span>
+            <button class="btnStar" data-pid="${esc(p.id)}" title="Quick pick" style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px 4px;line-height:1">${p.is_favorite ? "★" : "☆"}</button>
             <div class="vActiveDot ${p.active ? "vDotOn" : "vDotOff"}"></div>
             <span class="muted" style="font-size:18px">›</span>
           </div>
         `;
+        el.querySelector(".btnStar").onclick = async (e) => {
+          e.stopPropagation();
+          const newFav = !p.is_favorite;
+          try {
+            await api(`/api/products/${p.id}`, {
+              method: "PATCH",
+              body: JSON.stringify({ is_favorite: newFav }),
+            });
+            p.is_favorite = newFav;
+            e.currentTarget.textContent = newFav ? "★" : "☆";
+          } catch (err) {
+            CHK.toast?.("Error: " + (err.message || String(err)));
+          }
+        };
         el.onclick = () => openEditModal(p);
         list.appendChild(el);
       });

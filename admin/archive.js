@@ -268,7 +268,7 @@ window.CHK = window.CHK || {};
   /* ── share / download PDF report ── */
   async function shareReport() {
     const btn = $("btnArchShare");
-    if (btn) { btn.disabled = true; btn.textContent = "…"; }
+    if (btn) { btn.disabled = true; btn.textContent = "…"; btn.style.minWidth = btn.offsetWidth + "px"; }
     try {
       const from = ($("archFrom")?.value || "").trim();
       const to   = ($("archTo")?.value   || "").trim();
@@ -280,7 +280,9 @@ window.CHK = window.CHK || {};
       const blob = await resp.blob();
       const fname = "checki-report.pdf";
       const file = new File([blob], fname, { type: "application/pdf" });
-      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+      // Use native share only on touch devices (mobile); desktop gets a direct download
+      const isMobile = navigator.maxTouchPoints > 0;
+      if (isMobile && navigator.share && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: "Checki Report" });
       } else {
         const a = document.createElement("a");
@@ -292,7 +294,7 @@ window.CHK = window.CHK || {};
     } catch (e) {
       CHK.toast?.("Report: " + (e.message || String(e)));
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = "Share"; }
+      if (btn) { btn.disabled = false; btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> PDF'; }
     }
   }
 

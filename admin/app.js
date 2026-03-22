@@ -193,6 +193,7 @@
     await loadCheck();
     show("screenCheck", token);
     resetAddForm();
+    loadQuickChips().catch(()=>{});
   }
 
   window.CHK.openCheck = openCheck;
@@ -296,7 +297,7 @@
     $("itemName").value = "";
     $("itemPrice").value = "";
     $("itemTotal").value = "";
-    hideSuggest();    renderQuickChips();
+    hideSuggest();    renderQuickChips(); // chips already loaded; refresh from server on openCheck
     recalcAddTotal();
     updateAddButtonState();
   }
@@ -304,17 +305,29 @@
   $("btnQtyDec").onclick = ()=>{ qty = Math.max(1, qty-1); $("qtyVal").textContent = String(qty); recalcAddTotal(); updateAddButtonState(); };
   $("btnQtyInc").onclick = ()=>{ qty = Math.min(99, qty+1); $("qtyVal").textContent = String(qty); recalcAddTotal(); updateAddButtonState(); };
 
+  let _quickItems = [];
+
+  async function loadQuickChips(){
+    try{
+      const r = await api("/api/products/quickpicks", {method:"GET"});
+      _quickItems = Array.isArray(r.items) ? r.items : [];
+    }catch(e){
+      _quickItems = [];
+    }
+    renderQuickChips();
+  }
+
   function renderQuickChips(){
     const chips = $("quickChips");
+    if(!chips) return;
     chips.innerHTML = "";
-    const top = ["Beer","Hoegaarden","Negroni","Jerky","Saperavi"];
-    top.forEach(x=>{
+    if(!_quickItems.length) return;
+    _quickItems.forEach(p=>{
       const c = document.createElement("div");
       c.className = "chip";
-      c.textContent = x;
+      c.textContent = p.name;
       c.onclick = ()=>{
-        // No focus (no keyboard). Just set value and let autocomplete kick in.
-        $("itemName").value = x;
+        $("itemName").value = p.name;
         $("itemName").dispatchEvent(new Event("input"));
       };
       chips.appendChild(c);

@@ -1,25 +1,16 @@
 from __future__ import annotations
 
-import contextlib
 from typing import Any
-from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Header, HTTPException, Query
 
-from ..core.normalizer import normalize_all_bg, normalize_product_bg
-from ..core.security import UserContext, require_user
+from ..core.normalizer import normalize_product_bg
+from ..core.security import require_user
 from ..core.utils import normalize_key
 from ..db.conn import db_conn, db_release
-from ..schemas.products import ProductUpdateIn, ProductUpsertIn
+from ..schemas.products import ProductUpsertIn
 
 router = APIRouter()
-
-
-def _require_manager(authorization: str | None) -> UserContext:
-    user = require_user(authorization)
-    if user["role"] not in ("manager", "superadmin"):
-        raise HTTPException(status_code=403, detail="manager role required")
-    return user
 
 
 @router.post("/api/products/upsert")
@@ -73,7 +64,6 @@ def product_upsert(
 
         conn.commit()
 
-        # Normalize new products in the background — no latency on the check flow
         if is_new:
             background_tasks.add_task(normalize_product_bg, str(product_id), name, venue_id)
 
@@ -91,9 +81,9 @@ def product_upsert(
 @router.get("/api/products")
 def products_list(
     authorization: str | None = Header(default=None, alias="Authorization"),
-    q: str | None = Query(default=None, description="Search by name (substring)"),
-    category: str | None = Query(default=None, description="Filter by category"),
-    active_only: bool = Query(default=True, description="Only return active products"),
+    q: str | None = Query(default=None),
+    category: str | None = Query(default=None),
+    active_only: bool = Query(default=True),
     limit: int = Query(default=100, ge=1, le=500),
 ) -> dict[str, Any]:
     user = require_user(authorization)
@@ -113,17 +103,15 @@ def products_list(
 
         if active_only:
             where.append("active = TRUE")
-
         if cat:
             where.append("category=%s")
             params.append(cat)
-
         if q_norm:
             where.append("name ILIKE %s")
             params.append(f"%{q_norm}%")
 
         sql = f"""
-            select id, name, last_price, category, active
+            select id, name, last_price, category, active, is_favorite
             from products
             where {" and ".join(where)}
             order by category asc, name asc
@@ -133,7 +121,7 @@ def products_list(
 
         cur.execute(sql, tuple(params))
         items = []
-        for pid, pname, last_price, pcat, pactive in cur.fetchall():
+        for pid, pname, last_price, pcat, pactive, pfav in cur.fetchall():
             items.append(
                 {
                     "id": str(pid),
@@ -141,118 +129,10 @@ def products_list(
                     "last_price": float(last_price) if last_price is not None else None,
                     "category": pcat or "Other",
                     "active": bool(pactive),
+                    "is_favorite": bool(pfav),
                 }
             )
 
         return {"ok": True, "items": items}
     finally:
         db_release(conn)
-
-
-@router.post("/api/products/normalize-all")
-def products_normalize_all(
-    background_tasks: BackgroundTasks,
-    authorization: str | None = Header(default=None, alias="Authorization"),
-) -> dict[str, Any]:
-    user = _require_manager(authorization)
-    venue_id = user["venue_id"]
-    if not venue_id:
-        raise HTTPException(status_code=400, detail="user has no venue")
-
-    conn = db_conn()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            "UPDATE products SET needs_normalization = TRUE WHERE venue_id = %s"
-            " AND needs_normalization = FALSE AND locked = FALSE;",
-            (venue_id,),
-        )
-        count: int = cur.rowcount
-        conn.commit()
-    finally:
-        db_release(conn)
-
-    background_tasks.add_task(normalize_all_bg, venue_id)
-    return {"ok": True, "queued": count}
-
-
-@router.delete("/api/products/{product_id}")
-def product_delete(
-    product_id: UUID,
-    authorization: str | None = Header(default=None, alias="Authorization"),
-) -> dict[str, Any]:
-    user = _require_manager(authorization)
-    venue_id = user["venue_id"]
-    if not venue_id:
-        raise HTTPException(status_code=400, detail="user has no venue")
-
-    conn = db_conn()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT id FROM products WHERE id = %s AND venue_id = %s;",
-            (str(product_id), venue_id),
-        )
-        if not cur.fetchone():
-            raise HTTPException(status_code=404, detail="product not found")
-        cur.execute(
-            "DELETE FROM products WHERE id = %s AND venue_id = %s;",
-            (str(product_id), venue_id),
-        )
-        conn.commit()
-        return {"ok": True}
-    finally:
-        with contextlib.suppress(Exception):
-            db_release(conn)
-
-
-@router.patch("/api/products/{product_id}")
-def product_update(
-    product_id: UUID,
-    payload: ProductUpdateIn,
-    authorization: str | None = Header(default=None, alias="Authorization"),
-) -> dict[str, Any]:
-    user = _require_manager(authorization)
-    venue_id = user["venue_id"]
-    if not venue_id:
-        raise HTTPException(status_code=400, detail="user has no venue")
-
-    conn = db_conn()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT id FROM products WHERE id = %s AND venue_id = %s;",
-            (str(product_id), venue_id),
-        )
-        if not cur.fetchone():
-            raise HTTPException(status_code=404, detail="product not found")
-
-        col_map: list[tuple[str, Any]] = []
-        if payload.name is not None:
-            name = payload.name.strip()
-            if name:
-                col_map.append(("name", name))
-                col_map.append(("search_key", normalize_key(name)))
-        if payload.price is not None:
-            col_map.append(("last_price", payload.price))
-        if payload.category is not None:
-            col_map.append(("category", payload.category.strip() or "Other"))
-        if payload.active is not None:
-            col_map.append(("active", payload.active))
-
-        if not col_map:
-            return {"ok": True}
-
-        col_map.append(("locked", True))
-        col_map.append(("needs_normalization", False))
-        set_clause = ", ".join(f"{col} = %s" for col, _ in col_map)
-        params: list[Any] = [val for _, val in col_map] + [str(product_id)]
-        cur.execute(
-            f"UPDATE products SET {set_clause} WHERE id = %s;",  # noqa: S608
-            tuple(params),
-        )
-        conn.commit()
-        return {"ok": True}
-    finally:
-        with contextlib.suppress(Exception):
-            db_release(conn)
