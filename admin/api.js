@@ -30,8 +30,18 @@ window.CHK = window.CHK || {};
     return data;
   }
 
+  function getUserProfile() {
+    try { return JSON.parse(localStorage.getItem("checki_user") || "null"); } catch (_) { return null; }
+  }
+  function setUserProfile(u) {
+    if (u) localStorage.setItem("checki_user", JSON.stringify(u));
+    else localStorage.removeItem("checki_user");
+  }
+
   window.CHK.API_BASE = API_BASE;
   window.CHK.api = api;
   window.CHK.getToken = getToken;
   window.CHK.setToken = setToken;
+  window.CHK.getUserProfile = getUserProfile;
+  window.CHK.setUserProfile = setUserProfile;
 })();

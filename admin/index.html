@@ -12,6 +12,9 @@
   <!-- Payment method modal (receipt) — content injected by ui.js -->
   <div class="modalBack hide" id="payBack"></div>
 
+  <!-- Staff add/edit modal -->
+  <div class="modalBack hide" id="staffModalBack"></div>
+
   <!-- Confirm modal -->
   <div class="modalBack hide" id="confirmBack">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
@@ -29,6 +32,7 @@
       <div class="brand"><b>Checki — Staff</b></div>
       <div class="topRight">
         <button class="btn compact hide" id="btnAllChecks">All checks</button>
+        <button class="btn compact hide" id="btnVenue">Venue</button>
         <button class="btn danger hide" id="btnLogout">Logout</button>
       </div>
     </div>
@@ -108,6 +112,35 @@
         <button class="btn" id="btnArchPrev">← Prev</button>
         <div class="muted" id="archPager">—</div>
         <button class="btn" id="btnArchNext">Next →</button>
+      </div>
+    </div>
+
+    <!-- VENUE (manager screen) -->
+    <div class="card cardless hide" id="screenVenue">
+      <div id="venueHeader"></div>
+      <div class="hr"></div>
+
+      <!-- Staff -->
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:15px;font-weight:700">Staff</div>
+        <button class="btn compact primary" id="btnAddStaff">+ Add</button>
+      </div>
+      <div class="list" id="venueStaff"></div>
+
+      <div class="hr"></div>
+
+      <!-- Coming soon -->
+      <div style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Coming soon</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="item" style="opacity:.35;cursor:default">
+          <span>Product catalog</span><span class="muted">→</span>
+        </div>
+        <div class="item" style="opacity:.35;cursor:default">
+          <span>Procurement</span><span class="muted">→</span>
+        </div>
+        <div class="item" style="opacity:.35;cursor:default">
+          <span>Subscription</span><span class="muted">→</span>
+        </div>
       </div>
     </div>
 

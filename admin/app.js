@@ -29,6 +29,7 @@
 
   $("btnLogout").onclick = ()=>{
     setToken("");
+    if(window.CHK.setUserProfile) window.CHK.setUserProfile(null);
     currentCheckId=null; currentCheck=null;
     show("screenLogin");
     toast("Logged out");
@@ -74,10 +75,19 @@
       const password = $("password").value.trim();
       const r = await api("/api/auth/login", {method:"POST", body:JSON.stringify({login, password})});
       setToken(r.token);
+      if(r.user && window.CHK.setUserProfile) window.CHK.setUserProfile(r.user);
       toast("OK");
       await loadOpen();
-      show("screenOpen");
+      show("screenOpen", r.token);
     }catch(e){ toast("Login error: " + e.message); }
+  };
+
+  const btnVenue = $("btnVenue");
+  if(btnVenue) btnVenue.onclick = async ()=>{
+    show("screenVenue", token);
+    try{
+      if(window.CHK && window.CHK.venue) await window.CHK.venue.load();
+    }catch(e){ toast("Venue: " + e.message); }
   };
 
   $("btnNewCheck").onclick = ()=>{ $("guestName").value=""; show("screenNew"); $("guestName").focus(); };

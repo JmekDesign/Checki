@@ -5,7 +5,7 @@ window.CHK = window.CHK || {};
   const CHK = window.CHK;
   const $ = (id)=>document.getElementById(id);
 
-  const SCREENS = ["screenLogin","screenOpen","screenNew","screenCheck","screenArchive"];
+  const SCREENS = ["screenLogin","screenOpen","screenNew","screenCheck","screenArchive","screenVenue"];
 
   const toast = (msg)=>{
     const el = $("toast");
@@ -46,6 +46,14 @@ window.CHK = window.CHK || {};
         btnAll.classList.toggle("hide", !visible);
         if(screen === "screenOpen") btnAll.textContent = "Archive";
         else btnAll.textContent = "Open checks";
+      }
+
+      const btnVenue = $("btnVenue");
+      if(btnVenue){
+        const profile = (window.CHK && window.CHK.getUserProfile) ? window.CHK.getUserProfile() : null;
+        const isManager = profile && (profile.role === "manager" || profile.role === "superadmin");
+        const venueVisible = !!(token && isManager && screen !== "screenLogin" && screen !== "screenVenue");
+        btnVenue.classList.toggle("hide", !venueVisible);
       }
 
       if(screen === "screenCheck" && bottom) bottom.classList.remove("hide");

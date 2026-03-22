@@ -1,0 +1,185 @@
+/* Venue / manager screen */
+window.CHK = window.CHK || {};
+
+(function () {
+  const CHK = window.CHK;
+  const api = (...a) => CHK.api(...a);
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) =>
+    (s || "").toString().replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+    );
+  const money = (x) => {
+    const n = Number(x || 0);
+    return isFinite(n) ? n.toFixed(2).replace(/\.00$/, "") : "0";
+  };
+
+  let staff = [];
+
+  /* ── load ── */
+  async function load() {
+    const [venueRes, staffRes] = await Promise.all([
+      api("/api/venue",  { method: "GET" }),
+      api("/api/staff",  { method: "GET" }),
+    ]);
+    staff = Array.isArray(staffRes.items) ? staffRes.items : [];
+    renderVenue(venueRes);
+    renderStaff();
+  }
+
+  /* ── venue header + today stats ── */
+  function renderVenue(r) {
+    const el = $("venueHeader");
+    if (!el || !r.venue) return;
+    const v = r.venue, s = r.stats || {};
+    el.innerHTML = `
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+        <div>
+          <div class="h1" style="margin-bottom:2px">${esc(v.name)}</div>
+          <div class="muted" style="font-size:13px">@${esc(v.slug)}</div>
+        </div>
+        <span class="vRoleBadge vRoleManager">Manager</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px">
+        <div class="archStatCard" style="text-align:center">
+          <div class="archStatVal">${s.open_now ?? 0}</div>
+          <div class="archStatLabel">Open now</div>
+        </div>
+        <div class="archStatCard" style="text-align:center">
+          <div class="archStatVal">${s.closed_today ?? 0}</div>
+          <div class="archStatLabel">Closed today</div>
+        </div>
+        <div class="archStatCard" style="text-align:center">
+          <div class="archStatVal">${money(s.revenue_today)} ₾</div>
+          <div class="archStatLabel">Revenue today</div>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ── staff list ── */
+  function renderStaff() {
+    const el = $("venueStaff");
+    if (!el) return;
+    const profile = CHK.getUserProfile?.() || {};
+    if (!staff.length) {
+      el.innerHTML = `<div class="muted" style="font-size:13px;padding:8px 0">No staff yet.</div>`;
+      return;
+    }
+    el.innerHTML = staff.map((s) => `
+      <div class="item vStaffRow" data-id="${esc(s.id)}" style="cursor:pointer">
+        <div class="lineLeft">
+          <div class="lineTitle">
+            <b>${esc(s.name)}</b>
+            <span class="vRoleBadge ${s.role === "manager" ? "vRoleManager" : "vRoleStaff"}">${s.role}</span>
+          </div>
+          <div class="lineMeta"><span>${esc(s.login)}</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="vActiveDot ${s.is_active ? "vDotOn" : "vDotOff"}"></div>
+          ${s.id === profile.user_id ? "" : '<span class="muted" style="font-size:20px">›</span>'}
+        </div>
+      </div>
+    `).join("");
+
+    el.querySelectorAll(".vStaffRow").forEach((row) => {
+      const s = staff.find((x) => x.id === row.dataset.id);
+      if (s && s.id !== profile.user_id) row.onclick = () => openEditModal(s);
+    });
+  }
+
+  /* ── staff modal (add / edit) ── */
+  function openAddModal() {
+    showStaffModal({ title: "Add staff", okText: "Create", s: null });
+  }
+
+  function openEditModal(s) {
+    showStaffModal({ title: "Edit staff", okText: "Save", s });
+  }
+
+  function showStaffModal({ title, okText, s }) {
+    const back = $("staffModalBack");
+    const isEdit = !!s;
+
+    back.innerHTML = `
+      <div class="modal" style="width:min(92vw,420px)">
+        <div class="modalTitle">${esc(title)}</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+          <input class="inp" id="smName"  placeholder="Name"  value="${esc(s ? s.name : "")}" />
+          <input class="inp" id="smLogin" placeholder="Login" value="${esc(s ? s.login : "")}" ${isEdit ? "readonly style='opacity:.6'" : ""} />
+          <input class="inp" id="smPw" type="password" placeholder="${isEdit ? "New password (leave blank to keep)" : "Password"}" />
+          <div style="display:flex;gap:8px">
+            <button class="btn smRoleBtn ${!isEdit || s.role === "staff" ? "primary" : ""}"    data-role="staff"   style="flex:1">Staff</button>
+            <button class="btn smRoleBtn ${isEdit && s.role === "manager" ? "primary" : ""}"   data-role="manager" style="flex:1">Manager</button>
+          </div>
+          ${isEdit ? `
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer">
+              <input type="checkbox" id="smActive" ${s.is_active ? "checked" : ""} style="width:18px;height:18px;accent-color:var(--accent)" />
+              Active
+            </label>
+          ` : ""}
+        </div>
+        <div class="modalBtns">
+          <button class="btn" id="smCancel">Cancel</button>
+          <button class="btn primary" id="smOk">${esc(okText)}</button>
+        </div>
+      </div>
+    `;
+    back.classList.remove("hide");
+
+    let selectedRole = s ? s.role : "staff";
+    back.querySelectorAll(".smRoleBtn").forEach((btn) => {
+      btn.onclick = () => {
+        selectedRole = btn.dataset.role;
+        back.querySelectorAll(".smRoleBtn").forEach((b) =>
+          b.classList.toggle("primary", b.dataset.role === selectedRole)
+        );
+      };
+    });
+
+    $("smCancel").onclick = () => back.classList.add("hide");
+    back.onclick = (e) => { if (e.target === back) back.classList.add("hide"); };
+
+    $("smOk").onclick = async () => {
+      const name  = ($("smName").value  || "").trim();
+      const login = ($("smLogin").value || "").trim();
+      const pw    = ($("smPw").value    || "").trim();
+      const activeEl = $("smActive");
+      if (!name || !login)    return CHK.toast?.("Name and login required");
+      if (!isEdit && !pw)     return CHK.toast?.("Password required");
+      try {
+        if (!isEdit) {
+          await api("/api/staff", {
+            method: "POST",
+            body: JSON.stringify({ name, login, password: pw, role: selectedRole }),
+          });
+          CHK.toast?.("Staff added");
+        } else {
+          const body = { name, role: selectedRole, is_active: activeEl ? activeEl.checked : true };
+          if (pw) body.password = pw;
+          await api(`/api/staff/${s.id}`, { method: "PATCH", body: JSON.stringify(body) });
+          CHK.toast?.("Saved");
+        }
+        back.classList.add("hide");
+        await load();
+      } catch (e) {
+        CHK.toast?.("Error: " + (e.message || String(e)));
+      }
+    };
+  }
+
+  /* ── bind static elements ── */
+  function init() {
+    const btn = $("btnAddStaff");
+    if (btn) btn.onclick = () => openAddModal();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+
+  CHK.venue = {
+    load: async () => {
+      await load().catch((e) => CHK.toast?.("Venue: " + (e.message || String(e))));
+    },
+  };
+})();
