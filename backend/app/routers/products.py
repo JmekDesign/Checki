@@ -164,7 +164,7 @@ def products_normalize_all(
         cur = conn.cursor()
         cur.execute(
             "UPDATE products SET needs_normalization = TRUE WHERE venue_id = %s"
-            " AND needs_normalization = FALSE;",
+            " AND needs_normalization = FALSE AND locked = FALSE;",
             (venue_id,),
         )
         count: int = cur.rowcount
@@ -243,6 +243,8 @@ def product_update(
         if not col_map:
             return {"ok": True}
 
+        col_map.append(("locked", True))
+        col_map.append(("needs_normalization", False))
         set_clause = ", ".join(f"{col} = %s" for col, _ in col_map)
         params: list[Any] = [val for _, val in col_map] + [str(product_id)]
         cur.execute(

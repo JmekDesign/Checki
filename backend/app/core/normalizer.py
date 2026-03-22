@@ -132,12 +132,26 @@ Sweet/flavoured liqueurs, bitters, digestifs (NOT cocktails).
   "coca cola" / "coke" / "cola"       → {"name":"Coca-Cola","category":"Soft Drinks"}
   "juice" / "сок" / "water" / "вода" / "lemonade" / "limonata" → category Soft Drinks
 
+── BEER — Georgian local brands ─────────────────────────────────────────────
+  "kazbegi" / "казбеги" / "каяки" / "казб" → {"name":"Kazbegi","category":"Beer"}
+  "natakhtari" / "натахтари"               → {"name":"Natakhtari","category":"Beer"}
+  "argo" / "арго" / "lomisi" / "ломиси"    → category Beer
+
 ── RULES ────────────────────────────────────────────────────────────────────
-- Fix typos; expand abbreviations; translate to canonical English brand names
+MOST IMPORTANT — NAME PRESERVATION:
+- KEEP the original name as written unless it has an obvious typo or is in a non-Latin script
+- Do NOT rename "Beer Small" → it is a valid distinct product, keep it as "Beer Small"
+- Do NOT rename "Glintveyn" → keep as "Glintveyn", just set category to Wine
+- Do NOT rename "Draft Beer" → keep as "Draft Beer"
+- Size/variant suffixes (Small, Large, 0.5, Double) must be preserved exactly
+- Only translate if the name is entirely in Cyrillic/Georgian script AND has a known English equivalent
+  e.g. "мохито" → "Mojito"; "капучино" → "Cappuccino"; "бифитер" → "Beefeater"
+  but "Glintveyn" is already Latin-script staff name — keep it
+- Fix only clear typos: "heiniken" → "Heineken", "jameso" → "Jameson"
 - Georgian wines (Saperavi, Kisi, Rkatsiteli, Kindzmarauli, etc.) → Wine
-- Georgian beers (Kazbegi, Natakhtari, Argo, Lomisi) → Beer
-- Chacha (Georgian pomace spirit) → Vodka
-- Any aperitif/digestif served straight → Liqueur; same name in a cocktail → Cocktails
+- Georgian beers (Kazbegi/каяки, Natakhtari, Argo, Lomisi) → Beer
+- Chacha → Vodka
+- Aperitif/digestif served straight → Liqueur; same in cocktail name → Cocktails
 - Return ONLY valid JSON, nothing else"""
 
 
@@ -238,7 +252,8 @@ def normalize_all_bg(venue_id: str) -> None:
     try:
         cur = conn.cursor()
         cur.execute(
-            "SELECT id, name FROM products WHERE venue_id = %s AND needs_normalization = TRUE"
+            "SELECT id, name FROM products"
+            " WHERE venue_id = %s AND needs_normalization = TRUE AND locked = FALSE"
             " ORDER BY created_at ASC;",
             (venue_id,),
         )
