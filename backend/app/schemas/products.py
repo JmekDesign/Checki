@@ -9,11 +9,19 @@ class ProductUpsertIn(BaseModel):
     category: str | None = None
 
 
+class ProductUpdateIn(BaseModel):
+    name: str | None = None
+    price: float | None = None
+    category: str | None = None
+    active: bool | None = None
+
+
 class ProductOut(BaseModel):
     id: str
     name: str
     last_price: float | None = None
     category: str
+    active: bool = True
 
 
 class ProductListOut(BaseModel):

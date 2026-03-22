@@ -5,7 +5,7 @@ window.CHK = window.CHK || {};
   const CHK = window.CHK;
   const $ = (id)=>document.getElementById(id);
 
-  const SCREENS = ["screenLogin","screenOpen","screenNew","screenCheck","screenArchive","screenVenue"];
+  const SCREENS = ["screenLogin","screenOpen","screenNew","screenCheck","screenArchive","screenVenue","screenCatalog"];
 
   const toast = (msg)=>{
     const el = $("toast");

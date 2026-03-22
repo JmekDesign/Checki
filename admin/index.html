@@ -126,20 +126,33 @@
 
       <div class="hr"></div>
 
-      <!-- Coming soon -->
-      <div style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Coming soon</div>
+      <!-- Features -->
       <div style="display:flex;flex-direction:column;gap:8px">
-        <div class="item" style="opacity:.35;cursor:default">
-          <span>Product catalog</span><span class="muted">→</span>
+        <div class="item" id="btnGoCatalog" style="cursor:pointer">
+          <span style="font-weight:500">Product catalog</span><span class="muted">→</span>
         </div>
-        <div class="item" style="opacity:.35;cursor:default">
+        <div class="item" style="opacity:.3;cursor:default">
           <span>Procurement</span><span class="muted">→</span>
         </div>
-        <div class="item" style="opacity:.35;cursor:default">
+        <div class="item" style="opacity:.3;cursor:default">
           <span>Subscription</span><span class="muted">→</span>
         </div>
       </div>
     </div>
+
+    <!-- CATALOG (manager) -->
+    <div class="card cardless hide" id="screenCatalog">
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
+        <button class="btn compact" id="btnBackToCatalog">← Back</button>
+        <button class="btn compact primary" id="btnAddProduct">+ Add</button>
+      </div>
+      <input class="inp" id="catalogSearch" placeholder="Search products…" style="margin-bottom:10px" />
+      <div id="catalogList"></div>
+      <div class="muted" id="catalogHint" style="margin-top:10px;text-align:center"></div>
+    </div>
+
+    <!-- Catalog modal -->
+    <div class="modalBack hide" id="catalogModalBack"></div>
 
     <!-- NEW CHECK -->
     <div class="card hide" id="screenNew">

@@ -157,6 +157,13 @@ window.CHK = window.CHK || {};
   function init() {
     const btn = $("btnAddStaff");
     if (btn) btn.onclick = () => openAddModal();
+
+    const btnCatalog = $("btnGoCatalog");
+    if (btnCatalog) btnCatalog.onclick = async () => {
+      const tok = CHK.getToken?.() || "";
+      if (typeof CHK.show === "function") CHK.show("screenCatalog", tok);
+      try { await CHK.catalog?.load(); } catch (e) { CHK.toast?.("Catalog: " + e.message); }
+    };
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

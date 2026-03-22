@@ -381,7 +381,7 @@
     hideSuggest();    if(!q) { updateAddButtonState(); return; }
 
     try{
-      const r = await api(`/api/products?q=${encodeURIComponent(q)}&limit=20`, {method:"GET"});
+      const r = await api(`/api/products?q=${encodeURIComponent(q)}&limit=20&active_only=true`, {method:"GET"});
       const items = r.items || [];
 
             // Nothing found -> treat as new item. No suggestions.
