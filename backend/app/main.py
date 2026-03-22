@@ -25,6 +25,7 @@ from .routers.products_mgmt import router as products_mgmt_router
 from .routers.register import router as register_router
 from .routers.reports import router as reports_router
 from .routers.staff import router as staff_router
+from .routers.superadmin import router as superadmin_router
 from .routers.venue import router as venue_router
 
 log = logging.getLogger("checki")
@@ -52,6 +53,7 @@ app.add_middleware(
 
 app.include_router(health_router)
 app.include_router(register_router)
+app.include_router(superadmin_router)
 app.include_router(auth_router)
 app.include_router(bootstrap_router)
 app.include_router(guests_router)

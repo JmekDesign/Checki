@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Checki — Superadmin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1116; --surface: #161b24; --border: rgba(255,255,255,.10);
+      --text: #f0f2f5; --muted: #7a8497; --accent: #49d17c; --danger: #ff5a6a;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; -webkit-font-smoothing: antialiased; }
+
+    /* NAV */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--border); background: var(--surface); }
+    .logo { font-size: 16px; font-weight: 800; }
+    .logo span { color: var(--accent); }
+    .logoBadge { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-left: 8px; }
+    .btnLogout { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; padding: 6px 10px; border-radius: 8px; }
+    .btnLogout:hover { color: var(--danger); }
+
+    /* WRAP */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+    /* LOGIN */
+    .loginCard { max-width: 360px; margin: 80px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 32px 28px; }
+    .loginCard h1 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .loginCard p { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+    .inp { width: 100%; background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 14px; padding: 10px 12px; outline: none; margin-bottom: 10px; }
+    .inp:focus { border-color: rgba(73,209,124,.4); }
+    .btn { border: 1px solid var(--border); background: rgba(255,255,255,.06); color: var(--text); padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; }
+    .btn.primary { background: rgba(73,209,124,.16); border-color: rgba(73,209,124,.3); }
+    .btn.danger  { background: rgba(255,90,106,.12);  border-color: rgba(255,90,106,.25); color: var(--danger); }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: .4; cursor: default; }
+    .btnFull { width: 100%; padding: 11px; }
+    .errMsg { color: var(--danger); font-size: 13px; margin-top: 8px; min-height: 18px; }
+
+    /* STATS ROW */
+    .statsRow { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .statCard { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+    .statVal { font-size: 26px; font-weight: 800; color: var(--accent); }
+    .statLabel { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* SEARCH */
+    .toolbar { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; }
+    .searchInp { flex: 1; background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 14px; padding: 8px 12px; outline: none; }
+    .searchInp:focus { border-color: rgba(73,209,124,.4); }
+
+    /* TABLE */
+    .tableWrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.05); vertical-align: middle; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+    .venueName { font-weight: 700; font-size: 14px; }
+    .venueSlug { font-size: 11px; color: var(--muted); }
+    .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+    .badgeOn  { background: rgba(73,209,124,.15); color: var(--accent); }
+    .badgeOff { background: rgba(255,90,106,.12);  color: var(--danger); }
+    .muted { color: var(--muted); }
+    .hint { text-align: center; padding: 48px; color: var(--muted); }
+
+    /* MODAL */
+    .modalBack { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; z-index: 200; }
+    .modalBack.hide { display: none; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px; width: min(92vw, 400px); }
+    .modalTitle { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+    .modalBody  { font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+    .modalBtns  { display: flex; gap: 10px; justify-content: flex-end; }
+  </style>
+</head>
+<body>
+
+<nav id="appNav" style="display:none">
+  <div>
+    <span class="logo">Checki<span>.</span></span>
+    <span class="logoBadge">Superadmin</span>
+  </div>
+  <button class="btnLogout" id="btnLogout">Logout</button>
+</nav>
+
+<!-- LOGIN -->
+<div id="screenLogin">
+  <div class="loginCard">
+    <h1>Superadmin</h1>
+    <p>Checki internal panel</p>
+    <input class="inp" id="inpLogin" placeholder="Login" autocapitalize="none" />
+    <input class="inp" id="inpPass"  placeholder="Password" type="password" />
+    <button class="btn primary btnFull" id="btnLogin">Sign in</button>
+    <div class="errMsg" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="screenDash" style="display:none">
+  <div class="wrap">
+    <div class="statsRow" id="statsRow"></div>
+    <div class="toolbar">
+      <input class="searchInp" id="searchInp" placeholder="Search by name, slug, email, login…" />
+      <button class="btn" id="btnRefresh">↺ Refresh</button>
+    </div>
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Venue</th>
+            <th>Manager</th>
+            <th>Contact</th>
+            <th>Staff</th>
+            <th>Checks</th>
+            <th>30d revenue</th>
+            <th>Registered</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="venuesTbody"></tbody>
+      </table>
+    </div>
+    <div class="hint" id="hint" style="display:none">No venues yet.</div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modalBack hide" id="confirmModal">
+  <div class="modal">
+    <div class="modalTitle" id="confirmTitle">Confirm</div>
+    <div class="modalBody"  id="confirmBody">—</div>
+    <div class="modalBtns">
+      <button class="btn" id="confirmCancel">Cancel</button>
+      <button class="btn" id="confirmOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = "https://api.checki.ge";
+const STORE_KEY = "checki_super_token";
+
+let token = localStorage.getItem(STORE_KEY) || "";
+let allVenues = [];
+
+const $ = id => document.getElementById(id);
+
+/* ── AUTH ── */
+function setToken(t) {
+  token = t || "";
+  if (token) localStorage.setItem(STORE_KEY, token);
+  else localStorage.removeItem(STORE_KEY);
+}
+
+async function apiCall(path, opts = {}) {
+  const headers = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = "Bearer " + token;
+  const r = await fetch(API + path, { ...opts, headers: { ...headers, ...(opts.headers || {}) } });
+  if (r.status === 401) { logout(); throw new Error("Unauthorized"); }
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.detail || "Error " + r.status);
+  return data;
+}
+
+function logout() {
+  setToken("");
+  showLogin();
+}
+
+$("btnLogout").onclick = logout;
+
+/* ── SCREENS ── */
+function showLogin() {
+  $("screenLogin").style.display = "";
+  $("screenDash").style.display  = "none";
+  $("appNav").style.display      = "none";
+}
+
+function showDash() {
+  $("screenLogin").style.display = "none";
+  $("screenDash").style.display  = "";
+  $("appNav").style.display      = "";
+}
+
+/* ── LOGIN ── */
+$("btnLogin").onclick = async () => {
+  const login    = $("inpLogin").value.trim();
+  const password = $("inpPass").value;
+  $("loginErr").textContent = "";
+  $("btnLogin").disabled = true;
+  try {
+    const r = await apiCall("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ login, password }),
+    });
+    if (r.user?.role !== "superadmin") {
+      $("loginErr").textContent = "Not a superadmin account";
+      setToken("");
+      return;
+    }
+    setToken(r.token);
+    showDash();
+    loadVenues();
+  } catch (e) {
+    $("loginErr").textContent = e.message;
+  } finally {
+    $("btnLogin").disabled = false;
+  }
+};
+
+$("inpPass").addEventListener("keydown", e => { if (e.key === "Enter") $("btnLogin").click(); });
+
+/* ── VENUES ── */
+async function loadVenues() {
+  try {
+    const r = await apiCall("/api/super/venues");
+    allVenues = r.items || [];
+    renderStats();
+    renderTable($("searchInp").value.trim().toLowerCase());
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+$("btnRefresh").onclick = loadVenues;
+$("searchInp").addEventListener("input", () => {
+  renderTable($("searchInp").value.trim().toLowerCase());
+});
+
+function renderStats() {
+  const total    = allVenues.length;
+  const active   = allVenues.filter(v => v.is_active).length;
+  const checks30 = allVenues.reduce((s, v) => s + v.checks_30d, 0);
+  const rev30    = allVenues.reduce((s, v) => s + v.revenue_30d, 0);
+
+  $("statsRow").innerHTML = `
+    <div class="statCard"><div class="statVal">${total}</div><div class="statLabel">Venues total</div></div>
+    <div class="statCard"><div class="statVal">${active}</div><div class="statLabel">Active</div></div>
+    <div class="statCard"><div class="statVal">${checks30}</div><div class="statLabel">Checks (30d)</div></div>
+    <div class="statCard"><div class="statVal">${rev30.toFixed(0)} ₾</div><div class="statLabel">Revenue (30d)</div></div>
+  `;
+}
+
+function renderTable(q) {
+  const tbody = $("venuesTbody");
+  const hint  = $("hint");
+  const list  = q
+    ? allVenues.filter(v =>
+        (v.name||"").toLowerCase().includes(q) ||
+        (v.slug||"").toLowerCase().includes(q) ||
+        (v.email||"").toLowerCase().includes(q) ||
+        (v.manager_login||"").toLowerCase().includes(q)
+      )
+    : allVenues;
+
+  if (!list.length) {
+    tbody.innerHTML = "";
+    hint.style.display = "";
+    hint.textContent = q ? "Nothing found." : "No venues yet.";
+    return;
+  }
+  hint.style.display = "none";
+
+  tbody.innerHTML = list.map(v => `
+    <tr>
+      <td>
+        <div class="venueName">${esc(v.name)}</div>
+        <div class="venueSlug">${esc(v.slug)}</div>
+      </td>
+      <td class="${v.manager_login ? '' : 'muted'}">${esc(v.manager_login || '—')}</td>
+      <td>
+        ${v.email ? `<div>${esc(v.email)}</div>` : ''}
+        ${v.phone ? `<div class="muted">${esc(v.phone)}</div>` : ''}
+        ${!v.email && !v.phone ? '<span class="muted">—</span>' : ''}
+      </td>
+      <td class="muted">${v.staff_count}</td>
+      <td>
+        <span>${v.check_count}</span>
+        ${v.checks_30d ? `<span class="muted"> (${v.checks_30d} / 30d)</span>` : ''}
+      </td>
+      <td>${v.revenue_30d > 0 ? v.revenue_30d.toFixed(2) + ' ₾' : '<span class="muted">—</span>'}</td>
+      <td class="muted">${fmtDate(v.created_at)}</td>
+      <td><span class="badge ${v.is_active ? 'badgeOn' : 'badgeOff'}">${v.is_active ? 'Active' : 'Blocked'}</span></td>
+      <td>
+        <button class="btn ${v.is_active ? 'danger' : 'primary'}" data-id="${esc(v.id)}" data-name="${esc(v.name)}" data-active="${v.is_active}">
+          ${v.is_active ? 'Block' : 'Unblock'}
+        </button>
+      </td>
+    </tr>
+  `).join("");
+
+  tbody.querySelectorAll("button[data-id]").forEach(btn => {
+    btn.onclick = () => confirmToggle(btn.dataset.id, btn.dataset.name, btn.dataset.active === "true");
+  });
+}
+
+function confirmToggle(id, name, isActive) {
+  const modal = $("confirmModal");
+  $("confirmTitle").textContent = isActive ? "Block venue?" : "Unblock venue?";
+  $("confirmBody").textContent  = isActive
+    ? `"${name}" will be blocked. All users of this venue will lose access.`
+    : `"${name}" will be restored. Users will regain access.`;
+  $("confirmOk").className = "btn " + (isActive ? "danger" : "primary");
+  $("confirmOk").textContent = isActive ? "Block" : "Unblock";
+  modal.classList.remove("hide");
+
+  $("confirmCancel").onclick = () => modal.classList.add("hide");
+  $("confirmOk").onclick = async () => {
+    modal.classList.add("hide");
+    try {
+      await apiCall(`/api/super/venues/${id}`, { method: "PATCH" });
+      await loadVenues();
+    } catch (e) {
+      alert("Error: " + e.message);
+    }
+  };
+}
+
+/* ── HELPERS ── */
+function esc(s) {
+  return (s || "").toString().replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+  );
+}
+function fmtDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+/* ── INIT ── */
+(async () => {
+  if (!token) { showLogin(); return; }
+  try {
+    const me = await apiCall("/api/auth/me");
+    if (me.user?.role !== "superadmin") { logout(); return; }
+    showDash();
+    loadVenues();
+  } catch (_) {
+    showLogin();
+  }
+})();
+</script>
+</body>
+</html>

@@ -32,6 +32,23 @@ services:
       - "traefik.http.routers.checki_admin.tls.certresolver=mytlschallenge"
       - "traefik.http.routers.checki_admin.service=checki_admin_svc"
 
+  checki-super:
+    restart: unless-stopped
+    image: nginx:alpine
+    volumes:
+      - ./super:/usr/share/nginx/html:ro
+    networks:
+      - n8n_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=n8n_default"
+      - "traefik.http.services.checki_super_svc.loadbalancer.server.port=80"
+      - "traefik.http.routers.checki_super.rule=Host(`super.checki.ge`)"
+      - "traefik.http.routers.checki_super.entrypoints=websecure"
+      - "traefik.http.routers.checki_super.tls=true"
+      - "traefik.http.routers.checki_super.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.checki_super.service=checki_super_svc"
+
   checki-db:
     restart: unless-stopped
     image: postgres:16-alpine
