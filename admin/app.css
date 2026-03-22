@@ -15,16 +15,41 @@
     /* Bottom space so list scrolls above bottom bar */
     .wrap{max-width:720px;margin:0 auto;padding:16px 14px 220px}
 
-    /* header: title + (All checks) + logout */
-    .top{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    /* ── sticky nav wrapper (top bar + tabs) ── */
+    .topWrap{
       position:sticky; top:0; z-index:20;
-      padding:12px 14px; margin:-16px -14px 14px;
-      background:rgba(11,13,16,.88); backdrop-filter: blur(10px);
+      margin:-16px -14px 14px;
+      background:rgba(11,13,16,.92); backdrop-filter:blur(10px);
       border-bottom:1px solid rgba(255,255,255,.06);
     }
-    .brand b{font-size:18px}
-    .topRight{display:flex; gap:10px; align-items:center}
+    .top{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:11px 14px 10px;
+    }
+    .topLeft{ display:flex; align-items:center; gap:6px; }
+    .brandName{ font-size:17px; font-weight:700; color:var(--text); }
+    .btnGear{
+      background:none; border:none; color:var(--muted);
+      font-size:17px; cursor:pointer; padding:3px 5px;
+      border-radius:8px; line-height:1;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .btnGear:hover{ color:var(--text); background:rgba(255,255,255,.07); }
+
+    /* ── tab bar ── */
+    .tabBar{
+      display:flex; gap:0; padding:0 10px;
+      border-top:1px solid rgba(255,255,255,.04);
+    }
+    .tabBtn{
+      padding:8px 14px 10px;
+      background:none; border:none;
+      border-bottom:2px solid transparent;
+      color:var(--muted); font-size:14px; font-weight:500;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .tabBtn.active{ color:var(--text); border-bottom-color:var(--accent); font-weight:600; }
 
     .btn{
       border:1px solid rgba(255,255,255,.14);

@@ -108,12 +108,12 @@ window.CHK = window.CHK || {};
           <input class="inp" id="smName"  placeholder="Name"  value="${esc(s ? s.name : "")}" />
           <input class="inp" id="smLogin" placeholder="Login" value="${esc(s ? s.login : "")}" ${isEdit ? "readonly style='opacity:.6'" : ""} />
           <input class="inp" id="smPw" type="password" placeholder="${isEdit ? "New password (leave blank to keep)" : "Password"}" />
-          <div style="display:flex;gap:8px">
-            <button class="btn smRoleBtn ${!isEdit || s.role === "staff" ? "primary" : ""}"    data-role="staff"   style="flex:1">Staff</button>
-            <button class="btn smRoleBtn ${isEdit && s.role === "manager" ? "primary" : ""}"   data-role="manager" style="flex:1">Manager</button>
-          </div>
+          <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;padding:4px 0">
+            <input type="checkbox" id="smIsManager" ${isEdit && s.role === "manager" ? "checked" : ""} style="width:18px;height:18px;accent-color:var(--accent)" />
+            Manager (can access venue settings)
+          </label>
           ${isEdit ? `
-            <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer">
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;padding:4px 0">
               <input type="checkbox" id="smActive" ${s.is_active ? "checked" : ""} style="width:18px;height:18px;accent-color:var(--accent)" />
               Active
             </label>
@@ -127,35 +127,27 @@ window.CHK = window.CHK || {};
     `;
     back.classList.remove("hide");
 
-    let selectedRole = s ? s.role : "staff";
-    back.querySelectorAll(".smRoleBtn").forEach((btn) => {
-      btn.onclick = () => {
-        selectedRole = btn.dataset.role;
-        back.querySelectorAll(".smRoleBtn").forEach((b) =>
-          b.classList.toggle("primary", b.dataset.role === selectedRole)
-        );
-      };
-    });
-
     $("smCancel").onclick = () => back.classList.add("hide");
     back.onclick = (e) => { if (e.target === back) back.classList.add("hide"); };
 
     $("smOk").onclick = async () => {
-      const name  = ($("smName").value  || "").trim();
-      const login = ($("smLogin").value || "").trim();
-      const pw    = ($("smPw").value    || "").trim();
-      const activeEl = $("smActive");
-      if (!name || !login)    return CHK.toast?.("Name and login required");
-      if (!isEdit && !pw)     return CHK.toast?.("Password required");
+      const name    = ($("smName").value  || "").trim();
+      const login   = ($("smLogin").value || "").trim();
+      const pw      = ($("smPw").value    || "").trim();
+      const isManager = $("smIsManager")?.checked || false;
+      const activeEl  = $("smActive");
+      const role = isManager ? "manager" : "staff";
+      if (!name || !login)  return CHK.toast?.("Name and login required");
+      if (!isEdit && !pw)   return CHK.toast?.("Password required");
       try {
         if (!isEdit) {
           await api("/api/staff", {
             method: "POST",
-            body: JSON.stringify({ name, login, password: pw, role: selectedRole }),
+            body: JSON.stringify({ name, login, password: pw, role }),
           });
           CHK.toast?.("Staff added");
         } else {
-          const body = { name, role: selectedRole, is_active: activeEl ? activeEl.checked : true };
+          const body = { name, role, is_active: activeEl ? activeEl.checked : true };
           if (pw) body.password = pw;
           await api(`/api/staff/${s.id}`, { method: "PATCH", body: JSON.stringify(body) });
           CHK.toast?.("Saved");

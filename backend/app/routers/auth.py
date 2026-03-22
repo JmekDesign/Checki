@@ -20,13 +20,19 @@ def login(payload: LoginIn) -> dict[str, Any]:
     try:
         cur = conn.cursor()
         cur.execute(
-            "select id, venue_id, role, name, password_hash, is_active from users where login=%s;",
+            """
+            SELECT u.id, u.venue_id, u.role, u.name, u.password_hash, u.is_active,
+                   COALESCE(v.name, '') AS venue_name
+            FROM users u
+            LEFT JOIN venues v ON v.id = u.venue_id
+            WHERE u.login = %s;
+            """,
             (payload.login,),
         )
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=401, detail="invalid credentials")
-        user_id, venue_id, role, name, password_hash_db, is_active = row
+        user_id, venue_id, role, name, password_hash_db, is_active, venue_name = row
         if not is_active:
             raise HTTPException(status_code=403, detail="user inactive")
         if hash_password(payload.password) != password_hash_db:
@@ -50,6 +56,7 @@ def login(payload: LoginIn) -> dict[str, Any]:
                 "venue_id": str(venue_id) if venue_id else None,
                 "role": role,
                 "name": name,
+                "venue_name": venue_name,
                 "issued_at": int(time.time()),
                 "ttl_hours": SESSION_TTL_HOURS,
             },

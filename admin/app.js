@@ -35,38 +35,28 @@
     toast("Logged out");
   };
 
-    $("btnAllChecks").onclick = async ()=>{
-    const scr = (window.CHK && window.CHK._screen) ? window.CHK._screen : "";
+  // Tab navigation
+  const tabOpen = $("tabOpen");
+  if(tabOpen) tabOpen.onclick = async ()=>{
+    currentCheckId=null; currentCheck=null;
+    await loadOpen().catch(()=>{});
+    show("screenOpen", token);
+  };
 
-    // From Check -> Open checks
-    if(scr === "screenCheck"){
-      currentCheckId = null; currentCheck = null;
-      await loadOpen().catch(()=>{});
-      show("screenOpen");
-      return;
-    }
+  const tabArchive = $("tabArchive");
+  if(tabArchive) tabArchive.onclick = async ()=>{
+    show("screenArchive", token);
+    try{
+      if(window.CHK?.archive) await window.CHK.archive.load();
+    }catch(e){ toast("Archive: " + e.message); }
+  };
 
-    // From Open -> Archive
-    if(scr === "screenOpen"){
-      show("screenArchive");
-      try{
-        if(window.CHK && window.CHK.archive && typeof window.CHK.archive.load === "function"){
-          await window.CHK.archive.load();
-        }else{
-          toast("Archive module not ready");
-        }
-      }catch(e){
-        toast("Archive: " + (e && e.message ? e.message : String(e)));
-      }
-      return;
-    }
-
-    // From Archive -> Open
-    if(scr === "screenArchive"){
-      await loadOpen().catch(()=>{});
-      show("screenOpen");
-      return;
-    }
+  // Back from check detail → open checks (without closing)
+  const btnBackFromCheck = $("btnBackFromCheck");
+  if(btnBackFromCheck) btnBackFromCheck.onclick = async ()=>{
+    currentCheckId=null; currentCheck=null;
+    await loadOpen().catch(()=>{});
+    show("screenOpen", token);
   };
 
   $("btnLogin").onclick = async ()=>{
@@ -174,7 +164,7 @@
   async function openCheck(id){
     currentCheckId = id;
     await loadCheck();
-    show("screenCheck");
+    show("screenCheck", token);
     resetAddForm();
   }
 
@@ -543,7 +533,7 @@
     try{
       if(token){
         await loadOpen();
-        show("screenOpen");
+        show("screenOpen", token);
       } else {
         show("screenLogin");
       }

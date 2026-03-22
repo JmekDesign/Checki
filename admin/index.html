@@ -28,12 +28,17 @@
   </div>
 
   <div class="wrap">
-    <div class="top">
-      <div class="brand"><b>Checki — Staff</b></div>
-      <div class="topRight">
-        <button class="btn compact hide" id="btnAllChecks">All checks</button>
-        <button class="btn compact hide" id="btnVenue">Venue</button>
-        <button class="btn danger hide" id="btnLogout">Logout</button>
+    <div class="topWrap" id="topWrap">
+      <div class="top">
+        <div class="topLeft">
+          <span class="brandName" id="brandName">Checki</span>
+          <button class="btnGear hide" id="btnVenue" title="Venue settings">⚙</button>
+        </div>
+        <button class="btn compact danger hide" id="btnLogout">Logout</button>
+      </div>
+      <div class="tabBar hide" id="tabBar">
+        <button class="tabBtn" id="tabOpen">Open checks</button>
+        <button class="tabBtn" id="tabArchive">Archive</button>
       </div>
     </div>
 
@@ -69,12 +74,9 @@
 
     <!-- ARCHIVE -->
     <div class="card cardless hide" id="screenArchive">
-      <div class="row" style="justify-content:space-between">
-        <div>
-          <div class="h1" style="margin-bottom:4px">Archive</div>
-          <div class="muted">Closed checks</div>
-        </div>
-        <button class="btn" id="btnBackOpenFromArchive">← Back</button>
+      <div>
+        <div class="h1" style="margin-bottom:4px">Archive</div>
+        <div class="muted">Closed checks</div>
       </div>
       <div class="hr"></div>
 
@@ -168,7 +170,8 @@
           <div class="muted" id="checkMeta" style="font-size:13px">—</div>
           <div id="checkTotal" style="margin-top:6px;font-size:22px;font-weight:800;color:var(--accent)">—</div>
         </div>
-        <div style="display:flex; gap:10px; align-items:center">
+        <div style="display:flex; gap:8px; align-items:center">
+          <button class="btn compact" id="btnBackFromCheck">← Checks</button>
           <button class="btn danger" id="btnCloseCheck">Close</button>
         </div>
       </div>

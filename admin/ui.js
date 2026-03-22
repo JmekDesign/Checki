@@ -16,48 +16,43 @@ window.CHK = window.CHK || {};
     el._t = setTimeout(()=>{ el.style.display="none"; }, 2200);
   };
 
-  // Single source of truth for screen + header buttons + bottom bar
-  const show = (screen, token)=>{
-    try{
+  // Single source of truth for screen + nav + bottom bar
+  const show = (screen, token) => {
+    try {
       CHK._screen = screen;
 
-      SCREENS.forEach(id=>{
-        const el = $(id);
-        if(el) el.classList.add("hide");
-      });
+      // Hide all screens + bottom bar
+      SCREENS.forEach(id => $(id)?.classList.add("hide"));
+      $("bottomBar")?.classList.add("hide");
 
-      const bottom = $("bottomBar");
-      if(bottom) bottom.classList.add("hide");
-
+      // Show target screen
       const target = $(screen);
-      if(target) target.classList.remove("hide");
+      if (target) target.classList.remove("hide");
       else console.warn("CHK.show: unknown screen:", screen);
 
-      const btnLogout = $("btnLogout");
-      if(btnLogout) btnLogout.classList.toggle("hide", !token);
+      // Logout
+      $("btnLogout")?.classList.toggle("hide", !token);
 
-      // One button used for navigation:
-      // - on Open screen -> "Archive"
-      // - on Check screen -> "Open checks"
-      // - on Archive screen -> "Open checks"
-      const btnAll = $("btnAllChecks");
-      if(btnAll){
-        const visible = !!(token && (screen==="screenOpen" || screen==="screenCheck" || screen==="screenArchive"));
-        btnAll.classList.toggle("hide", !visible);
-        if(screen === "screenOpen") btnAll.textContent = "Archive";
-        else btnAll.textContent = "Open checks";
+      // Tab bar: visible on main screens
+      const TAB_SCREENS = ["screenOpen", "screenArchive", "screenVenue"];
+      $("tabBar")?.classList.toggle("hide", !(token && TAB_SCREENS.includes(screen)));
+      $("tabOpen")?.classList.toggle("active", screen === "screenOpen");
+      $("tabArchive")?.classList.toggle("active", screen === "screenArchive");
+
+      // Gear / venue button (manager+ only)
+      const profile = window.CHK?.getUserProfile?.() || null;
+      const isManager = profile?.role === "manager" || profile?.role === "superadmin";
+      $("btnVenue")?.classList.toggle("hide", !(token && isManager));
+
+      // Brand name
+      const brandEl = $("brandName");
+      if (brandEl) {
+        brandEl.textContent = (token && profile?.venue_name) ? profile.venue_name : "Checki";
       }
 
-      const btnVenue = $("btnVenue");
-      if(btnVenue){
-        const profile = (window.CHK && window.CHK.getUserProfile) ? window.CHK.getUserProfile() : null;
-        const isManager = profile && (profile.role === "manager" || profile.role === "superadmin");
-        const venueVisible = !!(token && isManager && screen !== "screenLogin" && screen !== "screenVenue");
-        btnVenue.classList.toggle("hide", !venueVisible);
-      }
-
-      if(screen === "screenCheck" && bottom) bottom.classList.remove("hide");
-    }catch(e){
+      // Bottom bar (check screen only)
+      if (screen === "screenCheck") $("bottomBar")?.classList.remove("hide");
+    } catch (e) {
       console.error("CHK.show failed:", e);
     }
   };
