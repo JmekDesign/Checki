@@ -92,7 +92,7 @@ window.CHK = window.CHK || {};
         <div class="modalTitle">${esc(title)}</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
           <input class="inp" id="cmName" placeholder="Name" value="${esc(p ? p.name : "")}" />
-          <input class="inp" id="cmCategory" placeholder="Category (e.g. Beer, Cocktails)" value="${esc(p ? p.category || "" : "")}" />
+          <input class="inp" id="cmCategory" placeholder="Category (optional: Beer, Cocktails…)" value="${esc(p ? (p.category === "Other" ? "" : p.category || "") : "")}" />
           <input class="inp" id="cmPrice" inputmode="decimal" placeholder="Price (₾)"
             value="${p && p.last_price != null ? money(p.last_price) : ""}" />
           ${isEdit ? `
