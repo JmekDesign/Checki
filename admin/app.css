@@ -345,12 +345,103 @@
   padding:14px 0 6px;
 }
 
-/* ── payment method modal ── */
-.payMethodBtn {
-  padding: 16px 10px;
-  font-size: 16px;
-  border-radius: 14px;
+/* ── Paper receipt modal ── */
+.rcptModal {
+  background: #f7f5f0;
+  color: #111;
+  border-radius: 20px;
+  padding: 20px 18px 16px;
+  width: min(92vw, 380px);
+  max-height: 82vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0,0,0,.75);
 }
+.rcptBrand {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: #bbb;
+  margin-bottom: 10px;
+}
+.rcptCheckNum {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: #111;
+}
+.rcptGuest {
+  text-align: center;
+  font-size: 13px;
+  color: #777;
+  margin-top: 2px;
+}
+.rcptDash {
+  border: none;
+  border-top: 1px dashed #ccc;
+  margin: 12px 0;
+}
+.rcptItems { display: flex; flex-direction: column; gap: 5px; }
+.rcptRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 14px;
+  color: #222;
+}
+.rcptName { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rcptQty  { font-size: 12px; color: #999; flex: 0 0 auto; }
+.rcptAmt  { font-weight: 600; white-space: nowrap; min-width: 48px; text-align: right; flex: 0 0 auto; }
+.rcptEmpty { text-align: center; color: #bbb; font-size: 13px; padding: 6px 0; }
+.rcptTotalLabel {
+  text-align: right;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #aaa;
+  margin-bottom: 2px;
+}
+.rcptTotalVal {
+  text-align: right;
+  font-size: 32px;
+  font-weight: 800;
+  color: #111;
+  line-height: 1;
+}
+.rcptTs {
+  text-align: right;
+  font-size: 11px;
+  color: #bbb;
+  margin-top: 4px;
+}
+.rcptPayBtns { display: flex; gap: 10px; margin-bottom: 10px; }
+.rcptBtnPay {
+  flex: 1;
+  padding: 15px 10px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  background: #111;
+  color: #fff;
+  -webkit-tap-highlight-color: transparent;
+}
+.rcptBtnPay:active { transform: translateY(1px); }
+.rcptBtnCancel {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+  background: transparent;
+  color: #aaa;
+  font-size: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.rcptBtnCancel:active { background: #eee; }
 
 /* ── date picker buttons ── */
 .dpBtn {

@@ -112,13 +112,16 @@
       const guest = c.guest_name_snapshot ?? c.guest ?? c.guest_name ?? "—";
       const total = Number(c.total ?? c.check_total ?? c.total_amount ?? 0);
       const totalText = Number.isFinite(total) ? `${fmtMoney(total)} ₾` : "—";
+      const timeStr = c.opened_at
+        ? new Date(c.opened_at).toLocaleTimeString(undefined, {hour:"2-digit", minute:"2-digit"})
+        : "";
       const el = document.createElement("div");
       el.className = "item";
       el.style.cursor = "pointer";
       el.innerHTML = `
-        <div style="min-width:0">
-          <b>#${escapeHtml(num)} • ${escapeHtml(guest)}</b>
-          <div><small>${escapeHtml(c.opened_at ? new Date(c.opened_at).toLocaleString() : "")}</small></div>
+        <div class="lineLeft">
+          <div class="lineTitle"><b>#${escapeHtml(num)} · ${escapeHtml(guest)}</b></div>
+          <div class="lineMeta"><span>${escapeHtml(timeStr)}</span></div>
         </div>
         <div class="lineTotal">${totalText}</div>
       `;
@@ -143,9 +146,8 @@
     const num   = currentCheck ? (currentCheck.number ?? "") : "";
     const guest = currentCheck ? (currentCheck.guest_name_snapshot ?? "—") : "—";
     const total = currentCheck ? Number(currentCheck.total ?? 0) : 0;
-    const method = await chkPayConfirm({
-      text: `#${num} · ${guest}\nTotal: ${fmtMoney(total)} ₾`,
-    });
+    const items = currentCheck ? (currentCheck.items || []) : [];
+    const method = await chkPayConfirm({ number: num, guest, total, items });
     if(method === null) return;
     try{
       await api(`/api/checks/${currentCheckId}/close`, {
@@ -179,8 +181,8 @@
     const guest = currentCheck.guest_name_snapshot ?? currentCheck.guest ?? currentCheck.guest_name ?? "—";
     const total = (currentCheck.total ?? 0);
     $("checkTitle").textContent = `Check #${num}`;
-    $("checkMeta").textContent = `${guest}`;
-    $("checkTotal").textContent = `Total: ${fmtMoney(total)} ₾`;
+    $("checkMeta").textContent = guest;
+    $("checkTotal").textContent = `${fmtMoney(total)} ₾`;
 
     const items = currentCheck.items || currentCheck.lines || [];
     const list = $("itemsList");

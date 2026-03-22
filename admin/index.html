@@ -9,18 +9,8 @@
 <body>
   <div class="toast" id="toast"></div>
 
-  <!-- Payment method modal -->
-  <div class="modalBack hide" id="payBack">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div class="modalTitle">Close check</div>
-      <div class="modalText" id="payText">—</div>
-      <div style="display:flex; gap:10px; margin-bottom:10px">
-        <button class="btn primary payMethodBtn" id="payCash" style="flex:1">💵 Cash</button>
-        <button class="btn primary payMethodBtn" id="payCard" style="flex:1">💳 Card</button>
-      </div>
-      <button class="btn" id="payCancel" style="width:100%; color:var(--muted)">Don't close</button>
-    </div>
-  </div>
+  <!-- Payment method modal (receipt) — content injected by ui.js -->
+  <div class="modalBack hide" id="payBack"></div>
 
   <!-- Confirm modal -->
   <div class="modalBack hide" id="confirmBack">
@@ -141,9 +131,9 @@
     <div class="card hide" id="screenCheck">
       <div class="row" style="justify-content:space-between; align-items:flex-start">
         <div style="min-width:0">
-          <div class="h1" id="checkTitle" style="margin-bottom:4px">Check</div>
-          <div class="muted" id="checkMeta">—</div>
-          <div class="muted" id="checkTotal" style="margin-top:6px">Total: —</div>
+          <div class="h1" id="checkTitle" style="margin-bottom:2px">Check</div>
+          <div class="muted" id="checkMeta" style="font-size:13px">—</div>
+          <div id="checkTotal" style="margin-top:6px;font-size:22px;font-weight:800;color:var(--accent)">—</div>
         </div>
         <div style="display:flex; gap:10px; align-items:center">
           <button class="btn danger" id="btnCloseCheck">Close</button>
