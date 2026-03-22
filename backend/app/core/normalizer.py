@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 import urllib.error
 import urllib.request
 from typing import Any
@@ -12,104 +13,113 @@ from .utils import normalize_key
 
 logger = logging.getLogger(__name__)
 
-_CATEGORIES = frozenset({"Beer", "Wine", "Cocktails", "Spirits", "Soft Drinks", "Food", "Other"})
-
-_SYSTEM = (
-    "You are a product catalog normalizer for a bar/restaurant. "
-    "Given a product name (possibly misspelled, abbreviated, or in any language), "
-    "return a JSON object with exactly two fields:\n"
-    '- "name": canonical English product name, properly capitalized '
-    '(e.g. "Heineken", "Negroni", "Red Bull", "French Fries")\n'
-    '- "category": exactly one of: Beer, Wine, Cocktails, Spirits, '
-    "Soft Drinks, Food, Other\n"
-    "Rules: fix typos; translate non-English brand names to English where known "
-    "(e.g. 'хайнекен' → 'Heineken', 'ред бул' → 'Red Bull'); "
-    "for untranslatable local items capitalize properly and keep original; "
-    "be concise (prefer 'Heineken' over 'Heineken Beer'). "
-    "Return ONLY valid JSON, no other text."
+_CATEGORIES = frozenset(
+    {"Beer", "Wine", "Cocktails", "Spirits", "Soft Drinks", "Food", "Other"}
 )
 
+_SYSTEM = """You are a bar product catalog normalizer. Your job: given a raw product name
+typed by bar staff (may have typos, be abbreviated, or be in any language), return the
+canonical English name and category.
 
-def normalize_product_bg(product_id: str, raw_name: str, venue_id: str) -> None:
-    """Background task: call OpenAI to normalize product name + category.
+Output ONLY a JSON object with two fields: "name" and "category".
 
-    Runs after upsert response is sent — zero latency impact on the check flow.
-    Silent on any failure; product keeps its original name if AI is unavailable.
-    """
-    if not OPENAI_API_KEY:
-        return
+CATEGORY must be exactly one of:
+  Beer, Wine, Cocktails, Spirits, Soft Drinks, Food, Other
 
-    canonical = ""
-    category = "Other"
+COCKTAIL examples (very important — staff often abbreviate or misspell):
+  "negroni" / "negron" / "нeгрони"     → {"name":"Negroni","category":"Cocktails"}
+  "mojito" / "mohito" / "мохито"       → {"name":"Mojito","category":"Cocktails"}
+  "long island" / "lang island" / "LI" → {"name":"Long Island Iced Tea","category":"Cocktails"}
+  "aperol spritz" / "aperol sp"        → {"name":"Aperol Spritz","category":"Cocktails"}
+  "espresso martini" / "esp mart"      → {"name":"Espresso Martini","category":"Cocktails"}
+  "old fashioned" / "old fash"         → {"name":"Old Fashioned","category":"Cocktails"}
+  "margarita" / "margarit"             → {"name":"Margarita","category":"Cocktails"}
+  "b52" / "B-52"                       → {"name":"B-52","category":"Cocktails"}
+  "sex on the beach" / "sex beach"     → {"name":"Sex on the Beach","category":"Cocktails"}
+  "pina colada" / "pina col"           → {"name":"Piña Colada","category":"Cocktails"}
+  "gin tonic" / "g&t" / "gin & tonic" → {"name":"Gin & Tonic","category":"Cocktails"}
 
-    try:
-        body = json.dumps(
-            {
-                "model": "gpt-4o-mini",
-                "messages": [
-                    {"role": "system", "content": _SYSTEM},
-                    {"role": "user", "content": raw_name},
-                ],
-                "response_format": {"type": "json_object"},
-                "max_tokens": 60,
-                "temperature": 0.1,
-            }
-        ).encode()
+BEER examples:
+  "heiniken" / "хайнекен"  → {"name":"Heineken","category":"Beer"}
+  "hoegaarden" / "hoeg"    → {"name":"Hoegaarden","category":"Beer"}
+  "budweiser" / "bud"      → {"name":"Budweiser","category":"Beer"}
+  "guinness" / "gines"     → {"name":"Guinness","category":"Beer"}
 
-        req = urllib.request.Request(
-            "https://api.openai.com/v1/chat/completions",
-            data=body,
-            headers={
-                "Authorization": f"Bearer {OPENAI_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            result: dict[str, Any] = json.loads(resp.read())
+SPIRITS examples:
+  "jack daniels" / "jack d" → {"name":"Jack Daniel's","category":"Spirits"}
+  "jameson" / "jameso"      → {"name":"Jameson","category":"Spirits"}
+  "grey goose" / "grey g"   → {"name":"Grey Goose","category":"Spirits"}
+  "baileys" / "бейлис"      → {"name":"Baileys","category":"Spirits"}
+  "jagermeister" / "jager"  → {"name":"Jägermeister","category":"Spirits"}
 
-        content = result["choices"][0]["message"]["content"]
-        data: dict[str, Any] = json.loads(content)
+SOFT DRINKS:
+  "red bull" / "ред бул" / "redbull" → {"name":"Red Bull","category":"Soft Drinks"}
+  "coca cola" / "cola" / "coke"      → {"name":"Coca-Cola","category":"Soft Drinks"}
 
-        canonical = str(data.get("name", "")).strip()
-        cat = str(data.get("category", "")).strip()
-        if cat in _CATEGORIES:
-            category = cat
+Rules:
+- Fix typos and expand bar abbreviations as shown above
+- Translate non-English names to canonical English brand names
+- For local untranslatable food items, capitalize properly and keep original
+- Return ONLY valid JSON, nothing else"""
 
-    except Exception as exc:
-        logger.warning("AI normalization failed for %r: %s", raw_name, exc)
 
-    if not canonical:
-        # AI unavailable or returned empty — mark done to avoid infinite retries
-        _mark_done(product_id)
-        return
+def _call_openai(raw_name: str) -> tuple[str, str]:
+    """Call OpenAI and return (canonical_name, category). Raises on any error."""
+    body = json.dumps(
+        {
+            "model": "gpt-4o-mini",
+            "messages": [
+                {"role": "system", "content": _SYSTEM},
+                {"role": "user", "content": raw_name},
+            ],
+            "response_format": {"type": "json_object"},
+            "max_tokens": 60,
+            "temperature": 0.2,
+        }
+    ).encode()
 
+    req = urllib.request.Request(
+        "https://api.openai.com/v1/chat/completions",
+        data=body,
+        headers={
+            "Authorization": f"Bearer {OPENAI_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        result: dict[str, Any] = json.loads(resp.read())
+
+    content = result["choices"][0]["message"]["content"]
+    data: dict[str, Any] = json.loads(content)
+
+    canonical = str(data.get("name", "")).strip()
+    cat = str(data.get("category", "")).strip()
+    if cat not in _CATEGORIES:
+        cat = "Other"
+    return canonical, cat
+
+
+def _save_normalized(
+    product_id: str, venue_id: str, canonical: str, category: str
+) -> None:
     conn = db_conn()
     try:
         cur = conn.cursor()
         cur.execute(
             """
             UPDATE products
-               SET name = %s,
-                   category = %s,
-                   search_key = %s,
-                   needs_normalization = FALSE
-             WHERE id = %s
-               AND venue_id = %s
-               AND needs_normalization = TRUE;
+               SET name = %s, category = %s, search_key = %s, needs_normalization = FALSE
+             WHERE id = %s AND venue_id = %s;
             """,
             (canonical, category, normalize_key(canonical), product_id, venue_id),
         )
         conn.commit()
-        logger.info("normalized %r → %r (%s)", raw_name, canonical, category)
-    except Exception as exc:
-        logger.warning("DB update failed after normalization: %s", exc)
     finally:
         db_release(conn)
 
 
 def _mark_done(product_id: str) -> None:
-    """Mark normalization as done without changes (AI unavailable)."""
     try:
         conn = db_conn()
         try:
@@ -123,3 +133,42 @@ def _mark_done(product_id: str) -> None:
             db_release(conn)
     except Exception:
         pass
+
+
+def normalize_product_bg(product_id: str, raw_name: str, venue_id: str) -> None:
+    """Background task: normalize a single product via OpenAI."""
+    if not OPENAI_API_KEY:
+        return
+    try:
+        canonical, category = _call_openai(raw_name)
+        if not canonical:
+            _mark_done(product_id)
+            return
+        _save_normalized(product_id, venue_id, canonical, category)
+        logger.info("normalized %r → %r (%s)", raw_name, canonical, category)
+    except Exception as exc:
+        logger.warning("normalization failed for %r: %s", raw_name, exc)
+        _mark_done(product_id)
+
+
+def normalize_all_bg(venue_id: str) -> None:
+    """Background task: normalize every product in the venue catalog."""
+    if not OPENAI_API_KEY:
+        return
+
+    conn = db_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT id, name FROM products WHERE venue_id = %s AND needs_normalization = TRUE"
+            " ORDER BY created_at ASC;",
+            (venue_id,),
+        )
+        rows: list[tuple[Any, Any]] = cur.fetchall()
+    finally:
+        db_release(conn)
+
+    logger.info("batch normalization: %d products for venue %s", len(rows), venue_id)
+    for product_id, raw_name in rows:
+        normalize_product_bg(str(product_id), raw_name, venue_id)
+        time.sleep(0.15)  # stay well within OpenAI rate limits

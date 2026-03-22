@@ -6,7 +6,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Header, HTTPException, Query
 
-from ..core.normalizer import normalize_product_bg
+from ..core.normalizer import normalize_all_bg, normalize_product_bg
 from ..core.security import UserContext, require_user
 from ..core.utils import normalize_key
 from ..db.conn import db_conn, db_release
@@ -147,6 +147,32 @@ def products_list(
         return {"ok": True, "items": items}
     finally:
         db_release(conn)
+
+
+@router.post("/api/products/normalize-all")
+def products_normalize_all(
+    background_tasks: BackgroundTasks,
+    authorization: str | None = Header(default=None, alias="Authorization"),
+) -> dict[str, Any]:
+    user = _require_manager(authorization)
+    venue_id = user["venue_id"]
+    if not venue_id:
+        raise HTTPException(status_code=400, detail="user has no venue")
+
+    conn = db_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE products SET needs_normalization = TRUE WHERE venue_id = %s;",
+            (venue_id,),
+        )
+        count: int = cur.rowcount
+        conn.commit()
+    finally:
+        db_release(conn)
+
+    background_tasks.add_task(normalize_all_bg, venue_id)
+    return {"ok": True, "queued": count}
 
 
 @router.patch("/api/products/{product_id}")

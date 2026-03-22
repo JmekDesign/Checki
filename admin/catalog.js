@@ -141,6 +141,21 @@ window.CHK = window.CHK || {};
     };
   }
 
+  /* ── batch normalize ── */
+  async function normalizeAll() {
+    const btn = $("btnNormalizeCatalog");
+    if (btn) { btn.disabled = true; btn.textContent = "Normalizing…"; }
+    try {
+      const r = await api("/api/products/normalize-all", { method: "POST" });
+      CHK.toast?.(`Queued ${r.queued ?? "?"} products for normalization`);
+      setTimeout(() => load(), 5000);
+    } catch (e) {
+      CHK.toast?.("Error: " + (e.message || String(e)));
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = "Normalize"; }
+    }
+  }
+
   /* ── back to venue ── */
   function goBack() {
     const tok = CHK.getToken?.() || "";
@@ -150,11 +165,13 @@ window.CHK = window.CHK || {};
 
   /* ── init ── */
   function init() {
-    const btnAdd  = $("btnAddProduct");
-    const btnBack = $("btnBackToCatalog");
-    const search  = $("catalogSearch");
+    const btnAdd      = $("btnAddProduct");
+    const btnBack     = $("btnBackToCatalog");
+    const btnNorm     = $("btnNormalizeCatalog");
+    const search      = $("catalogSearch");
     if (btnAdd)  btnAdd.onclick  = () => openAddModal();
     if (btnBack) btnBack.onclick = () => goBack();
+    if (btnNorm) btnNorm.onclick = () => normalizeAll();
     if (search)  search.addEventListener("input", () => render());
   }
 
