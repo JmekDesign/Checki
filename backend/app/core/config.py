@@ -33,7 +33,7 @@ class Settings:
 
     def __post_init__(self) -> None:
         if not self.cors_origins:
-            default_origins = "https://admin.checki.ge,https://checki.ge"
+            default_origins = "https://admin.checki.ge,https://checki.ge,https://super.checki.ge"
             origins = _split_csv(os.getenv("CORS_ORIGINS", default_origins))
             object.__setattr__(self, "cors_origins", origins)
 
