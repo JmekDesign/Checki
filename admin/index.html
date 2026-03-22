@@ -37,8 +37,10 @@
         <button class="btn compact danger hide" id="btnLogout">Logout</button>
       </div>
       <div class="tabBar hide" id="tabBar">
-        <button class="tabBtn" id="tabOpen">Open checks</button>
+        <button class="tabBtn" id="tabOpen">Open</button>
         <button class="tabBtn" id="tabArchive">Archive</button>
+        <div class="tabFlex"></div>
+        <button class="btn compact primary hide tabBarAction" id="btnNewCheck">+ New</button>
       </div>
     </div>
 
@@ -58,15 +60,7 @@
 
     <!-- OPEN CHECKS -->
     <div class="card cardless hide" id="screenOpen">
-      <div class="row" style="justify-content:space-between">
-        <div>
-          <div class="h1" style="margin-bottom:4px">Open checks</div>
-          <div class="muted">Newest first</div>
-        </div>
-        <button class="btn primary" id="btnNewCheck">New check</button>
-      </div>
-      <div class="hr"></div>
-      <input class="inp" id="openSearch" placeholder='Search…' />
+      <input class="inp" id="openSearch" placeholder='Search…' style="margin-top:4px" />
       <div style="height:10px"></div>
       <div class="list" id="openList"></div>
       <div class="muted" id="openHint" style="margin-top:10px"></div>
@@ -98,6 +92,7 @@
         <button class="btn dpBtn" id="dpBtnFrom" style="flex:1">From…</button>
         <span class="muted">—</span>
         <button class="btn dpBtn" id="dpBtnTo" style="flex:1">To…</button>
+        <button class="btn compact" id="btnArchReset" title="Reset dates" style="flex:none">✕</button>
       </div>
 
       <div class="hr" style="margin-top:12px"></div>

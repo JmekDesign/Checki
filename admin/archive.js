@@ -203,11 +203,23 @@ window.CHK = window.CHK || {};
     const search  = $("archSearch");
     const fromInp = $("archFrom");
     const toInp   = $("archTo");
+    const resetBtn = $("btnArchReset");
 
     if (back) {
       back.onclick = () => {
         try { document.body.classList.remove("chk-readonly"); } catch (_) {}
         if (typeof CHK.show === "function") CHK.show("screenOpen", CHK.getToken?.() || "");
+      };
+    }
+
+    if (resetBtn) {
+      resetBtn.onclick = async () => {
+        if (fromInp) fromInp.value = "";
+        if (toInp)   toInp.value   = "";
+        document.querySelectorAll(".archQuick").forEach((b) => b.classList.remove("primary"));
+        window.CHK?.datepicker?.updateButtons?.();
+        offset = 0;
+        await load().catch((e) => CHK.toast?.("Archive: " + (e.message || e)));
       };
     }
 
@@ -251,8 +263,14 @@ window.CHK = window.CHK || {};
   }
 
   CHK.archive = CHK.archive || {};
+  // Full load: resets filters to "week" (called when navigating TO archive fresh)
   CHK.archive.load = async () => {
     setQuick("week");
+    offset = 0;
+    await load();
+  };
+  // Reload: keeps current filters (called when returning from archived check)
+  CHK.archive.reload = async () => {
     offset = 0;
     await load();
   };

@@ -111,23 +111,42 @@
       const num = c.number ?? c.check_number ?? "";
       const guest = c.guest_name_snapshot ?? c.guest ?? c.guest_name ?? "—";
       const total = Number(c.total ?? c.check_total ?? c.total_amount ?? 0);
-      const totalText = Number.isFinite(total) ? `${fmtMoney(total)} ₾` : "—";
+      const totalText = Number.isFinite(total) && total > 0 ? `${fmtMoney(total)} ₾` : "";
       const timeStr = c.opened_at
         ? new Date(c.opened_at).toLocaleTimeString(undefined, {hour:"2-digit", minute:"2-digit"})
         : "";
       const el = document.createElement("div");
       el.className = "item";
-      el.style.cursor = "pointer";
+      el.style.cssText = "cursor:pointer; display:flex; align-items:center; gap:10px";
       el.innerHTML = `
-        <div class="lineLeft">
+        <div class="lineLeft" style="flex:1;min-width:0">
           <div class="lineTitle"><b>#${escapeHtml(num)} · ${escapeHtml(guest)}</b></div>
-          <div class="lineMeta"><span>${escapeHtml(timeStr)}</span></div>
+          <div class="lineMeta">
+            <span>${escapeHtml(timeStr)}</span>
+            ${totalText ? `<span style="font-weight:700;color:var(--text)">${escapeHtml(totalText)}</span>` : ""}
+          </div>
         </div>
-        <div class="lineTotal">${totalText}</div>
+        <button class="btn compact danger" style="flex:none;white-space:nowrap">Close</button>
       `;
+      const closeBtn = el.querySelector("button");
+      closeBtn.onclick = async (e)=>{ e.stopPropagation(); await closeCheckInline(c); };
       el.onclick = ()=>openCheck(c.id || c.check_id);
       list.appendChild(el);
     });
+  }
+
+  async function closeCheckInline(c) {
+    const num   = c.number ?? c.check_number ?? "";
+    const guest = c.guest_name_snapshot ?? c.guest ?? c.guest_name ?? "—";
+    const total = Number(c.total ?? c.check_total ?? c.total_amount ?? 0);
+    const method = await chkPayConfirm({ number: num, guest, total, items: [] });
+    if (method === null) return;
+    try {
+      const id = c.id || c.check_id;
+      await api(`/api/checks/${id}/close`, { method:"POST", body:JSON.stringify({ payment_method: method }) });
+      toast("Check closed");
+      await loadOpen().catch(()=>{});
+    } catch(e) { toast("Close error: " + e.message); }
   }
 
   $("btnCreateCheck").onclick = async ()=>{
@@ -557,7 +576,9 @@
     CHK._checkReadonly = false;
     if(typeof CHK.show === "function") CHK.show("screenArchive", _getToken());
     try{
-      if(CHK.archive && typeof CHK.archive.load === "function") await CHK.archive.load();
+      // Use reload (keeps current filters) instead of load (resets to "week")
+      const fn = CHK.archive?.reload ?? CHK.archive?.load;
+      if(typeof fn === "function") await fn();
     }catch(e){
       if(typeof CHK.toast === "function") CHK.toast("Archive: " + (e && e.message ? e.message : String(e)));
     }

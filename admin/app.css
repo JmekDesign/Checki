@@ -7,7 +7,7 @@
     *{box-sizing:border-box}
     body{
       margin:0;
-      background:linear-gradient(180deg,#090b0f, #0b0d10 60%);
+      background:var(--bg);
       color:var(--text);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
     }
@@ -38,18 +38,21 @@
 
     /* ── tab bar ── */
     .tabBar{
-      display:flex; gap:0; padding:0 10px;
+      display:flex; align-items:center; gap:0; padding:0 10px;
       border-top:1px solid rgba(255,255,255,.04);
     }
     .tabBtn{
-      padding:8px 14px 10px;
+      padding:13px 16px 14px;
       background:none; border:none;
       border-bottom:2px solid transparent;
-      color:var(--muted); font-size:14px; font-weight:500;
-      cursor:pointer;
+      color:var(--muted); font-size:18px; font-weight:600;
+      cursor:pointer; line-height:1;
       -webkit-tap-highlight-color:transparent;
     }
-    .tabBtn.active{ color:var(--text); border-bottom-color:var(--accent); font-weight:600; }
+    .tabBtn.active{ color:var(--text); border-bottom-color:var(--accent); font-weight:700; }
+    /* flex spacer + action button slot in tab bar */
+    .tabFlex{ flex:1; }
+    .tabBarAction{ margin:0 4px 0 8px; }
 
     .btn{
       border:1px solid rgba(255,255,255,.14);
@@ -314,6 +317,8 @@
   opacity:1 !important;
   pointer-events:auto !important;
 }
+/* в архивном чеке — только кнопка "← Archive", кнопка "← Checks" скрыта */
+.chk-readonly #btnBackFromCheck{ display:none !important; }
 
 /* УБРАТЬ +/- В АРХИВНОМ ЧЕКЕ, НО ОСТАВИТЬ ЧИСЛО */
 .chk-readonly .qtyCtl button{ display:none !important; }
@@ -369,6 +374,10 @@
   letter-spacing:.06em;
   padding:14px 0 6px;
 }
+
+/* ── Archive list: gap between items ── */
+#archList{ display:flex; flex-direction:column; gap:8px; }
+#archList .archDayLabel{ margin-top:4px; padding:6px 0 2px; }
 
 /* ── Venue / manager screen ── */
 .vRoleBadge {

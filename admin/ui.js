@@ -38,6 +38,8 @@ window.CHK = window.CHK || {};
       $("tabBar")?.classList.toggle("hide", !(token && TAB_SCREENS.includes(screen)));
       $("tabOpen")?.classList.toggle("active", screen === "screenOpen");
       $("tabArchive")?.classList.toggle("active", screen === "screenArchive");
+      // "+ New" button in tab bar: only on Open checks
+      $("btnNewCheck")?.classList.toggle("hide", screen !== "screenOpen");
 
       // Gear / venue button (manager+ only)
       const profile = window.CHK?.getUserProfile?.() || null;
