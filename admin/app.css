@@ -532,7 +532,8 @@
 /* ── date picker buttons ── */
 .dpBtn {
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
+  padding: 7px 8px;
   color: var(--muted);
   border-color: rgba(255,255,255,.10);
 }
