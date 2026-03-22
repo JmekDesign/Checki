@@ -1,4 +1,7 @@
-.PHONY: up down restart logs test lint typecheck lint-fix db-shell db-init db-test-init
+.PHONY: up down restart logs test lint typecheck lint-fix deploy db-shell db-init db-test-init
+
+SERVER=root@77.73.238.214
+SERVER_DIR=/srv/checki
 
 # Docker
 up:
@@ -12,6 +15,11 @@ restart:
 
 logs:
 	docker compose logs -f checki-api
+
+# Deploy
+deploy:
+	git push origin master
+	ssh $(SERVER) "cd $(SERVER_DIR) && git pull && docker compose build checki-api && bash api_restart.sh"
 
 # Quality
 test:
