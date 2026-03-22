@@ -3,8 +3,9 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException
+from pydantic import BaseModel
 
-from ..core.security import require_user
+from ..core.security import hash_password, require_user
 from ..db.conn import db_conn, db_release
 
 router = APIRouter()
@@ -91,6 +92,40 @@ def super_venues(
                 }
             )
         return {"ok": True, "items": items, "total": len(items)}
+    finally:
+        db_release(conn)
+
+
+class ResetPasswordIn(BaseModel):
+    password: str
+
+
+@router.post("/api/super/venues/{venue_id}/reset-password")
+def super_reset_password(
+    venue_id: str,
+    payload: ResetPasswordIn,
+    authorization: str | None = Header(default=None, alias="Authorization"),
+) -> dict[str, Any]:
+    _require_super(authorization)
+    if len(payload.password) < 4:
+        raise HTTPException(status_code=400, detail="password too short")
+
+    conn = db_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            """
+            UPDATE users SET password_hash = %s
+            WHERE venue_id = %s AND role = 'manager'
+            RETURNING login;
+            """,
+            (hash_password(payload.password), venue_id),
+        )
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="manager not found")
+        conn.commit()
+        return {"ok": True, "login": row[0]}
     finally:
         db_release(conn)
 

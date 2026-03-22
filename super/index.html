@@ -123,6 +123,20 @@
   </div>
 </div>
 
+<!-- RESET PASSWORD MODAL -->
+<div class="modalBack hide" id="resetModal">
+  <div class="modal">
+    <div class="modalTitle">Reset password</div>
+    <div class="modalBody" id="resetBody">—</div>
+    <input class="inp" id="resetInp" placeholder="New password" type="password" autocomplete="new-password" />
+    <div class="errMsg" id="resetErr"></div>
+    <div class="modalBtns" style="margin-top:12px">
+      <button class="btn" id="resetCancel">Cancel</button>
+      <button class="btn primary" id="resetOk">Set password</button>
+    </div>
+  </div>
+</div>
+
 <!-- CONFIRM MODAL -->
 <div class="modalBack hide" id="confirmModal">
   <div class="modal">
@@ -280,9 +294,12 @@ function renderTable(q) {
       <td>${v.revenue_30d > 0 ? v.revenue_30d.toFixed(2) + ' ₾' : '<span class="muted">—</span>'}</td>
       <td class="muted">${fmtDate(v.created_at)}</td>
       <td><span class="badge ${v.is_active ? 'badgeOn' : 'badgeOff'}">${v.is_active ? 'Active' : 'Blocked'}</span></td>
-      <td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="btn ${v.is_active ? 'danger' : 'primary'}" data-id="${esc(v.id)}" data-name="${esc(v.name)}" data-active="${v.is_active}">
           ${v.is_active ? 'Block' : 'Unblock'}
+        </button>
+        <button class="btn" data-reset-id="${esc(v.id)}" data-reset-name="${esc(v.name)}" data-reset-login="${esc(v.manager_login||'')}">
+          Reset pwd
         </button>
       </td>
     </tr>
@@ -290,6 +307,9 @@ function renderTable(q) {
 
   tbody.querySelectorAll("button[data-id]").forEach(btn => {
     btn.onclick = () => confirmToggle(btn.dataset.id, btn.dataset.name, btn.dataset.active === "true");
+  });
+  tbody.querySelectorAll("button[data-reset-id]").forEach(btn => {
+    btn.onclick = () => openResetModal(btn.dataset.resetId, btn.dataset.resetName, btn.dataset.resetLogin);
   });
 }
 
@@ -311,6 +331,40 @@ function confirmToggle(id, name, isActive) {
       await loadVenues();
     } catch (e) {
       alert("Error: " + e.message);
+    }
+  };
+}
+
+/* ── RESET PASSWORD ── */
+function openResetModal(id, name, login) {
+  const modal = $("resetModal");
+  $("resetBody").textContent = login
+    ? `Manager: ${name} (login: ${login})`
+    : `Venue: ${name} — no manager yet`;
+  $("resetInp").value = "";
+  $("resetErr").textContent = "";
+  $("resetOk").disabled = false;
+  modal.classList.remove("hide");
+  $("resetInp").focus();
+
+  $("resetCancel").onclick = () => modal.classList.add("hide");
+  $("resetOk").onclick = async () => {
+    const pw = $("resetInp").value.trim();
+    if (!pw) { $("resetErr").textContent = "Enter new password"; return; }
+    if (pw.length < 4) { $("resetErr").textContent = "Min 4 characters"; return; }
+    $("resetOk").disabled = true;
+    $("resetErr").textContent = "";
+    try {
+      await apiCall(`/api/super/venues/${id}/reset-password`, {
+        method: "POST",
+        body: JSON.stringify({ password: pw }),
+      });
+      modal.classList.add("hide");
+      alert(`Password updated for ${name}`);
+    } catch (e) {
+      $("resetErr").textContent = e.message;
+    } finally {
+      $("resetOk").disabled = false;
     }
   };
 }
