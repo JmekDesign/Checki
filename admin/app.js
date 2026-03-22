@@ -87,6 +87,8 @@
   async function loadOpen(){
     const r = await api("/api/checks/open", {method:"GET"});
     openChecks = Array.isArray(r) ? r : (r.checks || r.items || []);
+    const s = $("openSearch");
+    if (s) s.value = "";
     renderOpen();
   }
 
