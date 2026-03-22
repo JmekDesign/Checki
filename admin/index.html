@@ -9,6 +9,19 @@
 <body>
   <div class="toast" id="toast"></div>
 
+  <!-- Payment method modal -->
+  <div class="modalBack hide" id="payBack">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modalTitle">Close check</div>
+      <div class="modalText" id="payText">—</div>
+      <div style="display:flex; gap:10px; margin-bottom:10px">
+        <button class="btn primary payMethodBtn" id="payCash" style="flex:1">💵 Cash</button>
+        <button class="btn primary payMethodBtn" id="payCard" style="flex:1">💳 Card</button>
+      </div>
+      <button class="btn" id="payCancel" style="width:100%; color:var(--muted)">Don't close</button>
+    </div>
+  </div>
+
   <!-- Confirm modal -->
   <div class="modalBack hide" id="confirmBack">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">

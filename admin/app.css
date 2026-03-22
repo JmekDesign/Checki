@@ -345,6 +345,13 @@
   padding:14px 0 6px;
 }
 
+/* ── payment method modal ── */
+.payMethodBtn {
+  padding: 16px 10px;
+  font-size: 16px;
+  border-radius: 14px;
+}
+
 /* ── date picker buttons ── */
 .dpBtn {
   text-align: center;

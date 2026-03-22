@@ -138,9 +138,47 @@ window.CHK = window.CHK || {};
     });
   };
 
+  // Payment method picker modal — resolves "cash" | "card" | null
+  const paymentConfirm = (opts) => {
+    const o = opts || {};
+    const back     = $("payBack");
+    const elText   = $("payText");
+    const btnCash   = $("payCash");
+    const btnCard   = $("payCard");
+    const btnCancel = $("payCancel");
+    if (!back) return Promise.resolve(null);
+
+    elText.textContent = String(o.text || "");
+    back.classList.remove("hide");
+
+    return new Promise((resolve) => {
+      let done = false;
+      const cleanup = () => {
+        if (done) return;
+        done = true;
+        back.classList.add("hide");
+        btnCash.onclick = null;
+        btnCard.onclick = null;
+        btnCancel.onclick = null;
+        back.onclick = null;
+        document.removeEventListener("keydown", onKey);
+      };
+      const finish = (val) => { cleanup(); resolve(val); };
+      const onKey  = (e) => { if (e.key === "Escape") finish(null); };
+
+      btnCash.onclick   = () => finish("cash");
+      btnCard.onclick   = () => finish("card");
+      btnCancel.onclick = () => finish(null);
+      back.onclick = (e) => { if (e.target === back) finish(null); };
+      document.addEventListener("keydown", onKey);
+      setTimeout(() => { try { btnCash.focus(); } catch (_) {} }, 0);
+    });
+  };
+
   CHK.$ = $;
   CHK.toast = toast;
   CHK.show = show;
   CHK.setAddMsg = setAddMsg;
   CHK.confirm = confirm;
+  CHK.paymentConfirm = paymentConfirm;
 })();

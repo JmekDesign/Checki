@@ -17,6 +17,7 @@
   const $ = (window.CHK && window.CHK.$) ? window.CHK.$ : ((id)=>document.getElementById(id));
   const toast = (window.CHK && window.CHK.toast) ? window.CHK.toast : ((msg)=>console.log(msg));
   const chkConfirm = (window.CHK && window.CHK.confirm) ? window.CHK.confirm : (async (o)=>window.confirm((typeof o==="string") ? o : String((o && (o.text || o.title)) || "Are you sure?")));
+  const chkPayConfirm = (opts) => (window.CHK && window.CHK.paymentConfirm) ? window.CHK.paymentConfirm(opts) : Promise.resolve(null);
   const setAddMsg = (window.CHK && window.CHK.setAddMsg) ? window.CHK.setAddMsg : (()=>{});
   const show = (screen)=>{ const fn = (window.CHK && window.CHK.show) ? window.CHK.show : null; if(fn) return fn(screen, token); };
   const setToken = (t)=>{
@@ -139,9 +140,18 @@
 
   $("btnCloseCheck").onclick = async ()=>{
     if(!currentCheckId) return;
-    if(!(await chkConfirm({title:"Close check", text:"Close this check?", okText:"Close", cancelText:"Cancel"}))) return;
+    const num   = currentCheck ? (currentCheck.number ?? "") : "";
+    const guest = currentCheck ? (currentCheck.guest_name_snapshot ?? "—") : "—";
+    const total = currentCheck ? Number(currentCheck.total ?? 0) : 0;
+    const method = await chkPayConfirm({
+      text: `#${num} · ${guest}\nTotal: ${fmtMoney(total)} ₾`,
+    });
+    if(method === null) return;
     try{
-      await api(`/api/checks/${currentCheckId}/close`, {method:"POST"});
+      await api(`/api/checks/${currentCheckId}/close`, {
+        method:"POST",
+        body: JSON.stringify({ payment_method: method }),
+      });
       toast("Check closed");
       currentCheckId=null; currentCheck=null;
       await loadOpen().catch(()=>{});
