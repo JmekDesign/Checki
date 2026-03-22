@@ -31,17 +31,9 @@ window.CHK = window.CHK || {};
   function renderVenue(r) {
     const el = $("venueHeader");
     if (!el || !r.venue) return;
-    const v = r.venue, s = r.stats || {};
-    const profile = CHK.getUserProfile?.() || {};
-    const role = profile.role || "manager";
-    const badgeClass = role === "superadmin" ? "vRoleManager" : role === "manager" ? "vRoleManager" : "vRoleStaff";
-    const roleLabel = role === "superadmin" ? "Superadmin" : role === "manager" ? "Manager" : role;
+    const s = r.stats || {};
     el.innerHTML = `
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
-        <div class="h1" style="margin-bottom:2px">${esc(v.name)}</div>
-        <span class="vRoleBadge ${esc(badgeClass)}">${esc(roleLabel)}</span>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
         <div class="archStatCard" style="text-align:center">
           <div class="archStatVal">${s.open_now ?? 0}</div>
           <div class="archStatLabel">Open now</div>
