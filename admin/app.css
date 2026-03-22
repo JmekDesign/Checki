@@ -385,6 +385,19 @@
   padding:14px 0 6px;
 }
 
+/* ── Archive quick filter bar: horizontal scroll ── */
+.archQuickBar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+}
+.archQuickBar::-webkit-scrollbar { display: none; }
+.archQuickBar .btn { flex: 0 0 auto; white-space: nowrap; }
+
 /* ── Archive / Catalog lists: gap between items ── */
 #archList, #catalogList{ display:flex; flex-direction:column; gap:8px; }
 #archList .archDayLabel, #catalogList .archDayLabel{ margin-top:4px; padding:6px 0 2px; }
