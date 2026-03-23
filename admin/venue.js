@@ -114,6 +114,7 @@ window.CHK = window.CHK || {};
               Active
             </label>
           ` : ""}
+          <div id="smError" style="display:none;color:var(--danger,#ff5a6a);font-size:13px;padding:8px 10px;background:rgba(255,90,106,.08);border-radius:8px"></div>
         </div>
         <div class="modalBtns" style="justify-content:space-between">
           ${isEdit && s.role !== "manager" ? '<button class="btn danger" id="smDelete">Delete</button>' : '<div></div>'}
@@ -150,6 +151,13 @@ window.CHK = window.CHK || {};
       };
     }
 
+    const showErr = (msg) => {
+      const el = $("smError");
+      if (!el) return CHK.toast?.(msg);
+      el.textContent = msg;
+      el.style.display = "block";
+    };
+
     $("smOk").onclick = async () => {
       const name    = ($("smName").value  || "").trim();
       const login   = ($("smLogin").value || "").trim();
@@ -158,8 +166,10 @@ window.CHK = window.CHK || {};
       const isManager = $("smIsManager")?.checked || false;
       const activeEl  = $("smActive");
       const role = isManager ? "manager" : "staff";
-      if (!name || !login)  return CHK.toast?.("Name and login required");
-      if (!isEdit && !pw)   return CHK.toast?.("Password required");
+      const errEl = $("smError");
+      if (errEl) errEl.style.display = "none";
+      if (!name || !login)  return showErr("Name and login required");
+      if (!isEdit && !pw)   return showErr("Password required");
       try {
         if (!isEdit) {
           await api("/api/staff", {
@@ -176,7 +186,7 @@ window.CHK = window.CHK || {};
         back.classList.add("hide");
         await load();
       } catch (e) {
-        CHK.toast?.("Error: " + (e.message || String(e)));
+        showErr(e.message || String(e));
       }
     };
   }
