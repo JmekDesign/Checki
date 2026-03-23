@@ -15,9 +15,21 @@ logger = logging.getLogger(__name__)
 
 _CATEGORIES = frozenset(
     {
-        "Beer", "Wine", "Cocktails",
-        "Whisky", "Gin", "Vodka", "Rum", "Tequila", "Cognac & Brandy", "Absinthe", "Liqueur",
-        "Soft Drinks", "Coffee", "Food", "Other",
+        "Beer",
+        "Wine",
+        "Cocktails",
+        "Whisky",
+        "Gin",
+        "Vodka",
+        "Rum",
+        "Tequila",
+        "Cognac & Brandy",
+        "Absinthe",
+        "Liqueur",
+        "Soft Drinks",
+        "Coffee",
+        "Food",
+        "Other",
     }
 )
 
@@ -59,6 +71,9 @@ All still, sparkling, fortified wines, mulled wine, Georgian varieties.
   "prosecco" / "champagne" / "шампанское" / "sparkling" → category Wine
 
 ── COCKTAILS ────────────────────────────────────────────────────────────────
+COCKTAIL VARIANTS — second word is a meaningful modifier, ALWAYS preserve + fix typo:
+  "negroni sauer" / "negroni sour"    → {"name":"Negroni Sour","category":"Cocktails"}
+  "negroni sbagliato"                 → {"name":"Negroni Sbagliato","category":"Cocktails"}
   "negroni" / "negron" / "негрони"    → {"name":"Negroni","category":"Cocktails"}
   "mojito" / "mohito" / "мохито"      → {"name":"Mojito","category":"Cocktails"}
   "long island" / "lang island" / "LI" → {"name":"Long Island Iced Tea","category":"Cocktails"}
@@ -66,10 +81,13 @@ All still, sparkling, fortified wines, mulled wine, Georgian varieties.
   "espresso martini" / "esp mart"     → {"name":"Espresso Martini","category":"Cocktails"}
   "old fashioned" / "old fash"        → {"name":"Old Fashioned","category":"Cocktails"}
   "margarita"                         → {"name":"Margarita","category":"Cocktails"}
+  "tommy margarita" / "tommy marg"    → {"name":"Tommy Margarita","category":"Cocktails"}
   "b52" / "B-52"                      → {"name":"B-52","category":"Cocktails"}
   "sex on the beach"                  → {"name":"Sex on the Beach","category":"Cocktails"}
   "pina colada" / "pina col"          → {"name":"Piña Colada","category":"Cocktails"}
   "gin tonic" / "g&t" / "gin & tonic" → {"name":"Gin & Tonic","category":"Cocktails"}
+  "whisky sour" / "whiskey sauer"     → {"name":"Whisky Sour","category":"Cocktails"}
+  "amaretto sour" / "amareto sauer"   → {"name":"Amaretto Sour","category":"Cocktails"}
   "hugo" / "daiquiri" / "sour" / "spritz" → category Cocktails
 
 ── WHISKY ───────────────────────────────────────────────────────────────────
@@ -144,6 +162,15 @@ MOST IMPORTANT — NAME PRESERVATION:
 - Do NOT rename "Glintveyn" → keep as "Glintveyn", just set category to Wine
 - Do NOT rename "Draft Beer" → keep as "Draft Beer"
 - Size/variant suffixes (Small, Large, 0.5, Double) must be preserved exactly
+
+MULTI-WORD NAMES — NEVER drop the second word, always correct its spelling:
+- "Negroni Sauer" → "Negroni Sour"  (fix typo, keep both words — it's a real cocktail variant)
+- "Whiskey Sauer" → "Whisky Sour"   (fix both words)
+- "Beer Smol" → "Beer Small"        (fix typo, keep modifier)
+- If the second word is a modifier (Sour, Spritz, Sbagliato, Small, Large, Double,
+  Royal, Sling, Fizz, Collins, Smash, Mule, Colada, Fizz, Sunrise, etc.),
+  it describes a distinct variant — ALWAYS keep it and fix spelling if needed.
+
 - Only translate if the name is entirely in Cyrillic/Georgian script AND has a known English equivalent
   e.g. "мохито" → "Mojito"; "капучино" → "Cappuccino"; "бифитер" → "Beefeater"
   but "Glintveyn" is already Latin-script staff name — keep it
@@ -192,9 +219,7 @@ def _call_openai(raw_name: str) -> tuple[str, str]:
     return canonical, cat
 
 
-def _save_normalized(
-    product_id: str, venue_id: str, canonical: str, category: str
-) -> None:
+def _save_normalized(product_id: str, venue_id: str, canonical: str, category: str) -> None:
     conn = db_conn()
     try:
         cur = conn.cursor()

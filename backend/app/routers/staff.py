@@ -158,7 +158,7 @@ def staff_update(
 
 
 @router.delete("/api/staff/{staff_id}")
-def staff_deactivate(
+def staff_delete(
     staff_id: UUID,
     authorization: str | None = Header(default=None, alias="Authorization"),
 ) -> dict[str, Any]:
@@ -168,7 +168,7 @@ def staff_deactivate(
         raise HTTPException(status_code=400, detail="user has no venue")
 
     if str(staff_id) == user["user_id"]:
-        raise HTTPException(status_code=400, detail="cannot deactivate yourself")
+        raise HTTPException(status_code=400, detail="cannot delete yourself")
 
     conn = db_conn()
     try:
@@ -180,11 +180,13 @@ def staff_deactivate(
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="staff not found")
-        if row[0] == "superadmin":
-            raise HTTPException(status_code=403, detail="cannot deactivate superadmin")
+        if row[0] == "manager":
+            raise HTTPException(status_code=403, detail="cannot delete manager account")
 
+        # Delete sessions first, then user
+        cur.execute("DELETE FROM sessions WHERE user_id = %s;", (str(staff_id),))
         cur.execute(
-            "UPDATE users SET is_active = false WHERE id = %s AND venue_id = %s;",
+            "DELETE FROM users WHERE id = %s AND venue_id = %s;",
             (str(staff_id), venue_id),
         )
         conn.commit()
