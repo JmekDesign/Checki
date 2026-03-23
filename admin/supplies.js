@@ -5,9 +5,10 @@
   const show  = (screen) => CHK.show(screen, CHK.getToken?.() || "");
   const toast = (msg) => CHK.toast?.(msg);
 
-  let _currentOrderId   = null;
-  let _currentOrderTitle = "";
+  let _currentOrderId     = null;
+  let _currentOrderTitle  = "";
   let _currentOrderClosed = false;
+  let _allOrders          = { active: [], archive: [] };
 
   // ── screenSupplies nav ──────────────────────────────────────────────────────
   $("btnBackFromSupplies").onclick = () => show("screenVenue");
@@ -17,6 +18,10 @@
     show("screenNewSupply");
     $("supplyTitle").focus();
   };
+
+  $("suppliesSearch").addEventListener("input", () => {
+    renderSuppliesList(_allOrders.active, _allOrders.archive);
+  });
 
   // ── screenNewSupply ─────────────────────────────────────────────────────────
   $("btnBackFromNewSupply").onclick = () => {
@@ -29,10 +34,9 @@
     if (!title) { $("supplyTitle").focus(); return; }
     $("btnCreateSupply").disabled = true;
     try {
-      await api()("/api/procurement", { method: "POST", body: JSON.stringify({ title }) });
-      toast("Order created");
-      show("screenSupplies");
-      loadSupplies();
+      const r = await api()("/api/procurement", { method: "POST", body: JSON.stringify({ title }) });
+      // Go directly into the new order
+      openOrder(r.id, title, false);
     } catch (e) {
       toast("Error: " + e.message);
     } finally {
@@ -51,7 +55,9 @@
         api()("/api/procurement", { method: "GET" }),
         api()("/api/procurement/archive", { method: "GET" }),
       ]);
-      renderSuppliesList(activeR.items || [], archiveR.items || []);
+      _allOrders = { active: activeR.items || [], archive: archiveR.items || [] };
+      $("suppliesSearch").value = "";
+      renderSuppliesList(_allOrders.active, _allOrders.archive);
     } catch (e) {
       toast("Load error: " + e.message);
     }
@@ -60,33 +66,37 @@
   function renderSuppliesList(active, archive) {
     const list = $("suppliesList");
     const hint = $("suppliesHint");
+    const q    = ($("suppliesSearch").value || "").trim().toLowerCase();
 
-    if (!active.length && !archive.length) {
+    const filterFn = (o) => !q || o.title.toLowerCase().includes(q);
+    const filteredActive  = active.filter(filterFn);
+    const filteredArchive = archive.filter(filterFn);
+
+    if (!filteredActive.length && !filteredArchive.length) {
       list.innerHTML = "";
-      hint.textContent = "No supply orders yet.";
+      hint.textContent = q ? "Nothing found." : "No supply orders yet.";
       return;
     }
     hint.textContent = "";
 
     let html = "";
 
-    if (active.length) {
-      html += `<div class="muted" style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 0 8px">Active</div>`;
-      active.forEach((o) => {
-        const checked = o.items.filter((i) => i.is_checked).length;
-        const total   = o.items.length;
+    if (filteredActive.length) {
+      html += sectionHeader("Active");
+      filteredActive.forEach((o) => {
+        const checked  = o.items.filter((i) => i.is_checked).length;
+        const total    = o.items.length;
         const progress = total ? `${checked}/${total}` : "empty";
         html += orderRowHtml(o, false, progress);
       });
     }
 
-    if (archive.length) {
-      html += `<div class="muted" style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:12px 0 8px">Archive</div>`;
-      archive.forEach((o) => {
-        const done = o.items.filter((i) => i.is_checked).length;
+    if (filteredArchive.length) {
+      html += sectionHeader("Archive");
+      filteredArchive.forEach((o) => {
+        const done  = o.items.filter((i) => i.is_checked).length;
         const total = o.items.length;
-        const progress = total ? `${done}/${total} done` : "";
-        html += orderRowHtml(o, true, progress);
+        html += orderRowHtml(o, true, total ? `${done}/${total} done` : "");
       });
     }
 
@@ -94,22 +104,21 @@
 
     list.querySelectorAll("[data-open-order]").forEach((el) => {
       el.addEventListener("click", () => {
-        const id     = el.dataset.openOrder;
-        const title  = el.dataset.orderTitle;
-        const closed = el.dataset.orderClosed === "true";
-        openOrder(id, title, closed);
+        openOrder(el.dataset.openOrder, el.dataset.orderTitle, el.dataset.orderClosed === "true");
       });
     });
   }
 
+  function sectionHeader(label) {
+    return `<div class="muted" style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 0 8px">${label}</div>`;
+  }
+
   function orderRowHtml(o, isClosed, progress) {
-    const date = o.closed_at || o.created_at;
-    const dateStr = date
-      ? new Date(date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })
-      : "";
-    const badge = isClosed
+    const date    = o.closed_at || o.created_at;
+    const dateStr = date ? fmtDate(date) : "";
+    const meta    = isClosed
       ? `<span class="muted" style="font-size:12px">${dateStr}</span>`
-      : `<span style="font-size:12px;color:var(--muted)">${progress}</span>`;
+      : `<span class="muted" style="font-size:12px">${progress}${dateStr ? " · " + dateStr : ""}</span>`;
     return `
       <div class="item" style="cursor:pointer"
            data-open-order="${esc(o.id)}"
@@ -117,7 +126,7 @@
            data-order-closed="${isClosed}">
         <div class="lineLeft" style="flex:1;min-width:0">
           <div class="lineTitle"><b>${esc(o.title)}</b></div>
-          <div class="lineMeta">${badge}</div>
+          <div class="lineMeta">${meta}</div>
         </div>
         <span class="muted">→</span>
       </div>`;
@@ -129,11 +138,12 @@
     _currentOrderTitle  = title;
     _currentOrderClosed = isClosed;
 
-    $("supplyDetailTitle").textContent = title;
-    $("btnCloseSupply").style.display  = isClosed ? "none" : "";
-    // Add-item row: hide for closed orders
-    const addRow = $("supplyDetailAddRow");
-    if (addRow) addRow.style.display = isClosed ? "none" : "";
+    $("supplyDetailTitle").textContent    = title;
+    $("btnCloseSupply").style.display     = isClosed ? "none" : "";
+    $("supplyDetailAddRow").style.display = isClosed ? "none" : "";
+    $("supplyItemText").value = "";
+    $("supplyItemQty").value  = "";
+    hideSuggest();
 
     show("screenSupplyDetail");
     loadOrderDetail(id);
@@ -141,7 +151,6 @@
 
   async function loadOrderDetail(id) {
     try {
-      // Fetch the right list depending on status
       const endpoint = _currentOrderClosed ? "/api/procurement/archive" : "/api/procurement";
       const r = await api()(endpoint, { method: "GET" });
       const order = (r.items || []).find((o) => o.id === id);
@@ -167,10 +176,8 @@
     hint.style.display = "none";
 
     list.innerHTML = items.map((item) => {
-      const crossed = item.is_checked
-        ? "text-decoration:line-through;color:var(--muted)"
-        : "";
-      const delBtn = _currentOrderClosed ? "" :
+      const crossed  = item.is_checked ? "text-decoration:line-through;color:var(--muted)" : "";
+      const delBtn   = _currentOrderClosed ? "" :
         `<button class="btn compact" style="padding:2px 8px;font-size:12px;color:var(--muted)" data-del-item="${esc(item.id)}">✕</button>`;
       const checkbox = _currentOrderClosed
         ? `<span style="width:20px;text-align:center;color:var(--${item.is_checked ? "accent" : "muted"})">${item.is_checked ? "✓" : "·"}</span>`
@@ -184,16 +191,15 @@
         </div>`;
     }).join("");
 
-    // Checkbox toggles
     list.querySelectorAll("[data-chk]").forEach((el) => {
       el.onchange = async () => {
         const itemId = el.dataset.chk;
         try {
           const r = await api()(`/api/procurement/${_currentOrderId}/items/${itemId}`, { method: "PATCH" });
-          const row = list.querySelector(`[data-item-row="${itemId}"] span:nth-child(2)`);
-          if (row) {
-            row.style.textDecoration = r.is_checked ? "line-through" : "";
-            row.style.color = r.is_checked ? "var(--muted)" : "";
+          const textSpan = list.querySelector(`[data-item-row="${itemId}"] span:nth-child(2)`);
+          if (textSpan) {
+            textSpan.style.textDecoration = r.is_checked ? "line-through" : "";
+            textSpan.style.color          = r.is_checked ? "var(--muted)" : "";
           }
         } catch (e) {
           toast("Error: " + e.message);
@@ -202,7 +208,6 @@
       };
     });
 
-    // Delete item buttons
     list.querySelectorAll("[data-del-item]").forEach((el) => {
       el.onclick = async () => {
         const itemId = el.dataset.delItem;
@@ -217,24 +222,19 @@
     });
   }
 
-  // Back button
   $("btnBackFromSupplyDetail").onclick = () => {
+    hideSuggest();
     show("screenSupplies");
     loadSupplies();
   };
 
-  // Close order
   $("btnCloseSupply").onclick = async () => {
     if (!_currentOrderId) return;
-
-    // Check all items are checked
-    const checkboxes = document.querySelectorAll("#supplyItemsList [data-chk]");
-    const unchecked  = [...checkboxes].filter((el) => !el.checked);
+    const unchecked = [...document.querySelectorAll("#supplyItemsList [data-chk]")].filter((el) => !el.checked);
     if (unchecked.length > 0) {
       toast(`${unchecked.length} item${unchecked.length > 1 ? "s" : ""} not checked yet`);
       return;
     }
-
     const ok = await CHK.confirm({
       title: "Close order?",
       text: `"${_currentOrderTitle}" will move to archive.`,
@@ -242,7 +242,6 @@
       danger: true,
     });
     if (!ok) return;
-
     try {
       await api()(`/api/procurement/${_currentOrderId}/close`, { method: "POST" });
       toast("Order closed");
@@ -253,16 +252,72 @@
     }
   };
 
-  // Add item
+  // ── Add item + catalog suggestions ─────────────────────────────────────────
   $("btnAddSupplyItem").onclick = addItem;
   $("supplyItemText").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") addItem();
+    if (e.key === "Enter")  { addItem(); }
+    if (e.key === "Escape") { hideSuggest(); }
+  });
+
+  let _suggestTimer = null;
+  $("supplyItemText").addEventListener("input", () => {
+    clearTimeout(_suggestTimer);
+    const q = $("supplyItemText").value.trim();
+    if (!q) { hideSuggest(); return; }
+    _suggestTimer = setTimeout(() => loadSuggest(q), 200);
+  });
+
+  async function loadSuggest(q) {
+    try {
+      const r = await api()(`/api/products?q=${encodeURIComponent(q)}&limit=8&active_only=true`, { method: "GET" });
+      const items = (r.items || []);
+      if (!items.length) { hideSuggest(); return; }
+
+      // Exact match → just fill silently, no dropdown
+      const exact = items.find((p) => (p.name || "").toLowerCase() === q.toLowerCase());
+      if (exact) { hideSuggest(); return; }
+
+      showSuggest(items);
+    } catch (_) {
+      hideSuggest();
+    }
+  }
+
+  function showSuggest(items) {
+    const box = $("supplySuggestBox");
+    box.innerHTML = items.map((p) =>
+      `<div class="suggestItem" data-suggest-name="${esc(p.name)}" style="cursor:pointer">
+        <b>${esc(p.name)}</b>
+        <span class="muted" style="font-size:12px">${esc(p.category || "")}</span>
+      </div>`
+    ).join("");
+    box.style.display = "block";
+
+    box.querySelectorAll("[data-suggest-name]").forEach((el) => {
+      el.onmousedown = (e) => {
+        e.preventDefault(); // don't blur the input
+        $("supplyItemText").value = el.dataset.suggestName;
+        hideSuggest();
+        $("supplyItemQty").focus();
+      };
+    });
+  }
+
+  function hideSuggest() {
+    const box = $("supplySuggestBox");
+    box.style.display = "none";
+    box.innerHTML = "";
+  }
+
+  $("supplyItemText").addEventListener("blur", () => {
+    setTimeout(hideSuggest, 150);
   });
 
   async function addItem() {
     const text = $("supplyItemText").value.trim();
     const qty  = $("supplyItemQty").value.trim() || "1";
     if (!text) { $("supplyItemText").focus(); return; }
+    hideSuggest();
     $("btnAddSupplyItem").disabled = true;
     try {
       await api()(`/api/procurement/${_currentOrderId}/items`, {
@@ -279,7 +334,6 @@
       $("btnAddSupplyItem").disabled = false;
     }
   }
-
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
   function esc(s) {

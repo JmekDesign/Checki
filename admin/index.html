@@ -167,6 +167,7 @@
         <button class="btn compact" id="btnBackFromSupplies">← Back</button>
         <button class="btn compact primary" id="btnNewSupply">+ New</button>
       </div>
+      <input class="inp" id="suppliesSearch" placeholder="Search orders…" style="margin-bottom:10px" />
       <div class="list" id="suppliesList"></div>
       <div class="muted" id="suppliesHint" style="margin-top:10px;text-align:center"></div>
     </div>
@@ -203,11 +204,16 @@
       <div class="list" id="supplyItemsList"></div>
       <div class="muted" id="supplyItemsHint" style="margin-top:10px">Empty. Add items below.</div>
       <!-- Add item row -->
-      <div class="hr" style="margin-top:14px"></div>
-      <div class="row" style="gap:8px;margin-top:10px">
-        <input class="inp" id="supplyItemText" placeholder="Item name…" style="flex:1" autocomplete="off" />
-        <input class="inp" id="supplyItemQty"  placeholder="Qty" style="width:60px" />
-        <button class="btn primary compact" id="btnAddSupplyItem">Add</button>
+      <div id="supplyDetailAddRow">
+        <div class="hr" style="margin-top:14px"></div>
+        <div style="position:relative;margin-top:10px">
+          <div class="suggestBox" id="supplySuggestBox" style="display:none;position:absolute;bottom:100%;left:0;right:0;z-index:50;margin-bottom:4px"></div>
+          <div class="row" style="gap:8px">
+            <input class="inp" id="supplyItemText" placeholder="Item name…" style="flex:1" autocomplete="off" />
+            <input class="inp" id="supplyItemQty"  placeholder="Qty" style="width:60px" />
+            <button class="btn primary compact" id="btnAddSupplyItem">Add</button>
+          </div>
+        </div>
       </div>
     </div>
 
