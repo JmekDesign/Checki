@@ -40,6 +40,9 @@ def super_venues(
                 (SELECT login FROM users
                  WHERE venue_id = v.id AND role = 'manager'
                  ORDER BY created_at ASC LIMIT 1) AS manager_login,
+                (SELECT email FROM users
+                 WHERE venue_id = v.id AND role = 'manager'
+                 ORDER BY created_at ASC LIMIT 1) AS manager_email,
                 -- staff count (all venue users: manager + staff)
                 (SELECT COUNT(*) FROM users
                  WHERE venue_id = v.id) AS staff_count,
@@ -70,6 +73,7 @@ def super_venues(
                 is_active,
                 created_at,
                 manager_login,
+                manager_email,
                 staff_count,
                 check_count,
                 checks_30d,
@@ -85,6 +89,7 @@ def super_venues(
                     "is_active": bool(is_active),
                     "created_at": created_at.isoformat() if created_at else None,
                     "manager_login": manager_login,
+                    "manager_email": manager_email or "",
                     "staff_count": int(staff_count or 0),
                     "check_count": int(check_count or 0),
                     "checks_30d": int(checks_30d or 0),

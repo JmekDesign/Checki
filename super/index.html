@@ -286,9 +286,9 @@ function renderTable(q) {
       </td>
       <td class="${v.manager_login ? '' : 'muted'}">${esc(v.manager_login || '—')}</td>
       <td>
-        ${v.email ? `<div>${esc(v.email)}</div>` : ''}
+        ${v.manager_email ? `<div>${esc(v.manager_email)}</div>` : ''}
         ${v.phone ? `<div class="muted">${esc(v.phone)}</div>` : ''}
-        ${!v.email && !v.phone ? '<span class="muted">—</span>' : ''}
+        ${!v.manager_email && !v.phone ? '<span class="muted">—</span>' : ''}
       </td>
       <td class="muted">${v.staff_count}</td>
       <td>
