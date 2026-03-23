@@ -120,7 +120,7 @@
       ? `<span class="muted" style="font-size:12px">${dateStr}</span>`
       : `<span class="muted" style="font-size:12px">${progress}${dateStr ? " · " + dateStr : ""}</span>`;
     return `
-      <div class="item" style="cursor:pointer"
+      <div class="item" style="cursor:pointer${isClosed ? ";opacity:0.4" : ""}"
            data-open-order="${esc(o.id)}"
            data-order-title="${esc(o.title)}"
            data-order-closed="${isClosed}">
