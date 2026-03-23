@@ -45,8 +45,10 @@
       <div class="tabBar hide" id="tabBar">
         <button class="tabBtn" id="tabOpen">Open</button>
         <button class="tabBtn" id="tabArchive">Archive</button>
+        <button class="tabBtn hide" id="tabSupplies">Supplies</button>
         <div class="tabFlex"></div>
         <button class="btn compact primary hide tabBarAction" id="btnNewCheck">+ New</button>
+        <button class="btn compact primary hide tabBarAction" id="btnNewSupply">+ New</button>
       </div>
     </div>
 
@@ -136,8 +138,8 @@
         <div class="item" id="btnGoCatalog" style="cursor:pointer">
           <span style="font-weight:500">Product catalog</span><span class="muted">→</span>
         </div>
-        <div class="item" id="btnGoProcurement" style="cursor:pointer">
-          <span style="font-weight:500">Procurement</span><span class="muted">→</span>
+        <div class="item" id="btnGoSupplies" style="cursor:pointer">
+          <span style="font-weight:500">Supplies</span><span class="muted">→</span>
         </div>
         <div class="item" style="opacity:.3;cursor:default">
           <span>Subscription</span><span class="muted">→</span>
@@ -159,27 +161,51 @@
     <!-- Catalog modal -->
     <div class="modalBack hide" id="catalogModalBack"></div>
 
-    <!-- PROCUREMENT -->
-    <div class="card cardless hide" id="screenProcurement">
-      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
-        <button class="btn compact" id="btnBackFromProcurement">← Back</button>
-        <div style="font-weight:700;font-size:15px">Procurement</div>
-        <button class="btn compact primary" id="btnNewOrder">+ New</button>
+    <!-- SUPPLIES: list -->
+    <div class="card cardless hide" id="screenSupplies">
+      <div style="height:4px"></div>
+      <div class="list" id="suppliesList"></div>
+      <div class="muted" id="suppliesHint" style="margin-top:10px;text-align:center"></div>
+    </div>
+
+    <!-- SUPPLIES: new order -->
+    <div class="card hide" id="screenNewSupply">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <div class="h1" style="margin-bottom:4px">New supply</div>
+          <div class="muted">Name the order</div>
+        </div>
+        <button class="btn" id="btnBackFromNewSupply">← Back</button>
       </div>
-
-      <!-- Tab bar: Active / Archive -->
-      <div style="display:flex;gap:6px;margin-bottom:14px">
-        <button class="btn compact" id="tabProcActive" style="flex:1">Active</button>
-        <button class="btn compact" id="tabProcArchive" style="flex:1">Archive</button>
+      <div class="hr"></div>
+      <input class="inp" id="supplyTitle" placeholder='E.g. "Bar restock, spirits"' />
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" id="btnCreateSupply">Create</button>
       </div>
+    </div>
 
-      <!-- Active orders -->
-      <div id="procActiveList"></div>
-      <div class="muted" id="procActiveHint" style="text-align:center;padding:24px 0;display:none">No open orders.</div>
-
-      <!-- Archive list -->
-      <div id="procArchiveList" style="display:none"></div>
-      <div class="muted" id="procArchiveHint" style="text-align:center;padding:24px 0;display:none">No closed orders yet.</div>
+    <!-- SUPPLIES: order detail -->
+    <div class="card hide" id="screenSupplyDetail">
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
+        <div style="min-width:0">
+          <div class="h1" id="supplyDetailTitle" style="margin-bottom:2px">Supply</div>
+          <div class="muted" id="supplyDetailMeta" style="font-size:13px">—</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+          <button class="btn compact" id="btnBackFromSupplyDetail">← Supplies</button>
+          <button class="btn danger" id="btnCloseSupply">Close</button>
+        </div>
+      </div>
+      <div style="height:10px"></div>
+      <div class="list" id="supplyItemsList"></div>
+      <div class="muted" id="supplyItemsHint" style="margin-top:10px">Empty. Add items below.</div>
+      <!-- Add item row -->
+      <div class="hr" style="margin-top:14px"></div>
+      <div class="row" style="gap:8px;margin-top:10px">
+        <input class="inp" id="supplyItemText" placeholder="Item name…" style="flex:1" autocomplete="off" />
+        <input class="inp" id="supplyItemQty"  placeholder="Qty" style="width:60px" />
+        <button class="btn primary compact" id="btnAddSupplyItem">Add</button>
+      </div>
     </div>
 
     <!-- NEW CHECK -->
@@ -244,7 +270,7 @@
     </div>
   </div>
 
-  <script defer src="./procurement.js"></script>
+  <script defer src="./supplies.js"></script>
   <script defer src="./main.js"></script>
 </body>
 </html>

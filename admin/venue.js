@@ -165,10 +165,6 @@ window.CHK = window.CHK || {};
       try { await CHK.catalog?.load(); } catch (e) { CHK.toast?.("Catalog: " + e.message); }
     };
 
-    const btnProcurement = $("btnGoProcurement");
-    if (btnProcurement) btnProcurement.onclick = () => {
-      CHK.procurement?.open();
-    };
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
