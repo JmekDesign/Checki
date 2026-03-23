@@ -146,37 +146,51 @@
     .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
     .langOpt.active { color: var(--text); }
     .navLogin {
+      box-sizing: border-box; line-height: 1;
       background: none; border: 1px solid var(--border);
       color: var(--text); height: 34px; padding: 0 14px; border-radius: 10px;
-      font-weight: 700; font-size: 13px; white-space: nowrap;
-      transition: border-color .15s; flex: none; display: flex; align-items: center;
+      font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none;
+      transition: border-color .15s; flex: none; display: inline-flex; align-items: center;
     }
     .navLogin:hover { border-color: rgba(255,255,255,.3); }
     .navCta {
+      box-sizing: border-box; line-height: 1;
       background: var(--accent); color: #0f1116;
       height: 34px; padding: 0 16px; border-radius: 10px; font-weight: 700; font-size: 13px;
-      white-space: nowrap; transition: background .15s; flex: none; display: flex; align-items: center;
+      white-space: nowrap; transition: background .15s; flex: none; display: inline-flex; align-items: center;
+      text-decoration: none;
     }
     .navCta:hover { background: var(--accent2); }
     /* Mobile burger */
     .navBurger {
       display: none; background: none; border: 1px solid var(--border);
       color: var(--text); height: 34px; width: 40px; border-radius: 10px; cursor: pointer;
-      font-size: 18px; align-items: center; justify-content: center;
-      -webkit-tap-highlight-color: transparent;
+      font-size: 18px; align-items: center; justify-content: center; box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent; line-height: 1;
     }
     .navDrawer {
-      display: none; position: absolute; top: calc(100% + 6px); right: 0;
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-      padding: 8px; min-width: 180px; z-index: 200; flex-direction: column; gap: 6px;
+      display: none; position: absolute; top: calc(100% + 8px); right: 0;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 6px; min-width: 200px; z-index: 200; flex-direction: column; gap: 2px;
     }
     .navDrawer.open { display: flex; }
-    .navDrawerLogin {
-      display: flex; align-items: center; height: 38px; padding: 0 14px; border-radius: 8px;
-      background: none; border: 1px solid var(--border); color: var(--text);
-      font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none;
+    .navDrawerItem {
+      display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 10px;
+      background: none; border: none; color: var(--text);
+      font-weight: 700; font-size: 14px; white-space: nowrap; text-decoration: none;
+      cursor: pointer; transition: background .1s;
     }
-    @media (max-width: 480px) {
+    .navDrawerItem:hover { background: rgba(255,255,255,.06); }
+    .navDrawerItem.accent { color: var(--accent); }
+    .navDrawerSep { height: 1px; background: var(--border); margin: 4px 2px; }
+    .navDrawerLangs { display: flex; gap: 4px; padding: 2px 4px 4px; }
+    .navDrawerLang {
+      flex: 1; height: 34px; border-radius: 8px; border: none;
+      background: rgba(255,255,255,.04); color: var(--muted);
+      font-size: 12px; font-weight: 700; cursor: pointer; transition: all .1s;
+    }
+    .navDrawerLang:hover, .navDrawerLang.active { background: rgba(73,209,124,.12); color: var(--accent); }
+    @media (max-width: 520px) {
       .navLogin, .langDrop { display: none; }
       .navBurger { display: flex; }
       .navRight { position: relative; }
@@ -323,15 +337,15 @@
     <!-- Mobile burger -->
     <button class="navBurger" id="navBurger" aria-label="Menu">☰</button>
     <div class="navDrawer" id="navDrawer">
-      <a class="navDrawerLogin" href="https://admin.checki.ge" data-i="nav_login">Login</a>
-      <div class="langDrop" style="width:100%">
-        <button class="langDropBtn" id="langDropBtnMobile" style="width:100%;justify-content:space-between">🇬🇧 EN ▾</button>
-        <div class="langDropMenu" id="langDropMenuMobile" style="position:static;margin-top:4px;display:none">
-          <button class="langOpt" data-lang="ka">🇬🇪 Georgian</button>
-          <button class="langOpt active" data-lang="en">🇬🇧 English</button>
-          <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
-        </div>
+      <a class="navDrawerItem" href="https://admin.checki.ge" data-i="nav_login">Login</a>
+      <div class="navDrawerSep"></div>
+      <div class="navDrawerLangs">
+        <button class="navDrawerLang" data-lang="ka">🇬🇪 KA</button>
+        <button class="navDrawerLang active" data-lang="en">🇬🇧 EN</button>
+        <button class="navDrawerLang" data-lang="ru">🇷🇺 RU</button>
       </div>
+      <div class="navDrawerSep"></div>
+      <a class="navDrawerItem accent" href="#register" data-i="nav_cta">Попробовать →</a>
     </div>
   </div>
 </nav>
@@ -797,9 +811,10 @@ function applyLang(l) {
   const labels = { ka: "🇬🇪 KA", en: "🇬🇧 EN", ru: "🇷🇺 RU" };
   const dropBtn = document.getElementById("langDropBtn");
   if (dropBtn) dropBtn.textContent = (labels[l] || "EN") + " ▾";
-  const dropBtnMobile = document.getElementById("langDropBtnMobile");
-  if (dropBtnMobile) dropBtnMobile.textContent = (labels[l] || "EN") + " ▾";
   document.querySelectorAll(".langOpt").forEach(b => {
+    b.classList.toggle("active", b.dataset.lang === l);
+  });
+  document.querySelectorAll(".navDrawerLang").forEach(b => {
     b.classList.toggle("active", b.dataset.lang === l);
   });
 
@@ -812,10 +827,11 @@ function applyLang(l) {
 // Lang dropdown toggle (desktop)
 const langDropBtn = document.getElementById("langDropBtn");
 const langDropMenu = document.getElementById("langDropMenu");
+const navDrawer = document.getElementById("navDrawer");
 langDropBtn.onclick = (e) => { e.stopPropagation(); langDropMenu.classList.toggle("open"); };
 document.addEventListener("click", () => {
   langDropMenu.classList.remove("open");
-  document.getElementById("navDrawer").classList.remove("open");
+  navDrawer.classList.remove("open");
 });
 document.querySelectorAll("#langDropMenu .langOpt").forEach(btn => {
   btn.onclick = () => { applyLang(btn.dataset.lang); langDropMenu.classList.remove("open"); };
@@ -823,20 +839,13 @@ document.querySelectorAll("#langDropMenu .langOpt").forEach(btn => {
 
 // Mobile burger
 const navBurger = document.getElementById("navBurger");
-const navDrawer = document.getElementById("navDrawer");
 navBurger.onclick = (e) => { e.stopPropagation(); navDrawer.classList.toggle("open"); };
+navDrawer.addEventListener("click", (e) => e.stopPropagation());
 
-// Mobile lang dropdown
-const langDropBtnMobile = document.getElementById("langDropBtnMobile");
-const langDropMenuMobile = document.getElementById("langDropMenuMobile");
-langDropBtnMobile.onclick = (e) => {
-  e.stopPropagation();
-  langDropMenuMobile.style.display = langDropMenuMobile.style.display === "block" ? "none" : "block";
-};
-document.querySelectorAll("#langDropMenuMobile .langOpt").forEach(btn => {
+// Mobile lang buttons
+document.querySelectorAll(".navDrawerLang").forEach(btn => {
   btn.onclick = () => {
     applyLang(btn.dataset.lang);
-    langDropMenuMobile.style.display = "none";
     navDrawer.classList.remove("open");
   };
 });
