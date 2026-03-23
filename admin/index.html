@@ -136,8 +136,8 @@
         <div class="item" id="btnGoCatalog" style="cursor:pointer">
           <span style="font-weight:500">Product catalog</span><span class="muted">→</span>
         </div>
-        <div class="item" style="opacity:.3;cursor:default">
-          <span>Procurement</span><span class="muted">→</span>
+        <div class="item" id="btnGoProcurement" style="cursor:pointer">
+          <span style="font-weight:500">Procurement</span><span class="muted">→</span>
         </div>
         <div class="item" style="opacity:.3;cursor:default">
           <span>Subscription</span><span class="muted">→</span>
@@ -158,6 +158,29 @@
 
     <!-- Catalog modal -->
     <div class="modalBack hide" id="catalogModalBack"></div>
+
+    <!-- PROCUREMENT -->
+    <div class="card cardless hide" id="screenProcurement">
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
+        <button class="btn compact" id="btnBackFromProcurement">← Back</button>
+        <div style="font-weight:700;font-size:15px">Procurement</div>
+        <button class="btn compact primary" id="btnNewOrder">+ New</button>
+      </div>
+
+      <!-- Tab bar: Active / Archive -->
+      <div style="display:flex;gap:6px;margin-bottom:14px">
+        <button class="btn compact" id="tabProcActive" style="flex:1">Active</button>
+        <button class="btn compact" id="tabProcArchive" style="flex:1">Archive</button>
+      </div>
+
+      <!-- Active orders -->
+      <div id="procActiveList"></div>
+      <div class="muted" id="procActiveHint" style="text-align:center;padding:24px 0;display:none">No open orders.</div>
+
+      <!-- Archive list -->
+      <div id="procArchiveList" style="display:none"></div>
+      <div class="muted" id="procArchiveHint" style="text-align:center;padding:24px 0;display:none">No closed orders yet.</div>
+    </div>
 
     <!-- NEW CHECK -->
     <div class="card hide" id="screenNew">
@@ -221,6 +244,7 @@
     </div>
   </div>
 
+  <script defer src="./procurement.js"></script>
   <script defer src="./main.js"></script>
 </body>
 </html>

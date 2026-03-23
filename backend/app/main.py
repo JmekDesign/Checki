@@ -20,6 +20,7 @@ from .routers.checks_items import router as checks_items_router
 from .routers.checks_open import router as checks_open_router
 from .routers.guests import router as guests_router
 from .routers.health import router as health_router
+from .routers.procurement import router as procurement_router
 from .routers.products import router as products_router
 from .routers.products_mgmt import router as products_mgmt_router
 from .routers.register import router as register_router
@@ -66,3 +67,4 @@ app.include_router(checks_items_router)
 app.include_router(checks_close_router)
 app.include_router(staff_router)
 app.include_router(venue_router)
+app.include_router(procurement_router)
