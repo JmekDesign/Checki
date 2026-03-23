@@ -1,14 +1,20 @@
 from __future__ import annotations
 
+import logging
 import re
+import threading
 import unicodedata
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
+from ..core.config import APP_URL
+from ..core.mailer import send_welcome_email
 from ..core.security import hash_password
 from ..db.conn import db_conn, db_release
 from ..schemas.register import RegisterIn
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -73,6 +79,24 @@ def register(payload: RegisterIn) -> dict[str, Any]:
             (venue_id, manager_name, login, pw_hash, payload.email or None),
         )
         conn.commit()
+
+        # Send welcome email in background (don't block response if SMTP fails)
+        if payload.email:
+            email_to = payload.email
+            def _send() -> None:
+                try:
+                    send_welcome_email(
+                        to_email=email_to,
+                        manager_name=manager_name,
+                        venue_name=venue_name,
+                        login=login,
+                        password=password,
+                        app_url=APP_URL,
+                    )
+                except Exception as exc:
+                    logger.warning("welcome email failed: %s", exc)
+            threading.Thread(target=_send, daemon=True).start()
+
         return {"ok": True, "venue_id": str(venue_id)}
     finally:
         db_release(conn)

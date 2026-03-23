@@ -33,3 +33,37 @@ def send_reset_email(to_email: str, reset_url: str) -> None:
         smtp.sendmail(SMTP_FROM, [to_email], msg.as_bytes())
 
     logger.info("reset email sent to %s", to_email)
+
+
+def send_welcome_email(
+    to_email: str,
+    manager_name: str,
+    venue_name: str,
+    login: str,
+    password: str,
+    app_url: str,
+) -> None:
+    """Send welcome email with credentials after registration. Raises on failure."""
+    subject = f"Добро пожаловать в Checki — {venue_name}"
+    body = (
+        f"Привет, {manager_name}!\n\n"
+        f"Ваше заведение «{venue_name}» зарегистрировано в Checki.\n\n"
+        f"Данные для входа:\n"
+        f"  Логин:  {login}\n"
+        f"  Пароль: {password}\n\n"
+        f"Войти: {app_url}\n\n"
+        f"Сохраните это письмо — пароль в целях безопасности больше не отправляется.\n\n"
+        f"— Команда Checki"
+    )
+
+    msg = MIMEText(body, "plain", "utf-8")
+    msg["Subject"] = subject
+    msg["From"] = SMTP_FROM
+    msg["To"] = to_email
+
+    ctx = ssl.create_default_context()
+    with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, context=ctx) as smtp:
+        smtp.login(SMTP_USER, SMTP_PASS)
+        smtp.sendmail(SMTP_FROM, [to_email], msg.as_bytes())
+
+    logger.info("welcome email sent to %s (venue: %s)", to_email, venue_name)
