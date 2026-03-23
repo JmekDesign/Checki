@@ -123,11 +123,21 @@
     .navRight { display: flex; align-items: center; gap: 8px; }
     /* Language dropdown */
     .langDrop { position: relative; }
+    /* shared nav button base — guarantees identical height across button/a */
+    .navBtn {
+      box-sizing: border-box; display: block; line-height: 1;
+      padding: 10px 14px; border-radius: 10px;
+      font-family: inherit; font-weight: 700; font-size: 13px;
+      white-space: nowrap; text-decoration: none; cursor: pointer;
+      flex-shrink: 0; -webkit-tap-highlight-color: transparent;
+    }
     .langDropBtn {
       background: none; border: 1px solid var(--border);
       color: var(--muted); font-size: 12px; font-weight: 700;
-      height: 34px; padding: 0 10px; border-radius: 10px; cursor: pointer;
-      letter-spacing: .04em; transition: all .15s; display: flex; align-items: center; gap: 4px;
+      padding: 10px 10px; border-radius: 10px; cursor: pointer;
+      letter-spacing: .04em; transition: all .15s;
+      display: flex; align-items: center; gap: 4px;
+      box-sizing: border-box; line-height: 1; flex-shrink: 0;
       -webkit-tap-highlight-color: transparent;
     }
     .langDropBtn:hover { color: var(--text); }
@@ -146,27 +156,22 @@
     .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
     .langOpt.active { color: var(--text); }
     .navLogin {
-      box-sizing: border-box; line-height: 1;
       background: none; border: 1px solid var(--border);
-      color: var(--text); height: 34px; padding: 0 14px; border-radius: 10px;
-      font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none;
-      transition: border-color .15s; flex: none; display: inline-flex; align-items: center;
+      color: var(--text); transition: border-color .15s;
     }
     .navLogin:hover { border-color: rgba(255,255,255,.3); }
     .navCta {
-      box-sizing: border-box; line-height: 1;
       background: var(--accent); color: #0f1116;
-      height: 34px; padding: 0 16px; border-radius: 10px; font-weight: 700; font-size: 13px;
-      white-space: nowrap; transition: background .15s; flex: none; display: inline-flex; align-items: center;
-      text-decoration: none;
+      padding-left: 18px; padding-right: 18px;
+      transition: background .15s;
     }
     .navCta:hover { background: var(--accent2); }
     /* Mobile burger */
     .navBurger {
       display: none; background: none; border: 1px solid var(--border);
-      color: var(--text); height: 34px; width: 40px; border-radius: 10px; cursor: pointer;
-      font-size: 18px; align-items: center; justify-content: center; box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent; line-height: 1;
+      color: var(--text); padding: 10px 0; width: 40px; border-radius: 10px; cursor: pointer;
+      font-size: 14px; box-sizing: border-box; line-height: 1; text-align: center; flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
     }
     .navDrawer {
       display: none; position: absolute; top: calc(100% + 8px); right: 0;
@@ -332,8 +337,8 @@
         <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
       </div>
     </div>
-    <a class="navLogin" href="https://admin.checki.ge" data-i="nav_login">Login</a>
-    <a class="navCta" href="#register" data-i="nav_cta">Попробовать бесплатно</a>
+    <a class="navBtn navLogin" href="https://admin.checki.ge" data-i="nav_login">Login</a>
+    <a class="navBtn navCta" href="#register" data-i="nav_cta">Попробовать бесплатно</a>
     <!-- Mobile burger -->
     <button class="navBurger" id="navBurger" aria-label="Menu">☰</button>
     <div class="navDrawer" id="navDrawer">
