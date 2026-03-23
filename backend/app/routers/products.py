@@ -107,14 +107,23 @@ def products_list(
             where.append("category=%s")
             params.append(cat)
         if q_norm:
-            where.append("name ILIKE %s")
+            where.append("(name ILIKE %s OR word_similarity(%s, name) > 0.3)")
             params.append(f"%{q_norm}%")
+            params.append(q_norm)
+
+        order = (
+            "word_similarity(%s, name) DESC, name ASC"
+            if q_norm
+            else "category ASC, name ASC"
+        )
+        if q_norm:
+            params.append(q_norm)
 
         sql = f"""
             select id, name, last_price, category, active, is_favorite
             from products
             where {" and ".join(where)}
-            order by category asc, name asc
+            order by {order}
             limit %s;
         """  # noqa: S608
         params.append(limit)
