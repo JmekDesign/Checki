@@ -266,6 +266,40 @@
     .stepText h3 { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
     .stepText p  { font-size: 14px; color: var(--muted); }
 
+    /* ── SCREENSHOTS ── */
+    .screensSection {
+      padding: 56px 0 64px;
+      overflow: hidden;
+    }
+    .screensLabel {
+      text-align: center; font-size: 11px; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 32px;
+    }
+    .screensTrack {
+      display: flex; gap: 16px; overflow-x: auto; padding: 0 24px 16px;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .screensTrack::-webkit-scrollbar { display: none; }
+    .screenCard {
+      flex: 0 0 auto; scroll-snap-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .screenPhone {
+      width: 200px; border-radius: 32px; overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.08);
+      background: #0f1116;
+    }
+    .screenPhone img { display: block; width: 100%; height: auto; }
+    .screenCaption {
+      font-size: 13px; font-weight: 600; color: var(--muted); text-align: center;
+    }
+    @media (min-width: 700px) {
+      .screensTrack { justify-content: center; flex-wrap: wrap; overflow-x: visible; padding: 0 24px 0; }
+      .screenPhone { width: 180px; }
+    }
+
     /* ── FEATURES ── */
     .features { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 480px) { .features { grid-template-columns: 1fr; } }
@@ -420,6 +454,49 @@
   </div>
 </section>
 
+<!-- SCREENSHOTS -->
+<div class="screensSection">
+  <div class="screensLabel" data-i="screens_label">Как это выглядит</div>
+  <div class="screensTrack" id="screensTrack">
+    <div class="screenCard">
+      <div class="screenPhone">
+        <img src="/screenshots/open-checks.jpg" alt="Open checks" loading="lazy" />
+      </div>
+      <div class="screenCaption" data-i="screens_cap1">Открытые чеки</div>
+    </div>
+    <div class="screenCard">
+      <div class="screenPhone">
+        <img src="/screenshots/check-detail.jpg" alt="Check detail" loading="lazy" />
+      </div>
+      <div class="screenCaption" data-i="screens_cap2">Чек с позициями</div>
+    </div>
+    <div class="screenCard">
+      <div class="screenPhone">
+        <img src="/screenshots/archive.jpg" alt="Archive" loading="lazy" />
+      </div>
+      <div class="screenCaption" data-i="screens_cap3">Архив и выручка</div>
+    </div>
+    <div class="screenCard">
+      <div class="screenPhone">
+        <img src="/screenshots/catalog.jpg" alt="Catalog" loading="lazy" />
+      </div>
+      <div class="screenCaption" data-i="screens_cap4">Каталог продуктов</div>
+    </div>
+    <div class="screenCard">
+      <div class="screenPhone">
+        <img src="/screenshots/venue.jpg" alt="Venue" loading="lazy" />
+      </div>
+      <div class="screenCaption" data-i="screens_cap5">Персонал и статистика</div>
+    </div>
+    <div class="screenCard">
+      <div class="screenPhone">
+        <img src="/screenshots/supplies.jpg" alt="Supplies" loading="lazy" />
+      </div>
+      <div class="screenCaption" data-i="screens_cap6">Закупки</div>
+    </div>
+  </div>
+</div>
+
 <!-- HOW IT WORKS -->
 <section>
   <div class="sectionLabel" data-i="how_label">Как это работает</div>
@@ -568,6 +645,10 @@ const T = {
     prob2_p:     "Пока бармен разбирается в меню системы — гость ждёт. Checki обучается за 5 минут: открыл чек, написал название, нажал добавить.",
     prob3_h:     "Бумага и Excel не дают картину",
     prob3_p:     "Никогда не знаешь что продаётся, какая выручка сегодня и какой официант работал. Checki показывает это в реальном времени.",
+    screens_label: "Как это выглядит",
+    screens_cap1: "Открытые чеки", screens_cap2: "Чек с позициями",
+    screens_cap3: "Архив и выручка", screens_cap4: "Каталог продуктов",
+    screens_cap5: "Персонал и статистика", screens_cap6: "Закупки",
     how_label:   "Как это работает",
     how_h2:      "Три шага — и чек закрыт.",
     how1_h:      "Открыть чек",
@@ -642,6 +723,10 @@ const T = {
     prob2_p:     "While the bartender navigates menus — the guest waits. Staff learns Checki in 5 minutes: open a tab, type the name, add.",
     prob3_h:     "Paper and Excel give no picture",
     prob3_p:     "You never know what's selling, today's revenue, or which staff member is performing. Checki shows it all in real time.",
+    screens_label: "See it in action",
+    screens_cap1: "Open checks", screens_cap2: "Check detail",
+    screens_cap3: "Archive & revenue", screens_cap4: "Product catalog",
+    screens_cap5: "Staff & stats", screens_cap6: "Supplies",
     how_label:   "How it works",
     how_h2:      "Three steps, tab closed.",
     how1_h:      "Open a tab",
@@ -716,6 +801,10 @@ const T = {
     prob2_p:     "სანამ ბარმენი სისტემის მენიუს ეჩვევა — სტუმარი ელოდება. Checki 5 წუთში ისწავლება: გახსენი ჩეკი, დაწერე სახელი, დაამატე.",
     prob3_h:     "ქაღალდი და Excel სრულ სურათს არ იძლევა",
     prob3_p:     "არასდროს იცი რა იყიდება, რა შემოსავალია დღეს. Checki ამას რეალურ დროში გვიჩვენებს.",
+    screens_label: "როგორ გამოიყურება",
+    screens_cap1: "ღია ჩეკები", screens_cap2: "ჩეკის დეტალი",
+    screens_cap3: "არქივი და შემოსავალი", screens_cap4: "პროდუქტების კატალოგი",
+    screens_cap5: "პერსონალი და სტატისტიკა", screens_cap6: "შესყიდვები",
     how_label:   "როგორ მუშაობს",
     how_h2:      "სამი ნაბიჯი — ჩეკი დახურულია.",
     how1_h:      "გახსენი ჩეკი",
