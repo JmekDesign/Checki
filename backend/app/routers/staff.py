@@ -36,7 +36,7 @@ def staff_list(
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT id, name, login, role, is_active, created_at
+            SELECT id, name, login, role, is_active, created_at, email
             FROM users
             WHERE venue_id = %s
             ORDER BY created_at ASC;
@@ -44,7 +44,7 @@ def staff_list(
             (venue_id,),
         )
         items = []
-        for uid, name, login, role, is_active, created_at in cur.fetchall():
+        for uid, name, login, role, is_active, created_at, email in cur.fetchall():
             items.append(
                 {
                     "id": str(uid),
@@ -53,6 +53,7 @@ def staff_list(
                     "role": role,
                     "is_active": bool(is_active),
                     "created_at": created_at.isoformat() if created_at else None,
+                    "email": email or "",
                 }
             )
         return {"ok": True, "items": items}
@@ -77,6 +78,7 @@ def staff_create(
         raise HTTPException(status_code=400, detail="name, login and password required")
 
     role = payload.role if payload.role in _ALLOWED_ROLES else "staff"
+    email_val = (payload.email or "").strip().lower() or None
 
     conn = db_conn()
     try:
@@ -87,11 +89,11 @@ def staff_create(
 
         cur.execute(
             """
-            INSERT INTO users (venue_id, role, name, login, password_hash)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO users (venue_id, role, name, login, password_hash, email)
+            VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING id;
             """,
-            (venue_id, role, name, login_val, hash_password(payload.password)),
+            (venue_id, role, name, login_val, hash_password(payload.password), email_val),
         )
         row = cur.fetchone()
         assert row is not None
@@ -139,6 +141,8 @@ def staff_update(
             col_map.append(("is_active", payload.is_active))
         if payload.password:
             col_map.append(("password_hash", hash_password(payload.password)))
+        if payload.email is not None:
+            col_map.append(("email", (payload.email.strip().lower() or None)))
 
         if not col_map:
             return {"ok": True}

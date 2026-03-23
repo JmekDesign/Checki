@@ -100,6 +100,7 @@ window.CHK = window.CHK || {};
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
           <input class="inp" id="smName"  placeholder="Name"  value="${esc(s ? s.name : "")}" />
           <input class="inp" id="smLogin" placeholder="Login" value="${esc(s ? s.login : "")}" ${isEdit ? "readonly style='opacity:.6'" : ""} />
+          <input class="inp" id="smEmail" type="email" placeholder="Email (for password reset)" value="${esc(s ? (s.email || "") : "")}" />
           <input class="inp" id="smPw" type="password" placeholder="${isEdit ? "New password (leave blank to keep)" : "Password"}" />
           <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;padding:4px 0">
             <input type="checkbox" id="smIsManager" ${isEdit && s.role === "manager" ? "checked" : ""} style="width:18px;height:18px;accent-color:var(--accent)" />
@@ -151,6 +152,7 @@ window.CHK = window.CHK || {};
       const name    = ($("smName").value  || "").trim();
       const login   = ($("smLogin").value || "").trim();
       const pw      = ($("smPw").value    || "").trim();
+      const email   = ($("smEmail").value || "").trim().toLowerCase() || null;
       const isManager = $("smIsManager")?.checked || false;
       const activeEl  = $("smActive");
       const role = isManager ? "manager" : "staff";
@@ -160,11 +162,11 @@ window.CHK = window.CHK || {};
         if (!isEdit) {
           await api("/api/staff", {
             method: "POST",
-            body: JSON.stringify({ name, login, password: pw, role }),
+            body: JSON.stringify({ name, login, password: pw, role, email }),
           });
           CHK.toast?.("Staff added");
         } else {
-          const body = { name, role, is_active: activeEl ? activeEl.checked : true };
+          const body = { name, role, is_active: activeEl ? activeEl.checked : true, email };
           if (pw) body.password = pw;
           await api(`/api/staff/${s.id}`, { method: "PATCH", body: JSON.stringify(body) });
           CHK.toast?.("Saved");

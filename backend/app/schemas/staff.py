@@ -8,6 +8,7 @@ class StaffCreateIn(BaseModel):
     login: str
     password: str
     role: str = "staff"
+    email: str | None = None
 
 
 class StaffUpdateIn(BaseModel):
@@ -15,3 +16,4 @@ class StaffUpdateIn(BaseModel):
     role: str | None = None
     is_active: bool | None = None
     password: str | None = None
+    email: str | None = None
