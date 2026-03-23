@@ -9,11 +9,8 @@
   let _currentOrderTitle = "";
   let _currentOrderClosed = false;
 
-  // ── Tab bar wiring ──────────────────────────────────────────────────────────
-  $("tabSupplies").onclick = () => {
-    show("screenSupplies");
-    loadSupplies();
-  };
+  // ── screenSupplies nav ──────────────────────────────────────────────────────
+  $("btnBackFromSupplies").onclick = () => show("screenVenue");
 
   $("btnNewSupply").onclick = () => {
     $("supplyTitle").value = "";
@@ -267,16 +264,6 @@
     }
   }
 
-  // ── venue.js hook ───────────────────────────────────────────────────────────
-  document.addEventListener("DOMContentLoaded", () => {
-    const btnGoSupplies = $("btnGoSupplies");
-    if (btnGoSupplies) {
-      btnGoSupplies.onclick = () => {
-        show("screenSupplies");
-        loadSupplies();
-      };
-    }
-  });
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
   function esc(s) {

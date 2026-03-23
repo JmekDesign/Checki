@@ -34,20 +34,16 @@ window.CHK = window.CHK || {};
       $("btnLogout")?.classList.toggle("hide", !token);
 
       // Tab bar: visible on main screens
-      const TAB_SCREENS = ["screenOpen", "screenArchive", "screenVenue", "screenSupplies"];
+      const TAB_SCREENS = ["screenOpen", "screenArchive", "screenVenue"];
       $("tabBar")?.classList.toggle("hide", !(token && TAB_SCREENS.includes(screen)));
       $("tabOpen")?.classList.toggle("active", screen === "screenOpen");
       $("tabArchive")?.classList.toggle("active", screen === "screenArchive");
-      // "+ New" button in tab bar
       $("btnNewCheck")?.classList.toggle("hide", screen !== "screenOpen");
-      $("btnNewSupply")?.classList.toggle("hide", screen !== "screenSupplies");
 
       // Gear / venue button + Supplies tab (manager+ only)
       const profile = window.CHK?.getUserProfile?.() || null;
       const isManager = profile?.role === "manager" || profile?.role === "superadmin";
       $("btnVenue")?.classList.toggle("hide", !(token && isManager));
-      $("tabSupplies")?.classList.toggle("hide", !(token && isManager));
-      $("tabSupplies")?.classList.toggle("active", screen === "screenSupplies");
 
       // Brand name
       const brandEl = $("brandName");

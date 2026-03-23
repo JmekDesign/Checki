@@ -165,6 +165,12 @@ window.CHK = window.CHK || {};
       try { await CHK.catalog?.load(); } catch (e) { CHK.toast?.("Catalog: " + e.message); }
     };
 
+    const btnGoSupplies = $("btnGoSupplies");
+    if (btnGoSupplies) btnGoSupplies.onclick = () => {
+      const tok = CHK.getToken?.() || "";
+      CHK.show("screenSupplies", tok);
+      CHK.supplies?.load();
+    };
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

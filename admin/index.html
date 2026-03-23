@@ -45,10 +45,8 @@
       <div class="tabBar hide" id="tabBar">
         <button class="tabBtn" id="tabOpen">Open</button>
         <button class="tabBtn" id="tabArchive">Archive</button>
-        <button class="tabBtn hide" id="tabSupplies">Supplies</button>
         <div class="tabFlex"></div>
         <button class="btn compact primary hide tabBarAction" id="btnNewCheck">+ New</button>
-        <button class="btn compact primary hide tabBarAction" id="btnNewSupply">+ New</button>
       </div>
     </div>
 
@@ -163,7 +161,10 @@
 
     <!-- SUPPLIES: list -->
     <div class="card cardless hide" id="screenSupplies">
-      <div style="height:4px"></div>
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
+        <button class="btn compact" id="btnBackFromSupplies">← Back</button>
+        <button class="btn compact primary" id="btnNewSupply">+ New</button>
+      </div>
       <div class="list" id="suppliesList"></div>
       <div class="muted" id="suppliesHint" style="margin-top:10px;text-align:center"></div>
     </div>
