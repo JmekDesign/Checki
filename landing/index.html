@@ -60,16 +60,38 @@
     }
     .logo { font-size: 20px; font-weight: 800; letter-spacing: -.5px; color: var(--text); flex: none; }
     .logo span { color: var(--accent); }
-    .navRight { display: flex; align-items: center; gap: 10px; }
-    .langSwitch { display: flex; gap: 4px; }
-    .langBtn {
-      background: none; border: 1px solid transparent;
+    .navRight { display: flex; align-items: center; gap: 8px; }
+    /* Language dropdown */
+    .langDrop { position: relative; }
+    .langDropBtn {
+      background: none; border: 1px solid var(--border);
       color: var(--muted); font-size: 12px; font-weight: 700;
-      padding: 4px 8px; border-radius: 8px; cursor: pointer;
-      letter-spacing: .04em; transition: all .15s;
+      padding: 5px 10px; border-radius: 8px; cursor: pointer;
+      letter-spacing: .04em; transition: all .15s; display: flex; align-items: center; gap: 4px;
       -webkit-tap-highlight-color: transparent;
     }
-    .langBtn.active, .langBtn:hover { color: var(--text); border-color: var(--border); }
+    .langDropBtn:hover { color: var(--text); }
+    .langDropMenu {
+      display: none; position: absolute; top: calc(100% + 6px); right: 0;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; min-width: 110px; z-index: 200;
+    }
+    .langDropMenu.open { display: block; }
+    .langOpt {
+      display: block; width: 100%; text-align: left;
+      background: none; border: none; padding: 9px 14px;
+      color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background .1s;
+    }
+    .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .langOpt.active { color: var(--text); }
+    .navLogin {
+      background: none; border: 1px solid var(--border);
+      color: var(--text); padding: 7px 14px; border-radius: 10px;
+      font-weight: 700; font-size: 13px; white-space: nowrap;
+      transition: border-color .15s; flex: none;
+    }
+    .navLogin:hover { border-color: rgba(255,255,255,.3); }
     .navCta {
       background: var(--accent); color: #0f1116;
       padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 13px;
@@ -205,11 +227,15 @@
 <nav>
   <div class="logo">Checki<span>.</span></div>
   <div class="navRight">
-    <div class="langSwitch">
-      <button class="langBtn" data-lang="ka">🇬🇪 KA</button>
-      <button class="langBtn active" data-lang="en">🇬🇧 EN</button>
-      <button class="langBtn" data-lang="ru">🇷🇺 RU</button>
+    <div class="langDrop" id="langDrop">
+      <button class="langDropBtn" id="langDropBtn">🇬🇧 EN ▾</button>
+      <div class="langDropMenu" id="langDropMenu">
+        <button class="langOpt" data-lang="ka">🇬🇪 Georgian</button>
+        <button class="langOpt active" data-lang="en">🇬🇧 English</button>
+        <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
+      </div>
     </div>
+    <a class="navLogin" href="https://admin.checki.ge" data-i="nav_login">Login</a>
     <a class="navCta" href="#register" data-i="nav_cta">Попробовать бесплатно</a>
   </div>
 </nav>
@@ -397,6 +423,7 @@ const ADMIN = "https://admin.checki.ge";
 /* ── i18n ── */
 const T = {
   ru: {
+    nav_login:   "Войти",
     nav_cta:     "Попробовать бесплатно",
     badge:       "Бесплатный доступ · Открытое бета-тестирование",
     hero_h1:     "Управляй баром",
@@ -462,6 +489,7 @@ const T = {
     loading:     "Создаём…",
   },
   en: {
+    nav_login:   "Login",
     nav_cta:     "Get started free",
     badge:       "Free access · Open beta",
     hero_h1:     "Run your bar",
@@ -527,6 +555,7 @@ const T = {
     loading:     "Creating…",
   },
   ka: {
+    nav_login:   "შესვლა",
     nav_cta:     "უფასოდ სცადე",
     badge:       "უფასო წვდომა · ღია ბეტა",
     hero_h1:     "მართე ბარი",
@@ -624,8 +653,11 @@ function applyLang(l) {
     if (t[key]) el.placeholder = t[key];
   });
 
-  // lang buttons
-  document.querySelectorAll(".langBtn").forEach(b => {
+  // lang dropdown button label
+  const labels = { ka: "🇬🇪 KA", en: "🇬🇧 EN", ru: "🇷🇺 RU" };
+  const dropBtn = document.getElementById("langDropBtn");
+  if (dropBtn) dropBtn.textContent = (labels[l] || "EN") + " ▾";
+  document.querySelectorAll(".langOpt").forEach(b => {
     b.classList.toggle("active", b.dataset.lang === l);
   });
 
@@ -635,8 +667,13 @@ function applyLang(l) {
                  : "Checki — Run your bar from your phone";
 }
 
-document.querySelectorAll(".langBtn").forEach(btn => {
-  btn.onclick = () => applyLang(btn.dataset.lang);
+// Lang dropdown toggle
+const langDropBtn = document.getElementById("langDropBtn");
+const langDropMenu = document.getElementById("langDropMenu");
+langDropBtn.onclick = (e) => { e.stopPropagation(); langDropMenu.classList.toggle("open"); };
+document.addEventListener("click", () => langDropMenu.classList.remove("open"));
+document.querySelectorAll(".langOpt").forEach(btn => {
+  btn.onclick = () => { applyLang(btn.dataset.lang); langDropMenu.classList.remove("open"); };
 });
 
 applyLang(lang);
