@@ -5,17 +5,76 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 
   <!-- SEO -->
-  <title>Checki — Управление баром с телефона</title>
-  <meta name="description" content="Открывайте чеки, добавляйте позиции, закрывайте с оплатой — всё с телефона. Без кассового аппарата, без сложных программ." />
-  <meta name="keywords" content="bar management, чеки бар, управление баром, pos система, checki" />
+  <title>Checki — Программа учёта заказов для бара с телефона | Без кассы</title>
+  <meta name="description" content="Открывайте счета, добавляйте позиции и закрывайте заказы прямо со смартфона. Checki — простая POS-система для баров и кафе в Грузии. Бесплатный старт, без оборудования." />
+  <meta name="keywords" content="программа для бара, приложение для бармена, pos система для бара, bar management georgia, бар без кассы, учёт заказов бар, bar tab management tbilisi, ბარის მართვის პროგრამა" />
   <link rel="canonical" href="https://checki.ge/" />
 
   <!-- Open Graph -->
   <meta property="og:type"        content="website" />
   <meta property="og:url"         content="https://checki.ge/" />
-  <meta property="og:title"       content="Checki — Управление баром с телефона" />
-  <meta property="og:description" content="Открывайте чеки, добавляйте позиции, закрывайте с оплатой — всё с телефона. Без кассового аппарата." />
+  <meta property="og:title"       content="Checki — Bar Tab Management from Your Phone | No POS Hardware" />
+  <meta property="og:description" content="Open tabs, add drinks, close with payment — all from your phone. No cash register, no hardware. Free start for bars and cafes in Georgia." />
   <meta property="og:site_name"   content="Checki" />
+
+  <!-- JSON-LD: SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Checki",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "Mobile-first bar and cafe management system. Open tabs, add items, close with payment — all from your phone. No hardware required.",
+    "url": "https://checki.ge",
+    "inLanguage": ["ka", "ru", "en"],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GEL", "description": "Free start" },
+    "featureList": ["Tab management", "Smart catalog with AI", "Analytics & PDF reports", "Multi-staff access", "Multi-venue support", "No hardware required"]
+  }
+  </script>
+
+  <!-- JSON-LD: LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Checki",
+    "url": "https://checki.ge",
+    "email": "hello@checki.ge",
+    "address": { "@type": "PostalAddress", "addressLocality": "Tbilisi", "addressCountry": "GE" },
+    "areaServed": ["GE", "RU", "AM", "AZ", "KZ"]
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Нужен ли кассовый аппарат для работы с Checki?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Нет. Checki — это веб-приложение, которое работает на любом смартфоне или планшете через браузер. Никакого специального оборудования, касс или принтеров не требуется. Достаточно телефона с интернетом." }
+      },
+      {
+        "@type": "Question",
+        "name": "Чем Checki отличается от iiko или r_keeper?",
+        "acceptedAnswer": { "@type": "Answer", "text": "iiko и r_keeper — тяжёлые системы для крупных ресторанов с дорогим оборудованием и долгим внедрением. Checki создан для баров и небольших кафе: запускается за 5 минут, работает на личном телефоне, не требует установки." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use Checki without a cash register?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Checki is a web app that runs in any smartphone browser. No hardware, no cash register, no printer needed. Just a phone with internet access." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Checki work for multiple venues?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Checki supports multiple venues under one account. Each venue's data is fully isolated — staff of one bar cannot see orders from another." }
+      }
+    ]
+  }
+  </script>
 
   <!-- Google Analytics 4 — replace G-6YEDJ6Z2QZ with your Measurement ID -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6YEDJ6Z2QZ"></script>
@@ -412,6 +471,13 @@
   </div>
 </section>
 
+<!-- FAQ -->
+<section id="faq">
+  <div class="sectionLabel" data-i="faq_label">FAQ</div>
+  <h2 data-i="faq_h2">Frequently asked questions</h2>
+  <div class="steps" id="faqList"></div>
+</section>
+
 <footer>
   © 2026 Checki · <a href="mailto:hello@checki.ge">hello@checki.ge</a>
 </footer>
@@ -424,7 +490,7 @@ const ADMIN = "https://admin.checki.ge";
 const T = {
   ru: {
     nav_login:   "Войти",
-    nav_cta:     "Попробовать бесплатно",
+    nav_cta:     "Попробовать",
     badge:       "Бесплатный доступ · Открытое бета-тестирование",
     hero_h1:     "Управляй баром",
     hero_em:     "с телефона.",
@@ -487,10 +553,18 @@ const T = {
     ok_msg:      "✓ Готово! ",
     ok_link:     "Открыть Checki →",
     loading:     "Создаём…",
+    faq_label:   "Вопросы и ответы",
+    faq_h2:      "Часто задаваемые вопросы",
+    faq: [
+      { q: "Нужен ли кассовый аппарат?", a: "Нет. Checki работает в браузере любого смартфона. Никакого оборудования, касс или принтеров — только телефон с интернетом." },
+      { q: "Чем Checki отличается от iiko или r_keeper?", a: "iiko и r_keeper — тяжёлые системы для крупных ресторанов. Checki создан для баров и небольших кафе: запускается за 5 минут на личном телефоне, не требует установки и обучения." },
+      { q: "Можно ли работать с несколькими заведениями?", a: "Да. Checki поддерживает несколько заведений. Данные каждого полностью изолированы — персонал одного бара не видит заказы другого." },
+      { q: "Как вести учёт заказов без кассы?", a: "Бармен открывает чек, добавляет позиции из каталога, закрывает с выбором оплаты. Менеджер видит выручку и статистику в реальном времени. Всё — в браузере телефона, без установки." },
+    ],
   },
   en: {
     nav_login:   "Login",
-    nav_cta:     "Get started free",
+    nav_cta:     "Start free",
     badge:       "Free access · Open beta",
     hero_h1:     "Run your bar",
     hero_em:     "from your phone.",
@@ -553,10 +627,18 @@ const T = {
     ok_msg:      "✓ Done! ",
     ok_link:     "Open Checki →",
     loading:     "Creating…",
+    faq_label:   "FAQ",
+    faq_h2:      "Frequently asked questions",
+    faq: [
+      { q: "Do I need a cash register to use Checki?", a: "No. Checki runs in any smartphone browser — no hardware, no cash register, no printer required. Just a phone with internet." },
+      { q: "How is Checki different from iiko or Square?", a: "iiko and Square are built for large restaurants with expensive hardware and long setup. Checki is for bars and small cafes: ready in 5 minutes, runs on your personal phone, zero installation." },
+      { q: "Can I manage multiple venues?", a: "Yes. Checki supports multiple venues under one account. Each venue's data is fully isolated — staff from one bar cannot see another's orders." },
+      { q: "How do I track bar tabs without a POS system?", a: "A bartender opens a tab, adds items from the smart catalog, and closes with payment method. The manager sees live revenue and stats. All in a phone browser, nothing to install." },
+    ],
   },
   ka: {
     nav_login:   "შესვლა",
-    nav_cta:     "უფასოდ სცადე",
+    nav_cta:     "სცადე",
     badge:       "უფასო წვდომა · ღია ბეტა",
     hero_h1:     "მართე ბარი",
     hero_em:     "ტელეფონიდან.",
@@ -619,6 +701,14 @@ const T = {
     ok_msg:      "✓ მზადაა! ",
     ok_link:     "Checki-ს გახსნა →",
     loading:     "იქმნება…",
+    faq_label:   "კითხვები",
+    faq_h2:      "ხშირად დასმული კითხვები",
+    faq: [
+      { q: "საკასო აპარატი საჭიროა?", a: "არა. Checki მუშაობს ნებისმიერი სმარტფონის ბრაუზერში. არანაირი აღჭურვილობა, საკასო ან პრინტერი — მხოლოდ ინტერნეტით ტელეფონი." },
+      { q: "Checki რით განსხვავდება სხვა POS სისტემებისგან?", a: "სხვა სისტემები მსხვილი რესტორნებისთვისაა — ძვირი აღჭურვილობა, დიდი დანერგვა. Checki ბარებისა და პატარა კაფეებისთვისაა: 5 წუთში გაშვება, პირად ტელეფონზე, ინსტალაციის გარეშე." },
+      { q: "შეიძლება რამდენიმე დაწესებულების მართვა?", a: "დიახ. Checki მხარს უჭერს რამდენიმე დაწესებულებას. თითოეულის მონაცემები სრულად იზოლირებულია." },
+      { q: "როგორ ვაწარმოო ჩეკები საკასო სისტემის გარეშე?", a: "ბარმენი ხსნის ჩეკს, ამატებს პოზიციებს კატალოგიდან, ხურავს გადახდის მეთოდით. მენეჯერი ხედავს შემოსავალს რეალურ დროში — ყველაფერი ბრაუზერში." },
+    ],
   },
 };
 
@@ -652,6 +742,19 @@ function applyLang(l) {
     const key = el.dataset.ph;
     if (t[key]) el.placeholder = t[key];
   });
+
+  // FAQ section
+  const faqList = document.getElementById("faqList");
+  if (faqList && t.faq) {
+    faqList.innerHTML = t.faq.map(f => `
+      <div class="step">
+        <div class="stepNum" style="font-size:18px">?</div>
+        <div class="stepText">
+          <h3 style="margin-bottom:6px">${f.q}</h3>
+          <p>${f.a}</p>
+        </div>
+      </div>`).join("");
+  }
 
   // lang dropdown button label
   const labels = { ka: "🇬🇪 KA", en: "🇬🇧 EN", ru: "🇷🇺 RU" };
