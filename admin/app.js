@@ -686,7 +686,7 @@
   const show = (s) => { if (window.CHK?.show) window.CHK.show(s, ""); };
   const toast = (m) => window.CHK?.toast?.(m);
   const apiRaw = async (path, opts) => {
-    const base = (window.CHK?.apiBase?.()) || "";
+    const base = window.CHK?.API_BASE || "https://api.checki.ge";
     const res = await fetch(base + path, { headers: { "Content-Type": "application/json" }, ...opts });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.detail || res.statusText);
