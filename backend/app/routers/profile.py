@@ -13,6 +13,8 @@ router = APIRouter()
 
 
 class ProfileUpdateIn(BaseModel):
+    name: str | None = None
+    login: str | None = None
     email: str | None = None
     password: str | None = None
 
@@ -46,6 +48,16 @@ def profile_update(
     user = require_user(authorization)
 
     col_map: list[tuple[str, Any]] = []
+    if payload.name is not None:
+        name = payload.name.strip()
+        if not name:
+            raise HTTPException(status_code=400, detail="name cannot be empty")
+        col_map.append(("name", name))
+    if payload.login is not None:
+        login = payload.login.strip().lower()
+        if not login or len(login) < 3:
+            raise HTTPException(status_code=400, detail="login must be at least 3 characters")
+        col_map.append(("login", login))
     if payload.email is not None:
         col_map.append(("email", payload.email.strip().lower() or None))
     if payload.password:
@@ -56,12 +68,20 @@ def profile_update(
     if not col_map:
         return {"ok": True}
 
-    set_clause = ", ".join(f"{col} = %s" for col, _ in col_map)
-    params: list[Any] = [val for _, val in col_map] + [user["user_id"]]
-
     conn = db_conn()
     try:
         cur = conn.cursor()
+        # Check login uniqueness if changing it
+        if payload.login is not None:
+            cur.execute(
+                "SELECT 1 FROM users WHERE login = %s AND id != %s;",
+                (payload.login.strip().lower(), user["user_id"]),
+            )
+            if cur.fetchone():
+                raise HTTPException(status_code=409, detail="login already taken")
+
+        set_clause = ", ".join(f"{col} = %s" for col, _ in col_map)
+        params: list[Any] = [val for _, val in col_map] + [user["user_id"]]
         cur.execute(
             f"UPDATE users SET {set_clause} WHERE id = %s;",  # noqa: S608
             tuple(params),

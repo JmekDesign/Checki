@@ -193,6 +193,8 @@ window.CHK = window.CHK || {};
       <div class="modal" style="width:min(92vw,420px)">
         <div class="modalTitle">My profile</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+          <input class="inp" id="pmName"  placeholder="Name"  value="${esc(profileData.name || "")}" />
+          <input class="inp" id="pmLogin" placeholder="Login" value="${esc(profileData.login || "")}" />
           <input class="inp" id="pmEmail" type="email" placeholder="Email (for password reset)" value="${esc(profileData.email || "")}" />
           <input class="inp" id="pmPw" type="password" placeholder="New password (leave blank to keep)" />
         </div>
@@ -208,14 +210,18 @@ window.CHK = window.CHK || {};
     back.onclick = (e) => { if (e.target === back) back.classList.add("hide"); };
 
     $("pmOk").onclick = async () => {
+      const name  = ($("pmName").value  || "").trim();
+      const login = ($("pmLogin").value || "").trim();
       const email = ($("pmEmail").value || "").trim().toLowerCase() || null;
-      const pw = ($("pmPw").value || "").trim();
-      const body = { email };
+      const pw    = ($("pmPw").value    || "").trim();
+      if (!name || !login) return CHK.toast?.("Name and login required");
+      const body = { name, login, email };
       if (pw) body.password = pw;
       try {
         await api("/api/profile", { method: "PATCH", body: JSON.stringify(body) });
         CHK.toast?.("Saved");
         back.classList.add("hide");
+        await load();
       } catch (e) {
         CHK.toast?.("Error: " + (e.message || String(e)));
       }

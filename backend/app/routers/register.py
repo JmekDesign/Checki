@@ -66,11 +66,11 @@ def register(payload: RegisterIn) -> dict[str, Any]:
         pw_hash = hash_password(password)
         cur.execute(
             """
-            INSERT INTO users (venue_id, role, name, login, password_hash)
-            VALUES (%s, 'manager', %s, %s, %s)
+            INSERT INTO users (venue_id, role, name, login, password_hash, email)
+            VALUES (%s, 'manager', %s, %s, %s, %s)
             RETURNING id;
             """,
-            (venue_id, manager_name, login, pw_hash),
+            (venue_id, manager_name, login, pw_hash, payload.email or None),
         )
         conn.commit()
         return {"ok": True, "venue_id": str(venue_id)}
