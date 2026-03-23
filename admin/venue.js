@@ -70,14 +70,16 @@ window.CHK = window.CHK || {};
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <div class="vActiveDot ${s.is_active ? "vDotOn" : "vDotOff"}"></div>
-          ${s.id === profile.user_id ? "" : '<span class="muted" style="font-size:20px">›</span>'}
+          <span class="muted" style="font-size:20px">›</span>
         </div>
       </div>
     `).join("");
 
     el.querySelectorAll(".vStaffRow").forEach((row) => {
       const s = staff.find((x) => x.id === row.dataset.id);
-      if (s && s.id !== profile.user_id) row.onclick = () => openEditModal(s);
+      if (!s) return;
+      if (s.id === profile.user_id) row.onclick = () => openProfileModal();
+      else row.onclick = () => openEditModal(s);
     });
   }
 
@@ -173,6 +175,47 @@ window.CHK = window.CHK || {};
         }
         back.classList.add("hide");
         await load();
+      } catch (e) {
+        CHK.toast?.("Error: " + (e.message || String(e)));
+      }
+    };
+  }
+
+  /* ── profile modal (self-edit) ── */
+  async function openProfileModal() {
+    const back = $("staffModalBack");
+    let profileData = { email: "", name: "" };
+    try {
+      profileData = await api("/api/profile", { method: "GET" });
+    } catch (_) {}
+
+    back.innerHTML = `
+      <div class="modal" style="width:min(92vw,420px)">
+        <div class="modalTitle">My profile</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+          <input class="inp" id="pmEmail" type="email" placeholder="Email (for password reset)" value="${esc(profileData.email || "")}" />
+          <input class="inp" id="pmPw" type="password" placeholder="New password (leave blank to keep)" />
+        </div>
+        <div class="modalBtns">
+          <button class="btn" id="pmCancel">Cancel</button>
+          <button class="btn primary" id="pmOk">Save</button>
+        </div>
+      </div>
+    `;
+    back.classList.remove("hide");
+
+    $("pmCancel").onclick = () => back.classList.add("hide");
+    back.onclick = (e) => { if (e.target === back) back.classList.add("hide"); };
+
+    $("pmOk").onclick = async () => {
+      const email = ($("pmEmail").value || "").trim().toLowerCase() || null;
+      const pw = ($("pmPw").value || "").trim();
+      const body = { email };
+      if (pw) body.password = pw;
+      try {
+        await api("/api/profile", { method: "PATCH", body: JSON.stringify(body) });
+        CHK.toast?.("Saved");
+        back.classList.add("hide");
       } catch (e) {
         CHK.toast?.("Error: " + (e.message || String(e)));
       }

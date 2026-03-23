@@ -24,6 +24,7 @@ from .routers.password_reset import router as password_reset_router
 from .routers.procurement import router as procurement_router
 from .routers.products import router as products_router
 from .routers.products_mgmt import router as products_mgmt_router
+from .routers.profile import router as profile_router
 from .routers.register import router as register_router
 from .routers.reports import router as reports_router
 from .routers.staff import router as staff_router
@@ -58,6 +59,7 @@ app.include_router(register_router)
 app.include_router(superadmin_router)
 app.include_router(auth_router)
 app.include_router(password_reset_router)
+app.include_router(profile_router)
 app.include_router(bootstrap_router)
 app.include_router(guests_router)
 app.include_router(products_router)
