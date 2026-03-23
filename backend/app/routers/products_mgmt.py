@@ -80,11 +80,13 @@ def quickpicks(
                 pid = str(row[0])
                 if pid not in seen_ids and len(items) < 15:
                     seen_ids.add(pid)
-                    items.append({
-                        "id": pid,
-                        "name": row[1],
-                        "last_price": float(row[2]) if row[2] is not None else None,
-                    })
+                    items.append(
+                        {
+                            "id": pid,
+                            "name": row[1],
+                            "last_price": float(row[2]) if row[2] is not None else None,
+                        }
+                    )
 
         return {"ok": True, "items": items}
     finally:

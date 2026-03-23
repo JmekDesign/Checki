@@ -11,7 +11,7 @@ _FONT_DIR = "/usr/share/fonts/truetype/dejavu"
 _FONT_REG = os.path.join(_FONT_DIR, "DejaVuSans.ttf")
 _FONT_BOLD = os.path.join(_FONT_DIR, "DejaVuSans-Bold.ttf")
 _LARI = "\u20be"  # ₾
-_TIMES = "\xd7"   # ×
+_TIMES = "\xd7"  # ×
 
 
 def _m(x: float) -> str:
@@ -27,7 +27,11 @@ def _label_date(iso: str) -> str:
 
 def _period_label(date_from: str | None, date_to: str | None) -> str:
     if date_from and date_to:
-        return _label_date(date_from) if date_from == date_to else f"{_label_date(date_from)} — {_label_date(date_to)}"
+        return (
+            _label_date(date_from)
+            if date_from == date_to
+            else f"{_label_date(date_from)} — {_label_date(date_to)}"
+        )
     if date_from:
         return f"From {_label_date(date_from)}"
     if date_to:
@@ -86,8 +90,9 @@ def generate_report(
     reg(9)
     grey()
     pdf.cell(W, 5, _period_label(date_from, date_to), new_x="LMARGIN", new_y="NEXT")
-    pdf.cell(W, 5, datetime.now().strftime("Generated: %d %b %Y, %H:%M"),
-             new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(
+        W, 5, datetime.now().strftime("Generated: %d %b %Y, %H:%M"), new_x="LMARGIN", new_y="NEXT"
+    )
     black()
     pdf.ln(3)
     rule()
@@ -127,8 +132,7 @@ def generate_report(
             pdf.cell(W * 0.15, 6, f"({pct}%)", align="R")
             grey()
             reg(9)
-            pdf.cell(W * 0.23, 6, f"{cnt} checks", align="R",
-                     new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(W * 0.23, 6, f"{cnt} checks", align="R", new_x="LMARGIN", new_y="NEXT")
             black()
         pdf.ln(5)
 
@@ -151,8 +155,7 @@ def generate_report(
             grey()
             pdf.cell(W * 0.12, 6, f"{_TIMES}{qty}", align="R")
             black()
-            pdf.cell(W * 0.20, 6, f"{_m(rev)} {_LARI}", align="R",
-                     new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(W * 0.20, 6, f"{_m(rev)} {_LARI}", align="R", new_x="LMARGIN", new_y="NEXT")
         pdf.ln(5)
 
     rule()
@@ -166,8 +169,9 @@ def generate_report(
             cur_day = day
             bold(9)
             grey()
-            pdf.cell(W, 7, _label_date(day) if day else "Unknown date",
-                     new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(
+                W, 7, _label_date(day) if day else "Unknown date", new_x="LMARGIN", new_y="NEXT"
+            )
             black()
         num = str(c.get("number") or "")
         guest = str(c.get("guest") or "—")
@@ -184,7 +188,6 @@ def generate_report(
         grey()
         pdf.cell(W * 0.15, 6, pay)
         black()
-        pdf.cell(W * 0.20, 6, f"{_m(total)} {_LARI}", align="R",
-                 new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(W * 0.20, 6, f"{_m(total)} {_LARI}", align="R", new_x="LMARGIN", new_y="NEXT")
 
     return bytes(pdf.output())

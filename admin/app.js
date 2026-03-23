@@ -680,3 +680,77 @@
 })();
 // === /ARCHIVE READONLY PATCH (AUTO) ===
 
+// === PASSWORD RESET ===
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const show = (s) => { if (window.CHK?.show) window.CHK.show(s, ""); };
+  const toast = (m) => window.CHK?.toast?.(m);
+  const apiRaw = async (path, opts) => {
+    const base = (window.CHK?.apiBase?.()) || "";
+    const res = await fetch(base + path, { headers: { "Content-Type": "application/json" }, ...opts });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.detail || res.statusText);
+    return data;
+  };
+
+  // Forgot password screen
+  $("btnForgotPassword").onclick = () => {
+    $("forgotEmail").value = "";
+    $("forgotDone").classList.add("hide");
+    show("screenForgot");
+    $("forgotEmail").focus();
+  };
+
+  $("btnBackFromForgot").onclick = () => show("screenLogin");
+
+  $("btnSendReset").onclick = async () => {
+    const email = $("forgotEmail").value.trim();
+    if (!email) { $("forgotEmail").focus(); return; }
+    $("btnSendReset").disabled = true;
+    try {
+      await apiRaw("/api/auth/forgot-password", { method: "POST", body: JSON.stringify({ email }) });
+      $("forgotDone").classList.remove("hide");
+      $("btnSendReset").style.display = "none";
+    } catch (e) {
+      toast("Error: " + e.message);
+    } finally {
+      $("btnSendReset").disabled = false;
+    }
+  };
+
+  $("forgotEmail").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") $("btnSendReset").click();
+  });
+
+  // Reset password screen (opened via ?reset=TOKEN in URL)
+  $("btnDoReset").onclick = async () => {
+    const token = new URLSearchParams(window.location.search).get("reset") || "";
+    const password = $("resetPassword").value.trim();
+    if (!password) { $("resetPassword").focus(); return; }
+    $("btnDoReset").disabled = true;
+    try {
+      await apiRaw("/api/auth/reset-password", { method: "POST", body: JSON.stringify({ token, password }) });
+      toast("Password changed! Please log in.");
+      history.replaceState(null, "", window.location.pathname);
+      show("screenLogin");
+    } catch (e) {
+      toast("Error: " + e.message);
+    } finally {
+      $("btnDoReset").disabled = false;
+    }
+  };
+
+  $("resetPassword").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") $("btnDoReset").click();
+  });
+
+  // On page load — check for ?reset= in URL
+  const resetToken = new URLSearchParams(window.location.search).get("reset");
+  if (resetToken) {
+    $("resetPassword").value = "";
+    show("screenReset");
+    $("resetPassword").focus();
+  }
+})();
+// === /PASSWORD RESET ===
+

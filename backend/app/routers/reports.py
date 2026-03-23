@@ -64,8 +64,7 @@ def archive_report(
             tuple(params),
         )
         top_products: list[dict[str, Any]] = [
-            {"name": r[0], "qty": float(r[1]), "revenue": float(r[2])}
-            for r in cur.fetchall()
+            {"name": r[0], "qty": float(r[1]), "revenue": float(r[2])} for r in cur.fetchall()
         ]
 
         cur.execute(  # noqa: S608

@@ -31,6 +31,14 @@ class Settings:
     # AI normalization
     openai_api_key: str = ""
 
+    # Email / SMTP
+    smtp_host: str = "smtp.beget.com"
+    smtp_port: int = 465
+    smtp_user: str = ""
+    smtp_pass: str = ""
+    smtp_from: str = "hello@checki.ge"
+    app_url: str = "https://admin.checki.ge"
+
     def __post_init__(self) -> None:
         if not self.cors_origins:
             default_origins = "https://admin.checki.ge,https://checki.ge,https://super.checki.ge"
@@ -48,6 +56,12 @@ def get_settings() -> Settings:
         auth_salt=os.getenv("AUTH_SALT", "change-me"),
         session_ttl_hours=int(os.getenv("SESSION_TTL_HOURS", "72")),
         openai_api_key=os.getenv("OPENAI_API_KEY", ""),
+        smtp_host=os.getenv("SMTP_HOST", "smtp.beget.com"),
+        smtp_port=int(os.getenv("SMTP_PORT", "465")),
+        smtp_user=os.getenv("SMTP_USER", ""),
+        smtp_pass=os.getenv("SMTP_PASS", ""),
+        smtp_from=os.getenv("SMTP_FROM", "hello@checki.ge"),
+        app_url=os.getenv("APP_URL", "https://admin.checki.ge"),
     )
 
 
@@ -68,3 +82,10 @@ DB_PASSWORD = _settings.db_password
 AUTH_SALT = _settings.auth_salt
 SESSION_TTL_HOURS = _settings.session_ttl_hours
 OPENAI_API_KEY = _settings.openai_api_key
+
+SMTP_HOST = _settings.smtp_host
+SMTP_PORT = _settings.smtp_port
+SMTP_USER = _settings.smtp_user
+SMTP_PASS = _settings.smtp_pass
+SMTP_FROM = _settings.smtp_from
+APP_URL = _settings.app_url
