@@ -126,7 +126,7 @@
     .langDropBtn {
       background: none; border: 1px solid var(--border);
       color: var(--muted); font-size: 12px; font-weight: 700;
-      height: 34px; padding: 0 10px; border-radius: 8px; cursor: pointer;
+      height: 34px; padding: 0 10px; border-radius: 10px; cursor: pointer;
       letter-spacing: .04em; transition: all .15s; display: flex; align-items: center; gap: 4px;
       -webkit-tap-highlight-color: transparent;
     }
@@ -158,6 +158,29 @@
       white-space: nowrap; transition: background .15s; flex: none; display: flex; align-items: center;
     }
     .navCta:hover { background: var(--accent2); }
+    /* Mobile burger */
+    .navBurger {
+      display: none; background: none; border: 1px solid var(--border);
+      color: var(--text); height: 34px; width: 40px; border-radius: 10px; cursor: pointer;
+      font-size: 18px; align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .navDrawer {
+      display: none; position: absolute; top: calc(100% + 6px); right: 0;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 8px; min-width: 180px; z-index: 200; flex-direction: column; gap: 6px;
+    }
+    .navDrawer.open { display: flex; }
+    .navDrawerLogin {
+      display: flex; align-items: center; height: 38px; padding: 0 14px; border-radius: 8px;
+      background: none; border: 1px solid var(--border); color: var(--text);
+      font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none;
+    }
+    @media (max-width: 480px) {
+      .navLogin, .langDrop { display: none; }
+      .navBurger { display: flex; }
+      .navRight { position: relative; }
+    }
 
     /* ── SECTIONS ── */
     section { padding: 72px 24px; max-width: 680px; margin: 0 auto; }
@@ -297,6 +320,19 @@
     </div>
     <a class="navLogin" href="https://admin.checki.ge" data-i="nav_login">Login</a>
     <a class="navCta" href="#register" data-i="nav_cta">Попробовать бесплатно</a>
+    <!-- Mobile burger -->
+    <button class="navBurger" id="navBurger" aria-label="Menu">☰</button>
+    <div class="navDrawer" id="navDrawer">
+      <a class="navDrawerLogin" href="https://admin.checki.ge" data-i="nav_login">Login</a>
+      <div class="langDrop" style="width:100%">
+        <button class="langDropBtn" id="langDropBtnMobile" style="width:100%;justify-content:space-between">🇬🇧 EN ▾</button>
+        <div class="langDropMenu" id="langDropMenuMobile" style="position:static;margin-top:4px;display:none">
+          <button class="langOpt" data-lang="ka">🇬🇪 Georgian</button>
+          <button class="langOpt active" data-lang="en">🇬🇧 English</button>
+          <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -761,6 +797,8 @@ function applyLang(l) {
   const labels = { ka: "🇬🇪 KA", en: "🇬🇧 EN", ru: "🇷🇺 RU" };
   const dropBtn = document.getElementById("langDropBtn");
   if (dropBtn) dropBtn.textContent = (labels[l] || "EN") + " ▾";
+  const dropBtnMobile = document.getElementById("langDropBtnMobile");
+  if (dropBtnMobile) dropBtnMobile.textContent = (labels[l] || "EN") + " ▾";
   document.querySelectorAll(".langOpt").forEach(b => {
     b.classList.toggle("active", b.dataset.lang === l);
   });
@@ -771,13 +809,36 @@ function applyLang(l) {
                  : "Checki — Run your bar from your phone";
 }
 
-// Lang dropdown toggle
+// Lang dropdown toggle (desktop)
 const langDropBtn = document.getElementById("langDropBtn");
 const langDropMenu = document.getElementById("langDropMenu");
 langDropBtn.onclick = (e) => { e.stopPropagation(); langDropMenu.classList.toggle("open"); };
-document.addEventListener("click", () => langDropMenu.classList.remove("open"));
-document.querySelectorAll(".langOpt").forEach(btn => {
+document.addEventListener("click", () => {
+  langDropMenu.classList.remove("open");
+  document.getElementById("navDrawer").classList.remove("open");
+});
+document.querySelectorAll("#langDropMenu .langOpt").forEach(btn => {
   btn.onclick = () => { applyLang(btn.dataset.lang); langDropMenu.classList.remove("open"); };
+});
+
+// Mobile burger
+const navBurger = document.getElementById("navBurger");
+const navDrawer = document.getElementById("navDrawer");
+navBurger.onclick = (e) => { e.stopPropagation(); navDrawer.classList.toggle("open"); };
+
+// Mobile lang dropdown
+const langDropBtnMobile = document.getElementById("langDropBtnMobile");
+const langDropMenuMobile = document.getElementById("langDropMenuMobile");
+langDropBtnMobile.onclick = (e) => {
+  e.stopPropagation();
+  langDropMenuMobile.style.display = langDropMenuMobile.style.display === "block" ? "none" : "block";
+};
+document.querySelectorAll("#langDropMenuMobile .langOpt").forEach(btn => {
+  btn.onclick = () => {
+    applyLang(btn.dataset.lang);
+    langDropMenuMobile.style.display = "none";
+    navDrawer.classList.remove("open");
+  };
 });
 
 applyLang(lang);

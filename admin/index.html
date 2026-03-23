@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Checki — Staff</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230f1116'/><text y='24' x='4' font-size='22' font-family='system-ui,sans-serif' font-weight='800' fill='%2349d17c'>C</text></svg>" />
   <link rel="stylesheet" href="./app.css">
 </head>
 <body>
@@ -254,7 +255,10 @@
         <button class="btn" id="btnBackOpen">← Back</button>
       </div>
       <div class="hr"></div>
-      <input class="inp" id="guestName" placeholder='Example: "Table 7 / Ira"' />
+      <div style="position:relative">
+        <input class="inp" id="guestName" placeholder='Example: "Table 7 / Ira"' autocomplete="off" />
+        <div id="guestSuggestBox" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--surface,#161b24);border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;z-index:50"></div>
+      </div>
       <div class="row" style="margin-top:10px">
         <button class="btn primary" id="btnCreateCheck">Open check</button>
       </div>

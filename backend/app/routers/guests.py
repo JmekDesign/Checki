@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Header, HTTPException, Query
 
 from ..core.security import require_user
 from ..core.utils import normalize_key
@@ -10,6 +10,35 @@ from ..db.conn import db_conn, db_release
 from ..schemas.guests import GuestUpsertIn
 
 router = APIRouter()
+
+
+@router.get("/api/guests")
+def guest_search(
+    q: str = Query(default=""),
+    limit: int = Query(default=8, ge=1, le=30),
+    authorization: str | None = Header(default=None, alias="Authorization"),
+) -> dict[str, Any]:
+    user = require_user(authorization)
+    venue_id = user["venue_id"]
+    conn = db_conn()
+    try:
+        cur = conn.cursor()
+        if q.strip():
+            cur.execute(
+                "SELECT name FROM guests WHERE venue_id = %s AND name ILIKE %s"
+                " ORDER BY times_seen DESC, last_seen_at DESC LIMIT %s;",
+                (venue_id, f"%{q.strip()}%", limit),
+            )
+        else:
+            cur.execute(
+                "SELECT name FROM guests WHERE venue_id = %s"
+                " ORDER BY last_seen_at DESC LIMIT %s;",
+                (venue_id, limit),
+            )
+        rows = cur.fetchall()
+        return {"ok": True, "items": [r[0] for r in rows]}
+    finally:
+        db_release(conn)
 
 
 @router.post("/api/guests/upsert")

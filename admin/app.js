@@ -80,9 +80,59 @@
     }catch(e){ toast("Venue: " + e.message); }
   };
 
-  $("btnNewCheck").onclick = ()=>{ $("guestName").value=""; show("screenNew"); $("guestName").focus(); };
-  $("btnBackOpen").onclick = ()=>show("screenOpen");
+  $("btnNewCheck").onclick = ()=>{ $("guestName").value=""; hideGuestSuggest(); show("screenNew"); $("guestName").focus(); };
+  $("btnBackOpen").onclick = ()=>{ hideGuestSuggest(); show("screenOpen"); };
   $("openSearch").oninput = ()=>renderOpen();
+
+  /* ── guest name autocomplete ── */
+  let guestSuggestTimer = null;
+
+  function showGuestSuggest(names){
+    const box = $("guestSuggestBox");
+    if(!box) return;
+    box.innerHTML = "";
+    if(!names.length){ box.style.display="none"; return; }
+    names.forEach(name=>{
+      const row = document.createElement("div");
+      row.style.cssText = "padding:10px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid rgba(255,255,255,.06)";
+      row.textContent = name;
+      row.onmousedown = (e)=>{ e.preventDefault(); $("guestName").value=name; hideGuestSuggest(); };
+      box.appendChild(row);
+    });
+    box.style.display = "block";
+  }
+
+  function hideGuestSuggest(){
+    const box = $("guestSuggestBox");
+    if(box){ box.style.display="none"; box.innerHTML=""; }
+  }
+
+  async function loadGuestSuggest(q){
+    try{
+      const r = await api(`/api/guests?q=${encodeURIComponent(q)}&limit=6`, {method:"GET"});
+      const names = Array.isArray(r.items) ? r.items : [];
+      showGuestSuggest(names);
+    }catch(_){ hideGuestSuggest(); }
+  }
+
+  const guestNameEl = $("guestName");
+  if(guestNameEl){
+    guestNameEl.addEventListener("input", ()=>{
+      const q = guestNameEl.value.trim();
+      if(guestSuggestTimer) clearTimeout(guestSuggestTimer);
+      guestSuggestTimer = setTimeout(()=>loadGuestSuggest(q), 150);
+    });
+    guestNameEl.addEventListener("focus", ()=>{
+      const q = guestNameEl.value.trim();
+      loadGuestSuggest(q);
+    });
+    guestNameEl.addEventListener("blur", ()=>{
+      setTimeout(hideGuestSuggest, 150);
+    });
+    guestNameEl.addEventListener("keydown",(e)=>{
+      if(e.key==="Escape") hideGuestSuggest();
+    });
+  }
 
   async function loadOpen(){
     const r = await api("/api/checks/open", {method:"GET"});
