@@ -226,7 +226,23 @@
   // Close order
   $("btnCloseSupply").onclick = async () => {
     if (!_currentOrderId) return;
-    if (!confirm(`Close order "${_currentOrderTitle}"? It will move to archive.`)) return;
+
+    // Check all items are checked
+    const checkboxes = document.querySelectorAll("#supplyItemsList [data-chk]");
+    const unchecked  = [...checkboxes].filter((el) => !el.checked);
+    if (unchecked.length > 0) {
+      toast(`${unchecked.length} item${unchecked.length > 1 ? "s" : ""} not checked yet`);
+      return;
+    }
+
+    const ok = await CHK.confirm({
+      title: "Close order?",
+      text: `"${_currentOrderTitle}" will move to archive.`,
+      okText: "Close",
+      danger: true,
+    });
+    if (!ok) return;
+
     try {
       await api()(`/api/procurement/${_currentOrderId}/close`, { method: "POST" });
       toast("Order closed");
