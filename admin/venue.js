@@ -60,7 +60,7 @@ window.CHK = window.CHK || {};
       return;
     }
     el.innerHTML = staff.map((s) => `
-      <div class="item vStaffRow" data-id="${esc(s.id)}" style="cursor:pointer">
+      <div class="item vStaffRow" data-id="${esc(s.id)}" style="cursor:pointer${s.is_active ? "" : ";opacity:0.4"}">
         <div class="lineLeft">
           <div class="lineTitle">
             <b>${esc(s.name)}</b>
@@ -112,9 +112,12 @@ window.CHK = window.CHK || {};
             </label>
           ` : ""}
         </div>
-        <div class="modalBtns">
-          <button class="btn" id="smCancel">Cancel</button>
-          <button class="btn primary" id="smOk">${esc(okText)}</button>
+        <div class="modalBtns" style="justify-content:space-between">
+          ${isEdit && s.role !== "manager" ? '<button class="btn danger" id="smDelete">Delete</button>' : '<div></div>'}
+          <div style="display:flex;gap:8px">
+            <button class="btn" id="smCancel">Cancel</button>
+            <button class="btn primary" id="smOk">${esc(okText)}</button>
+          </div>
         </div>
       </div>
     `;
@@ -122,6 +125,27 @@ window.CHK = window.CHK || {};
 
     $("smCancel").onclick = () => back.classList.add("hide");
     back.onclick = (e) => { if (e.target === back) back.classList.add("hide"); };
+
+    const delBtn = $("smDelete");
+    if (delBtn) {
+      delBtn.onclick = async () => {
+        const ok = await CHK.confirm({
+          title: "Delete staff?",
+          text: `"${s.name}" will be permanently deleted.`,
+          okText: "Delete",
+          danger: true,
+        });
+        if (!ok) return;
+        try {
+          await api(`/api/staff/${s.id}`, { method: "DELETE" });
+          CHK.toast?.("Deleted");
+          back.classList.add("hide");
+          await load();
+        } catch (e) {
+          CHK.toast?.("Error: " + (e.message || String(e)));
+        }
+      };
+    }
 
     $("smOk").onclick = async () => {
       const name    = ($("smName").value  || "").trim();
