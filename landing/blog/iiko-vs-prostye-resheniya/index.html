@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M2ZHXFCW');</script>
+  <!-- End Google Tag Manager -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Альтернатива iiko для маленького бара — Checki</title>
+  <meta name="description" content="iiko и r_keeper — мощные системы, но слишком сложные и дорогие для небольшого бара. Checki — простая замена без оборудования и обучения." />
+  <link rel="canonical" href="https://checki.ge/blog/iiko-vs-prostye-resheniya/" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0f1116;
+      --surface: #161b24;
+      --border:  rgba(255,255,255,.10);
+      --text:    #f0f2f5;
+      --muted:   #7a8497;
+      --accent:  #49d17c;
+      --accent2: #2eb865;
+      --danger:  #ff5a6a;
+    }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; line-height: 1.75; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent2); }
+
+    nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(15,17,22,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); gap: 12px; }
+    .navLeft { display: flex; align-items: center; gap: 2px; }
+    .navLogo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; margin-right: 4px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    .navLogoText { font-size: 17px; font-weight: 800; color: var(--text); }
+    .navRight { display: flex; align-items: center; gap: 8px; position: relative; }
+    .navBtn { box-sizing: border-box; display: block; line-height: 1; padding: 10px 14px; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none; cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+    .langDrop { position: relative; }
+    .langDropBtn { background: none; border: 1px solid var(--border); color: var(--muted); font-size: 12px; font-weight: 700; padding: 10px 10px; border-radius: 10px; cursor: pointer; letter-spacing: .04em; transition: all .15s; display: flex; align-items: center; gap: 4px; box-sizing: border-box; line-height: 1; flex-shrink: 0; -webkit-tap-highlight-color: transparent; font-family: inherit; }
+    .langDropBtn:hover { color: var(--text); }
+    .langDropMenu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; min-width: 110px; z-index: 200; }
+    .langDropMenu.open { display: block; }
+    .langOpt { display: block; width: 100%; text-align: left; background: none; border: none; padding: 9px 14px; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .langOpt.active { color: var(--text); }
+    .navLink { background: none; border: none; color: var(--muted); transition: color .15s; padding-left: 4px; padding-right: 4px; }
+    .navLink:hover { color: var(--text); }
+    .navLink.active { color: var(--text); }
+    .navLeft .navLink { margin-left: 16px; font-size: 15px; }
+    .navLogin { background: none; border: 1px solid var(--border); color: var(--text); transition: border-color .15s; }
+    .navLogin:hover { border-color: rgba(255,255,255,.3); }
+    .navCta { background: var(--accent); color: #0f1116; padding-left: 18px; padding-right: 18px; transition: background .15s; }
+    .navCta:hover { background: var(--accent2); color: #0f1116; }
+    .navBurger { display: none; background: none; border: 1px solid var(--border); color: var(--text); padding: 10px 13px; border-radius: 10px; cursor: pointer; box-sizing: border-box; line-height: 1; flex-shrink: 0; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+    .navBurgerLines { display: flex; flex-direction: column; gap: 5px; width: 18px; }
+    .navBurgerLine { height: 2px; border-radius: 1px; background: var(--text); }
+    .navDrawer { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 6px; min-width: 200px; z-index: 200; flex-direction: column; gap: 2px; }
+    .navDrawer.open { display: flex; }
+    .navDrawerItem { display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 10px; background: none; border: none; color: var(--text); font-weight: 700; font-size: 14px; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .navDrawerItem:hover { background: rgba(255,255,255,.06); }
+    .navDrawerItem.accent { color: var(--accent); }
+    .navDrawerItem.active-blog { color: var(--accent); }
+    .navDrawerSep { height: 1px; background: var(--border); margin: 4px 2px; }
+    .navDrawerLangs { display: flex; gap: 4px; padding: 2px 4px 4px; }
+    .navDrawerLang { flex: 1; height: 34px; border-radius: 8px; border: none; background: rgba(255,255,255,.04); color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .1s; font-family: inherit; }
+    .navDrawerLang:hover, .navDrawerLang.active { background: rgba(73,209,124,.12); color: var(--accent); }
+    @media (max-width: 520px) { .navLogin, .langDrop, .navLeft .navLink { display: none; } .navBurger { display: flex; } }
+
+    .wrap { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .tag { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    h1 { font-size: clamp(26px, 6vw, 38px); font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin-bottom: 16px; }
+    .meta { font-size: 14px; color: var(--muted); margin-bottom: 40px; display: flex; gap: 16px; }
+    .lead { font-size: 18px; color: rgba(240,242,245,.8); line-height: 1.7; margin-bottom: 32px; border-left: 3px solid var(--accent); padding-left: 16px; }
+
+    .body p { font-size: 16px; margin-bottom: 20px; }
+    .body h2 { font-size: 22px; font-weight: 700; margin: 40px 0 14px; letter-spacing: -.01em; }
+    .body ul, .body ol { padding-left: 24px; margin-bottom: 20px; }
+    .body li { font-size: 16px; margin-bottom: 8px; }
+    .body strong { color: var(--text); font-weight: 600; }
+
+    .table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+    .table th { background: var(--surface); padding: 10px 14px; text-align: left; font-weight: 700; border-bottom: 1px solid var(--border); }
+    .table th:first-child { border-radius: 10px 0 0 0; }
+    .table th:last-child { border-radius: 0 10px 0 0; }
+    .table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .table tr:last-child td { border-bottom: none; }
+    .table tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+    .yes { color: var(--accent); font-weight: 600; }
+    .no  { color: var(--danger); font-weight: 600; }
+
+    .verdicts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0; }
+    @media (max-width: 520px) { .verdicts { grid-template-columns: 1fr; } }
+    .verdict { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .verdictTitle { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+    .verdictList { list-style: none; padding: 0; }
+    .verdictList li { font-size: 13px; color: var(--muted); padding: 4px 0; padding-left: 16px; position: relative; }
+    .verdictList li::before { content: "·"; position: absolute; left: 4px; color: var(--accent); }
+
+    .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; margin-top: 48px; }
+    .cta h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .cta p { font-size: 15px; color: var(--muted); margin-bottom: 20px; }
+    .ctaBtn { display: inline-block; background: var(--accent); color: #0f1116; font-weight: 700; font-size: 15px; padding: 12px 28px; border-radius: 10px; }
+    .ctaBtn:hover { background: var(--accent2); color: #0f1116; }
+
+    footer { text-align: center; padding: 24px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2ZHXFCW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav>
+  <div class="navLeft">
+    <a class="navLogo" href="/">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" style="flex-shrink:0"><rect width="32" height="32" rx="8" fill="#141418"/><text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text><circle cx="23" cy="24" r="3.5" fill="#49d17c"/></svg>
+      <span class="navLogoText">Checki</span>
+    </a>
+    <a class="navBtn navLink" href="/blog/" data-i="nav_blog">Blog</a>
+  </div>
+  <div class="navRight">
+    <div class="langDrop" id="langDrop">
+      <button class="langDropBtn" id="langDropBtn">🇷🇺 RU ▾</button>
+      <div class="langDropMenu" id="langDropMenu">
+        <button class="langOpt" data-lang="ka">🇬🇪 Georgian</button>
+        <button class="langOpt" data-lang="en">🇬🇧 English</button>
+        <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
+      </div>
+    </div>
+    <a class="navBtn navLogin" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+    <a class="navBtn navCta" href="/#register" data-i="nav_cta">Попробовать</a>
+    <button class="navBurger" id="navBurger" aria-label="Menu">
+      <div class="navBurgerLines">
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+      </div>
+    </button>
+    <div class="navDrawer" id="navDrawer">
+      <a class="navDrawerItem" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+      <a class="navDrawerItem" href="/blog/" data-i="nav_blog">Блог</a>
+      <div class="navDrawerSep"></div>
+      <div class="navDrawerLangs">
+        <button class="navDrawerLang" data-lang="ka">🇬🇪 KA</button>
+        <button class="navDrawerLang" data-lang="en">🇬🇧 EN</button>
+        <button class="navDrawerLang" data-lang="ru">🇷🇺 RU</button>
+      </div>
+      <div class="navDrawerSep"></div>
+      <a class="navDrawerItem accent" href="/#register" data-i="nav_cta">Попробовать →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="tag" data-i="tag">Выбор системы</div>
+  <h1 data-i="h1">iiko и r_keeper для маленького бара: нужны ли они на самом деле</h1>
+  <div class="meta">
+    <span data-i="date">1 апреля 2026</span>
+    <span data-i="read">5 мин читать</span>
+  </div>
+  <p class="lead" data-i="lead">Когда открываешь бар, рано или поздно встаёт вопрос: какую программу поставить? Гуглишь — и везде iiko, r_keeper, Frontpad. Но нужны ли они маленькому бару на самом деле?</p>
+
+  <!-- RU body -->
+  <div class="body lang-block" data-lang="ru">
+    <h2>Что такое iiko и r_keeper</h2>
+    <p>iiko и r_keeper — полноценные ресторанные ERP-системы. Они созданы для автоматизации всего: управление складом и закупками, технологические карты блюд, расчёт себестоимости, зарплата персонала, кухонные дисплеи, интеграция с кассовым оборудованием.</p>
+    <p>Это мощные инструменты. Для ресторана на 80 посадок с полноценной кухней — они оправданы. Для небольшого бара — это как купить грузовик чтобы ездить за продуктами.</p>
+
+    <h2>Что это значит на практике</h2>
+    <p><strong>Цена внедрения.</strong> Лицензия iiko для небольшого заведения — от нескольких сотен долларов, плюс оборудование: терминалы, принтеры, сканеры. Ежемесячная поддержка — дополнительные расходы.</p>
+    <p><strong>Время на запуск.</strong> Настройка занимает дни или недели. Нужно занести всё меню, техкарты, остатки, настроить роли, подключить оборудование. До первого чека — минимум несколько дней работы.</p>
+    <p><strong>Обучение персонала.</strong> Даже опытный бармен потратит несколько дней чтобы разобраться в интерфейсе. И при первой возможности найдёт способ его обойти — потому что в живой работе система медленная.</p>
+    <p><strong>Поддержка.</strong> Когда что-то идёт не так в пятницу вечером — нужен технический специалист. Это не вопрос, это данность.</p>
+
+    <h2>Что реально нужно маленькому бару</h2>
+    <p>Выпишем честно. Что делает бармен во время смены?</p>
+    <ol>
+      <li>Открывает чек на гостя</li>
+      <li>Добавляет позиции по мере заказа</li>
+      <li>Закрывает чек, фиксирует оплату (наличные или карта)</li>
+    </ol>
+    <p>Что нужно менеджеру?</p>
+    <ul>
+      <li>Видеть выручку за день, неделю, месяц</li>
+      <li>Знать какие позиции продаются лучше</li>
+      <li>Смотреть историю закрытых чеков</li>
+    </ul>
+    <p>Это всё. Для этого не нужны техкарты, складской учёт и кухонные дисплеи.</p>
+
+    <h2>Сравнение по критериям</h2>
+    <table class="table">
+      <thead>
+        <tr><th>Критерий</th><th>iiko / r_keeper</th><th>Простое решение</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Запуск до первого чека</td><td class="no">Дни–недели</td><td class="yes">5–10 минут</td></tr>
+        <tr><td>Оборудование</td><td class="no">Терминалы, принтеры</td><td class="yes">Телефон</td></tr>
+        <tr><td>Обучение персонала</td><td class="no">1–3 дня</td><td class="yes">~5 минут</td></tr>
+        <tr><td>Ежемесячные расходы</td><td class="no">Высокие</td><td class="yes">Низкие</td></tr>
+        <tr><td>Учёт чеков и выручки</td><td class="yes">Да</td><td class="yes">Да</td></tr>
+        <tr><td>Аналитика продаж</td><td class="yes">Да</td><td class="yes">Да</td></tr>
+        <tr><td>Складской учёт</td><td class="yes">Да</td><td class="no">Нет</td></tr>
+        <tr><td>Техкарты и себестоимость</td><td class="yes">Да</td><td class="no">Нет</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Когда что выбирать</h2>
+    <div class="verdicts">
+      <div class="verdict">
+        <div class="verdictTitle">✓ iiko / r_keeper, если:</div>
+        <ul class="verdictList">
+          <li>Ресторан с полноценной кухней</li>
+          <li>Нужен складской учёт продуктов</li>
+          <li>Техкарты и себестоимость блюд</li>
+          <li>5+ сотрудников в штате</li>
+          <li>Есть бюджет на внедрение</li>
+        </ul>
+      </div>
+      <div class="verdict">
+        <div class="verdictTitle">✓ Простое решение, если:</div>
+        <ul class="verdictList">
+          <li>Бар или кафе без сложной кухни</li>
+          <li>До 100 чеков в день</li>
+          <li>Команда 2–6 человек</li>
+          <li>Нужно запуститься быстро</li>
+          <li>Бюджет ограничен</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Итог</h2>
+    <p>iiko и r_keeper — отличные продукты для своей аудитории. Эта аудитория — средние и крупные заведения с полноценным производством.</p>
+    <p>Для небольшого бара нужен инструмент который не мешает работать. Простой, быстрый, работающий с телефона. Тот который бармен освоит за смену, а не за неделю обучения. Тот который не сломается в пятницу вечером.</p>
+    <p>80% функций тяжёлой системы маленький бар никогда не использует — но платит за них каждый месяц.</p>
+  </div>
+
+  <!-- EN body -->
+  <div class="body lang-block" data-lang="en" hidden>
+    <h2>What are iiko and r_keeper</h2>
+    <p>iiko and r_keeper are full restaurant ERP systems. They're built to automate everything: inventory and procurement management, recipe cards, cost calculation, payroll, kitchen displays, integration with cash register equipment.</p>
+    <p>These are powerful tools. For an 80-seat restaurant with a full kitchen — they make sense. For a small bar — it's like buying a truck to go grocery shopping.</p>
+
+    <h2>What this means in practice</h2>
+    <p><strong>Deployment cost.</strong> An iiko license for a small venue starts at several hundred dollars, plus hardware: terminals, printers, scanners. Monthly support is an additional cost on top of that.</p>
+    <p><strong>Time to launch.</strong> Setup takes days or weeks. You need to enter the full menu, recipe cards, inventory, configure roles, connect equipment. Minimum several days of work before the first check.</p>
+    <p><strong>Staff training.</strong> Even an experienced bartender will spend a few days figuring out the interface. And at the first opportunity, they'll find a workaround — because in real-world use, the system is slow.</p>
+    <p><strong>Support.</strong> When something goes wrong on Friday evening — you need a technical specialist. That's not a question, that's a given.</p>
+
+    <h2>What a small bar actually needs</h2>
+    <p>Let's be honest. What does a bartender do during a shift?</p>
+    <ol>
+      <li>Opens a tab for a guest</li>
+      <li>Adds items as ordered</li>
+      <li>Closes the tab, records payment (cash or card)</li>
+    </ol>
+    <p>What does a manager need?</p>
+    <ul>
+      <li>See revenue for the day, week, month</li>
+      <li>Know which items sell best</li>
+      <li>View history of closed checks</li>
+    </ul>
+    <p>That's it. Recipe cards, inventory management, and kitchen displays aren't needed for this.</p>
+
+    <h2>Side-by-side comparison</h2>
+    <table class="table">
+      <thead>
+        <tr><th>Criterion</th><th>iiko / r_keeper</th><th>Simple solution</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Launch to first check</td><td class="no">Days–weeks</td><td class="yes">5–10 minutes</td></tr>
+        <tr><td>Equipment</td><td class="no">Terminals, printers</td><td class="yes">Phone</td></tr>
+        <tr><td>Staff training</td><td class="no">1–3 days</td><td class="yes">~5 minutes</td></tr>
+        <tr><td>Monthly costs</td><td class="no">High</td><td class="yes">Low</td></tr>
+        <tr><td>Check &amp; revenue tracking</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+        <tr><td>Sales analytics</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+        <tr><td>Inventory management</td><td class="yes">Yes</td><td class="no">No</td></tr>
+        <tr><td>Recipe cards &amp; cost</td><td class="yes">Yes</td><td class="no">No</td></tr>
+      </tbody>
+    </table>
+
+    <h2>When to choose which</h2>
+    <div class="verdicts">
+      <div class="verdict">
+        <div class="verdictTitle">✓ iiko / r_keeper, if:</div>
+        <ul class="verdictList">
+          <li>Restaurant with a full kitchen</li>
+          <li>Inventory tracking is required</li>
+          <li>Recipe cards and food cost needed</li>
+          <li>5+ employees on staff</li>
+          <li>Budget available for implementation</li>
+        </ul>
+      </div>
+      <div class="verdict">
+        <div class="verdictTitle">✓ Simple solution, if:</div>
+        <ul class="verdictList">
+          <li>Bar or cafe without a complex kitchen</li>
+          <li>Up to 100 checks per day</li>
+          <li>Team of 2–6 people</li>
+          <li>Need to launch quickly</li>
+          <li>Budget is limited</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Bottom line</h2>
+    <p>iiko and r_keeper are great products for their audience. That audience is medium and large venues with full-scale production.</p>
+    <p>A small bar needs a tool that doesn't get in the way. Simple, fast, works from a phone. One that bartenders learn in a shift, not a week of training. One that won't break on Friday evening.</p>
+    <p>80% of features in a heavy system a small bar will never use — but pays for them every month.</p>
+  </div>
+
+  <!-- KA body -->
+  <div class="body lang-block" data-lang="ka" hidden>
+    <h2>რა არის iiko და r_keeper</h2>
+    <p>iiko და r_keeper სრულფასოვანი რესტორნული ERP სისტემებია. ისინი შექმნილია ყველაფრის ავტომატიზაციისთვის: საწყობის მართვა და შესყიდვები, კერძების ტექნოლოგიური ბარათები, თვითღირებულების გაანგარიშება, პერსონალის ხელფასი, სამზარეულოს დისპლეები, სალარო აღჭურვილობასთან ინტეგრაცია.</p>
+    <p>ეს მძლავრი ინსტრუმენტებია. 80-ადგილიანი რესტორნისთვის სრული სამზარეულოთი — გამართლებულია. პატარა ბარისთვის — ეს ისეა, თითქოს სასურსათოში სასყიდლად სატვირთო მანქანა შეიძინე.</p>
+
+    <h2>რას ნიშნავს ეს პრაქტიკაში</h2>
+    <p><strong>განლაგების ფასი.</strong> iiko-ს ლიცენზია პატარა დაწესებულებისთვის რამდენიმე ასეულ დოლარს ითვლება, პლუს აღჭურვილობა: ტერმინალები, პრინტერები, სკანერები. ყოველთვიური მხარდაჭერა — დამატებითი ხარჯი.</p>
+    <p><strong>გაშვების დრო.</strong> კონფიგურაცია დღეებს ან კვირებს იღებს. საჭიროა მთელი მენიუ, ტექკარტები, ნაშთები, როლების კონფიგურაცია, აღჭურვილობის მიერთება. პირველ ქვითრამდე — მინიმუმ რამდენიმე დღე.</p>
+    <p><strong>პერსონალის სწავლება.</strong> გამოცდილი ბარმენიც კი რამდენიმე დღეს დახარჯავს ინტერფეისის გასაგებად. და პირველ შემთხვევაში გვერდის ავლის გზას იპოვის — რადგან რეალურ მუშაობაში სისტემა ნელია.</p>
+    <p><strong>მხარდაჭერა.</strong> პარასკევ საღამოს პრობლემის გამო — ტექნიკური სპეციალისტი გჭირდება. ეს კითხვა კი არ არის, ეს ფაქტია.</p>
+
+    <h2>რა სჭირდება მართლა პატარა ბარს</h2>
+    <p>გულწრფელად. რას აკეთებს ბარმენი ცვლის განმავლობაში?</p>
+    <ol>
+      <li>ხსნის ქვითარს სტუმარზე</li>
+      <li>ამატებს პოზიციებს შეკვეთისამებრ</li>
+      <li>ხურავს ქვითარს, ასახელებს გადახდას (ნაღდი ან ბარათი)</li>
+    </ol>
+    <p>რა სჭირდება მენეჯერს?</p>
+    <ul>
+      <li>იხილოს შემოსავალი დღის, კვირის, თვის განმავლობაში</li>
+      <li>გაიგოს, რომელი პოზიცია უკეთ იყიდება</li>
+      <li>ნახოს დახურული ქვითრების ისტორია</li>
+    </ul>
+    <p>სულ ეს. ამისთვის ტექკარტები, საწყობის აღრიცხვა და სამზარეულოს დისპლეები არ სჭირდება.</p>
+
+    <h2>კრიტერიუმებით შედარება</h2>
+    <table class="table">
+      <thead>
+        <tr><th>კრიტერიუმი</th><th>iiko / r_keeper</th><th>მარტივი გადაწყვეტა</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>პირველ ქვითრამდე გაშვება</td><td class="no">დღეები–კვირები</td><td class="yes">5–10 წუთი</td></tr>
+        <tr><td>აღჭურვილობა</td><td class="no">ტერმინალები, პრინტერები</td><td class="yes">ტელეფონი</td></tr>
+        <tr><td>პერსონალის სწავლება</td><td class="no">1–3 დღე</td><td class="yes">~5 წუთი</td></tr>
+        <tr><td>ყოველთვიური ხარჯები</td><td class="no">მაღალი</td><td class="yes">დაბალი</td></tr>
+        <tr><td>ქვითრებისა და შემოსავლის აღრიცხვა</td><td class="yes">დიახ</td><td class="yes">დიახ</td></tr>
+        <tr><td>გაყიდვების ანალიტიკა</td><td class="yes">დიახ</td><td class="yes">დიახ</td></tr>
+        <tr><td>საწყობის აღრიცხვა</td><td class="yes">დიახ</td><td class="no">არა</td></tr>
+        <tr><td>ტექკარტები და თვითღირებულება</td><td class="yes">დიახ</td><td class="no">არა</td></tr>
+      </tbody>
+    </table>
+
+    <h2>როდის რომელი ავარჩიოთ</h2>
+    <div class="verdicts">
+      <div class="verdict">
+        <div class="verdictTitle">✓ iiko / r_keeper, თუ:</div>
+        <ul class="verdictList">
+          <li>რესტორანი სრული სამზარეულოთი</li>
+          <li>საწყობის აღრიცხვა საჭიროა</li>
+          <li>ტექკარტები და კერძების ფასი</li>
+          <li>5+ თანამშრომელი</li>
+          <li>დანერგვის ბიუჯეტი გათვალისწინებულია</li>
+        </ul>
+      </div>
+      <div class="verdict">
+        <div class="verdictTitle">✓ მარტივი გადაწყვეტა, თუ:</div>
+        <ul class="verdictList">
+          <li>ბარი ან კაფე რთული სამზარეულოს გარეშე</li>
+          <li>დღეში 100 ქვითრამდე</li>
+          <li>2–6 კაციანი გუნდი</li>
+          <li>სწრაფად გაშვება საჭიროა</li>
+          <li>ბიუჯეტი შეზღუდულია</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>დასკვნა</h2>
+    <p>iiko და r_keeper შესანიშნავი პროდუქტებია თავიანთი აუდიტორიისთვის. ეს აუდიტორია — საშუალო და მსხვილი დაწესებულებები სრულფასოვანი წარმოებით.</p>
+    <p>პატარა ბარს სჭირდება ინსტრუმენტი, რომელიც მუშაობაში ხელს არ უშლის. მარტივი, სწრაფი, ტელეფონიდან მუშაობს. ისეთი, რომელსაც ბარმენი ერთი ცვლით ისწავლის, კვირის ტრენინგის გარეშე. ისეთი, რომელიც პარასკევ საღამოს არ გაფუჭდება.</p>
+    <p>მძიმე სისტემის ფუნქციების 80%-ს პატარა ბარი არასდროს გამოიყენებს — მაგრამ ყოველ თვეში მათთვის იხდის.</p>
+  </div>
+
+  <div class="cta">
+    <h3 data-i="cta_h3">Попробуйте Checki — простое решение для баров</h3>
+    <p data-i="cta_p">Запуск за 5 минут. Без оборудования, без долгого внедрения.</p>
+    <a class="ctaBtn" href="/#register" data-i="cta_btn">Начать бесплатно</a>
+  </div>
+</div>
+
+<footer>© 2026 Checki · <a href="/blog/" data-i="blog_link">Блог</a> · <a href="/">checki.ge</a></footer>
+
+<script>
+const LANG_KEY = "checki_lang";
+const T = {
+  ru: {
+    nav_blog: "Блог", nav_login: "Войти", nav_cta: "Попробовать",
+    back: "← Блог", tag: "Выбор системы",
+    h1: "iiko и r_keeper для маленького бара: нужны ли они на самом деле",
+    date: "1 апреля 2026", read: "5 мин читать",
+    lead: "Когда открываешь бар, рано или поздно встаёт вопрос: какую программу поставить? Гуглишь — и везде iiko, r_keeper, Frontpad. Но нужны ли они маленькому бару на самом деле?",
+    cta_h3: "Попробуйте Checki — простое решение для баров",
+    cta_p: "Запуск за 5 минут. Без оборудования, без долгого внедрения.",
+    cta_btn: "Начать бесплатно",
+    blog_link: "Блог",
+  },
+  en: {
+    nav_blog: "Blog", nav_login: "Login", nav_cta: "Try free",
+    back: "← Blog", tag: "Comparison",
+    h1: "iiko vs r_keeper for a Small Bar: Do You Actually Need Them?",
+    date: "Apr 1, 2026", read: "5 min read",
+    lead: "When you open a bar, the question of which software to use comes up sooner or later. You Google it — and iiko, r_keeper, Frontpad are everywhere. But do small bars actually need them?",
+    cta_h3: "Try Checki — a simple solution for bars",
+    cta_p: "Set up in 5 minutes. No hardware, no lengthy onboarding.",
+    cta_btn: "Start free",
+    blog_link: "Blog",
+  },
+  ka: {
+    nav_blog: "ბლოგი", nav_login: "შესვლა", nav_cta: "სცადე",
+    back: "← ბლოგი", tag: "შედარება",
+    h1: "iiko და r_keeper პატარა ბარისთვის: სჭირდება თუ არა?",
+    date: "1 აპრ 2026", read: "5 წთ კითხვა",
+    lead: "ბარის გახსნისას სოფტვეარის კითხვა გარდაუვლად დგება. გუგლავ — და ყველგან iiko, r_keeper, Frontpad. მაგრამ მართლა სჭირდება ეს პატარა ბარს?",
+    cta_h3: "სცადეთ Checki — მარტივი გადაწყვეტა ბარებისთვის",
+    cta_p: "გაშვება 5 წუთში. აღჭურვილობის გარეშე, გრძელი დანერგვის გარეშე.",
+    cta_btn: "უფასოდ დაწყება",
+    blog_link: "ბლოგი",
+  },
+};
+
+const LANG_LABELS = { en: "🇬🇧 EN", ru: "🇷🇺 RU", ka: "🇬🇪 KA" };
+
+function apply(lang) {
+  localStorage.setItem(LANG_KEY, lang);
+  const t = T[lang] || T.ru;
+  document.querySelectorAll("[data-i]").forEach(el => {
+    if (t[el.dataset.i] !== undefined) el.textContent = t[el.dataset.i];
+  });
+  document.documentElement.lang = lang;
+  const dropBtn = document.getElementById("langDropBtn");
+  if (dropBtn) dropBtn.textContent = (LANG_LABELS[lang] || lang.toUpperCase()) + " ▾";
+  document.querySelectorAll(".langOpt").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".navDrawerLang").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".lang-block").forEach(el => { el.hidden = el.dataset.lang !== lang; });
+}
+
+const langDropBtn = document.getElementById("langDropBtn");
+const langDropMenu = document.getElementById("langDropMenu");
+const navBurger = document.getElementById("navBurger");
+const navDrawer = document.getElementById("navDrawer");
+
+if (langDropBtn) langDropBtn.addEventListener("click", e => { e.stopPropagation(); langDropMenu.classList.toggle("open"); });
+document.querySelectorAll(".langOpt").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); langDropMenu.classList.remove("open"); }));
+document.querySelectorAll(".navDrawerLang").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); navDrawer.classList.remove("open"); }));
+if (navBurger) navBurger.addEventListener("click", e => { e.stopPropagation(); navDrawer.classList.toggle("open"); });
+document.addEventListener("click", () => { langDropMenu?.classList.remove("open"); navDrawer?.classList.remove("open"); });
+
+apply(localStorage.getItem(LANG_KEY) || "ru");
+</script>
+</body>
+</html>

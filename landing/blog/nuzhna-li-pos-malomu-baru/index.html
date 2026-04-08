@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M2ZHXFCW');</script>
+  <!-- End Google Tag Manager -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Нужна ли POS система маленькому бару? Честный ответ</title>
+  <meta name="description" content="Разбираемся, когда POS-система оправдана, а когда переплата. Для баров с 1–3 барменами есть более простые и дешёвые решения." />
+  <link rel="canonical" href="https://checki.ge/blog/nuzhna-li-pos-malomu-baru/" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0f1116;
+      --surface: #161b24;
+      --border:  rgba(255,255,255,.10);
+      --text:    #f0f2f5;
+      --muted:   #7a8497;
+      --accent:  #49d17c;
+      --accent2: #2eb865;
+    }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; line-height: 1.75; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent2); }
+
+    nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(15,17,22,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); gap: 12px; }
+    .navLeft { display: flex; align-items: center; gap: 2px; }
+    .navLogo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; margin-right: 4px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    .navLogoText { font-size: 17px; font-weight: 800; color: var(--text); }
+    .navRight { display: flex; align-items: center; gap: 8px; position: relative; }
+    .navBtn { box-sizing: border-box; display: block; line-height: 1; padding: 10px 14px; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none; cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+    .langDrop { position: relative; }
+    .langDropBtn { background: none; border: 1px solid var(--border); color: var(--muted); font-size: 12px; font-weight: 700; padding: 10px 10px; border-radius: 10px; cursor: pointer; letter-spacing: .04em; transition: all .15s; display: flex; align-items: center; gap: 4px; box-sizing: border-box; line-height: 1; flex-shrink: 0; -webkit-tap-highlight-color: transparent; font-family: inherit; }
+    .langDropBtn:hover { color: var(--text); }
+    .langDropMenu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; min-width: 110px; z-index: 200; }
+    .langDropMenu.open { display: block; }
+    .langOpt { display: block; width: 100%; text-align: left; background: none; border: none; padding: 9px 14px; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .langOpt.active { color: var(--text); }
+    .navLink { background: none; border: none; color: var(--muted); transition: color .15s; padding-left: 4px; padding-right: 4px; }
+    .navLink:hover { color: var(--text); }
+    .navLeft .navLink { margin-left: 16px; font-size: 15px; }
+    .navLogin { background: none; border: 1px solid var(--border); color: var(--text); transition: border-color .15s; }
+    .navLogin:hover { border-color: rgba(255,255,255,.3); }
+    .navCta { background: var(--accent); color: #0f1116; padding-left: 18px; padding-right: 18px; transition: background .15s; }
+    .navCta:hover { background: var(--accent2); color: #0f1116; }
+    .navBurger { display: none; background: none; border: 1px solid var(--border); color: var(--text); padding: 10px 13px; border-radius: 10px; cursor: pointer; box-sizing: border-box; line-height: 1; flex-shrink: 0; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+    .navBurgerLines { display: flex; flex-direction: column; gap: 5px; width: 18px; }
+    .navBurgerLine { height: 2px; border-radius: 1px; background: var(--text); }
+    .navDrawer { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 6px; min-width: 200px; z-index: 200; flex-direction: column; gap: 2px; }
+    .navDrawer.open { display: flex; }
+    .navDrawerItem { display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 10px; background: none; border: none; color: var(--text); font-weight: 700; font-size: 14px; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .navDrawerItem:hover { background: rgba(255,255,255,.06); }
+    .navDrawerItem.accent { color: var(--accent); }
+    .navDrawerSep { height: 1px; background: var(--border); margin: 4px 2px; }
+    .navDrawerLangs { display: flex; gap: 4px; padding: 2px 4px 4px; }
+    .navDrawerLang { flex: 1; height: 34px; border-radius: 8px; border: none; background: rgba(255,255,255,.04); color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .1s; font-family: inherit; }
+    .navDrawerLang:hover, .navDrawerLang.active { background: rgba(73,209,124,.12); color: var(--accent); }
+    @media (max-width: 520px) { .navLogin, .langDrop, .navLeft .navLink { display: none; } .navBurger { display: flex; } }
+
+    .wrap { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .tag { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    h1 { font-size: clamp(26px, 6vw, 38px); font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin-bottom: 16px; }
+    .meta { font-size: 14px; color: var(--muted); margin-bottom: 40px; display: flex; gap: 16px; }
+    .lead { font-size: 18px; color: rgba(240,242,245,.8); line-height: 1.7; margin-bottom: 32px; border-left: 3px solid var(--accent); padding-left: 16px; }
+
+    .body p { font-size: 16px; margin-bottom: 20px; }
+    .body h2 { font-size: 22px; font-weight: 700; margin: 40px 0 14px; letter-spacing: -.01em; }
+    .body ol, .body ul { padding-left: 24px; margin-bottom: 20px; }
+    .body li { font-size: 16px; margin-bottom: 8px; }
+    .body strong { color: var(--text); font-weight: 600; }
+
+    .compTable { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+    .compTable th { text-align: left; padding: 10px 14px; color: var(--muted); font-weight: 600; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    .compTable td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.05); vertical-align: top; }
+    .compTable tr:last-child td { border-bottom: none; }
+    .compTable .yes { color: var(--accent); font-weight: 700; }
+    .compTable .no { color: #e05c5c; font-weight: 700; }
+    .compTable .maybe { color: #d4a843; font-weight: 700; }
+
+    .steps { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin: 24px 0; }
+    .step { display: flex; gap: 14px; margin-bottom: 16px; }
+    .step:last-child { margin-bottom: 0; }
+    .stepN { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #0f1116; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .stepText { font-size: 15px; line-height: 1.6; }
+
+    .verdict { background: rgba(73,209,124,.07); border: 1px solid rgba(73,209,124,.2); border-radius: 14px; padding: 24px; margin: 32px 0; }
+    .verdict strong { color: var(--accent); }
+
+    .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; margin-top: 48px; }
+    .cta h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .cta p { font-size: 15px; color: var(--muted); margin-bottom: 20px; }
+    .ctaBtn { display: inline-block; background: var(--accent); color: #0f1116; font-weight: 700; font-size: 15px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+    .ctaBtn:hover { background: var(--accent2); color: #0f1116; }
+
+    footer { text-align: center; padding: 24px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2ZHXFCW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav>
+  <div class="navLeft">
+    <a class="navLogo" href="/">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" style="flex-shrink:0"><rect width="32" height="32" rx="8" fill="#141418"/><text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text><circle cx="23" cy="24" r="3.5" fill="#49d17c"/></svg>
+      <span class="navLogoText">Checki</span>
+    </a>
+    <a class="navBtn navLink" href="/blog/" data-i="nav_blog">Blog</a>
+  </div>
+  <div class="navRight">
+    <div class="langDrop" id="langDrop">
+      <button class="langDropBtn" id="langDropBtn">🇷🇺 RU ▾</button>
+      <div class="langDropMenu" id="langDropMenu">
+        <button class="langOpt" data-lang="ka">🇬🇪 Georgian</button>
+        <button class="langOpt" data-lang="en">🇬🇧 English</button>
+        <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
+      </div>
+    </div>
+    <a class="navBtn navLogin" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+    <a class="navBtn navCta" href="/#register" data-i="nav_cta">Попробовать</a>
+    <button class="navBurger" id="navBurger" aria-label="Menu">
+      <div class="navBurgerLines">
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+      </div>
+    </button>
+    <div class="navDrawer" id="navDrawer">
+      <a class="navDrawerItem" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+      <a class="navDrawerItem" href="/blog/" data-i="nav_blog">Блог</a>
+      <div class="navDrawerSep"></div>
+      <div class="navDrawerLangs">
+        <button class="navDrawerLang" data-lang="ka">🇬🇪 KA</button>
+        <button class="navDrawerLang" data-lang="en">🇬🇧 EN</button>
+        <button class="navDrawerLang" data-lang="ru">🇷🇺 RU</button>
+      </div>
+      <div class="navDrawerSep"></div>
+      <a class="navDrawerItem accent" href="/#register" data-i="nav_cta">Попробовать →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="tag" data-i="tag">POS системы</div>
+  <h1 data-i="h1">Нужна ли POS-система маленькому бару? Честный ответ</h1>
+  <div class="meta">
+    <span data-i="date">8 апреля 2026</span>
+    <span data-i="read">5 мин читать</span>
+  </div>
+  <p class="lead" data-i="lead">Продавцы ресторанного оборудования скажут: нужна. Но маленький бар с тремя барменами — это не ресторан. Разберёмся когда POS-система реально необходима, а когда это переплата за ненужную сложность.</p>
+
+  <!-- RU body -->
+  <div class="body lang-block" data-lang="ru">
+    <p>Сначала определимся с терминами. POS-система — это комплекс: сенсорный терминал, встроенный принтер чеков, иногда кассовый ящик, программное обеспечение с ежегодной лицензией. Стоит это всё от 1 000 до 5 000 долларов на точку — плюс установка, обучение и техподдержка.</p>
+    <p>Вопрос не в том, «хорошая» эта система или «плохая». Вопрос в том, нужно ли именно вам то, что она предлагает.</p>
+
+    <h2>Что даёт POS-система</h2>
+    <ul>
+      <li>Фискальные чеки для налоговой отчётности</li>
+      <li>Управление складом и себестоимостью</li>
+      <li>Технологические карты (рецепты для кухни)</li>
+      <li>Интеграции с кухонными дисплеями и принтерами</li>
+      <li>Сложная аналитика и CRM</li>
+      <li>Управление несколькими точками</li>
+    </ul>
+    <p>Это мощный набор. Для ресторана на 80 мест с кухней, пятью официантами и складом — оправдано. Для бара с 1–3 барменами — большинство этих функций не нужны никогда.</p>
+
+    <h2>Что реально нужно небольшому бару</h2>
+    <ul>
+      <li>Открыть чек на гостя или стол</li>
+      <li>Добавить позиции из каталога</li>
+      <li>Закрыть чек с выбором оплаты (наличные / карта)</li>
+      <li>Видеть текущую выручку и открытые чеки</li>
+      <li>PDF-отчёт в конце месяца</li>
+    </ul>
+    <p>Пять пунктов. Для этого не нужен терминал за 2 000 долларов — нужен браузер на смартфоне, который уже есть у каждого бармена.</p>
+
+    <h2>Сравнение: POS vs простое веб-решение</h2>
+    <table class="compTable">
+      <thead>
+        <tr>
+          <th>Критерий</th>
+          <th>POS-система</th>
+          <th>Checki</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Стоимость входа</td>
+          <td class="no">от $1 000</td>
+          <td class="yes">Бесплатно</td>
+        </tr>
+        <tr>
+          <td>Установка и настройка</td>
+          <td class="no">1–3 дня</td>
+          <td class="yes">30 минут</td>
+        </tr>
+        <tr>
+          <td>Своё оборудование</td>
+          <td class="no">Обязательно</td>
+          <td class="yes">Любой смартфон</td>
+        </tr>
+        <tr>
+          <td>Обучение персонала</td>
+          <td class="no">Несколько дней</td>
+          <td class="yes">5–10 минут</td>
+        </tr>
+        <tr>
+          <td>Учёт чеков и выручки</td>
+          <td class="yes">Да</td>
+          <td class="yes">Да</td>
+        </tr>
+        <tr>
+          <td>Склад и технокарты</td>
+          <td class="yes">Да</td>
+          <td class="no">Нет</td>
+        </tr>
+        <tr>
+          <td>Фискальные чеки</td>
+          <td class="maybe">Зависит от страны</td>
+          <td class="no">Нет</td>
+        </tr>
+        <tr>
+          <td>PDF-отчёты</td>
+          <td class="yes">Да</td>
+          <td class="yes">Да</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Когда POS-система действительно нужна</h2>
+    <p>Честно — есть ситуации, когда без POS не обойтись:</p>
+    <ol>
+      <li><strong>Вам требуются фискальные чеки по закону.</strong> В некоторых странах и форматах работы нужен сертифицированный терминал для налоговой отчётности. В Грузии для малого бизнеса на патентной системе это часто не так.</li>
+      <li><strong>У вас сложная кухня.</strong> Если есть повара, технологические карты, заявки на кухонный дисплей — нужна полноценная система.</li>
+      <li><strong>Вы управляете несколькими точками с единым складом.</strong> Здесь нужна интеграция, которую простое решение не даст.</li>
+    </ol>
+    <p>Если ни один пункт не про вас — вы переплачиваете.</p>
+
+    <h2>Когда POS-система только мешает</h2>
+    <p>Небольшие бары, которые установили «правильную» систему, часто сталкиваются с одними и теми же проблемами:</p>
+    <ul>
+      <li><strong>Персонал саботирует.</strong> Сложный интерфейс — бармен в час пик забивает и пишет в блокнот. Система есть, данных нет.</li>
+      <li><strong>Техника ломается.</strong> Терминал завис, принтер не печатает, нужен сервисный инженер. Бар стоит.</li>
+      <li><strong>Вы платите за то чем не пользуетесь.</strong> Ежегодная лицензия, функции склада которые никто не трогает, обновления которые ломают что-то другое.</li>
+    </ul>
+
+    <div class="verdict">
+      <p><strong>Вывод:</strong> Небольшой бар с 1–3 барменами и простым меню не нуждается в POS-системе. Нужен инструмент, который решает задачу «открыть чек → добавить позиции → закрыть с оплатой» — быстро, с телефона, без установки оборудования.</p>
+    </div>
+
+    <h2>Как начать работать без POS</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="stepN">1</div>
+        <div class="stepText">Зарегистрируйте заведение — 2 минуты, никакой карты.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">2</div>
+        <div class="stepText">Добавьте позиции в каталог: название, цена, категория.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">3</div>
+        <div class="stepText">Покажите барменам как открыть чек и добавить позицию — 5 минут.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">4</div>
+        <div class="stepText">Работайте. В конце дня открывайте отчёт и смотрите выручку.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EN body -->
+  <div class="body lang-block" data-lang="en" hidden>
+    <p>First, let's define terms. A POS system is a complete package: touchscreen terminal, built-in receipt printer, sometimes a cash drawer, software with an annual license. This all costs between $1,000 and $5,000 per location — plus installation, training, and support.</p>
+    <p>The question isn't whether the system is "good" or "bad." The question is whether you actually need what it offers.</p>
+
+    <h2>What a POS system provides</h2>
+    <ul>
+      <li>Fiscal receipts for tax reporting</li>
+      <li>Inventory and cost-of-goods management</li>
+      <li>Recipe cards for the kitchen</li>
+      <li>Kitchen display and printer integrations</li>
+      <li>Advanced analytics and CRM</li>
+      <li>Multi-location management</li>
+    </ul>
+    <p>That's a powerful set. For an 80-seat restaurant with a kitchen, five waiters, and a stockroom — it's justified. For a bar with 1–3 bartenders — most of these features are never used.</p>
+
+    <h2>What a small bar actually needs</h2>
+    <ul>
+      <li>Open a tab for a guest or table</li>
+      <li>Add items from the catalog</li>
+      <li>Close the tab with payment method (cash / card)</li>
+      <li>See current revenue and open tabs</li>
+      <li>PDF report at the end of the month</li>
+    </ul>
+    <p>Five items. You don't need a $2,000 terminal for this — you need a browser on a smartphone, which every bartender already has.</p>
+
+    <h2>Comparison: POS vs simple web solution</h2>
+    <table class="compTable">
+      <thead>
+        <tr>
+          <th>Criteria</th>
+          <th>POS System</th>
+          <th>Checki</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Entry cost</td>
+          <td class="no">from $1,000</td>
+          <td class="yes">Free</td>
+        </tr>
+        <tr>
+          <td>Setup time</td>
+          <td class="no">1–3 days</td>
+          <td class="yes">30 minutes</td>
+        </tr>
+        <tr>
+          <td>Hardware required</td>
+          <td class="no">Mandatory</td>
+          <td class="yes">Any smartphone</td>
+        </tr>
+        <tr>
+          <td>Staff training</td>
+          <td class="no">Several days</td>
+          <td class="yes">5–10 minutes</td>
+        </tr>
+        <tr>
+          <td>Tab and revenue tracking</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Inventory and recipes</td>
+          <td class="yes">Yes</td>
+          <td class="no">No</td>
+        </tr>
+        <tr>
+          <td>Fiscal receipts</td>
+          <td class="maybe">Depends on country</td>
+          <td class="no">No</td>
+        </tr>
+        <tr>
+          <td>PDF reports</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>When a POS system is genuinely needed</h2>
+    <p>To be honest — there are situations where POS is unavoidable:</p>
+    <ol>
+      <li><strong>The law requires fiscal receipts.</strong> In some countries and business formats you need a certified terminal for tax reporting. In Georgia for small businesses on the patent system, this often isn't the case.</li>
+      <li><strong>You have a real kitchen.</strong> If you have cooks, recipe cards, and kitchen display orders — you need a full system.</li>
+      <li><strong>You manage multiple locations with shared inventory.</strong> This requires integrations that a simple solution can't provide.</li>
+    </ol>
+    <p>If none of these apply to you — you're overpaying.</p>
+
+    <h2>When a POS system just gets in the way</h2>
+    <p>Small bars that install a "proper" system often run into the same problems:</p>
+    <ul>
+      <li><strong>Staff ignore it.</strong> Complex interface — bartender in rush hour gives up and writes in a notebook. The system exists, the data doesn't.</li>
+      <li><strong>Hardware breaks.</strong> Terminal freezes, printer stops working, you need a service engineer. The bar is stuck.</li>
+      <li><strong>You pay for things you never use.</strong> Annual license, inventory features nobody touches, updates that break something else.</li>
+    </ul>
+
+    <div class="verdict">
+      <p><strong>Bottom line:</strong> A small bar with 1–3 bartenders and a straightforward menu doesn't need a POS system. It needs a tool that handles "open tab → add items → close with payment" — fast, from a phone, with no hardware installation.</p>
+    </div>
+
+    <h2>How to get started without a POS</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="stepN">1</div>
+        <div class="stepText">Register your venue — 2 minutes, no credit card needed.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">2</div>
+        <div class="stepText">Add items to the catalog: name, price, category.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">3</div>
+        <div class="stepText">Show the bartenders how to open a tab and add an item — 5 minutes.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">4</div>
+        <div class="stepText">Work. At the end of the day, open the report and check revenue.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KA body -->
+  <div class="body lang-block" data-lang="ka" hidden>
+    <p>პირველ რიგში, ტერმინოლოგია განვმარტოთ. POS სისტემა კომპლექსია: სენსორული ტერმინალი, ჩაშენებული ქვითრის პრინტერი, ზოგჯერ სალარო ყუთი, ყოველწლიური ლიცენზიით პროგრამული უზრუნველყოფა. ეს ყველაფერი 1 000-დან 5 000 დოლარამდე ღირს ერთ წერტილზე — პლუს ინსტალაცია, ტრენინგი და ტექნიკური მხარდაჭერა.</p>
+    <p>კითხვა არ არის სისტემა „კარგია" თუ „ცუდი". კითხვა არის, გჭირდება თუ არა ის, რასაც ის გთავაზობს.</p>
+
+    <h2>რას გაძლევს POS სისტემა</h2>
+    <ul>
+      <li>ფისკალური ქვითრები საგადასახადო ანგარიშგებისთვის</li>
+      <li>საწყობის მართვა და თვითღირებულება</li>
+      <li>ტექნოლოგიური ბარათები (რეცეპტები სამზარეულოსთვის)</li>
+      <li>ინტეგრაციები სამზარეულოს დისპლეებთან და პრინტერებთან</li>
+      <li>კომპლექსური ანალიტიკა და CRM</li>
+      <li>რამდენიმე წერტილის მართვა</li>
+    </ul>
+    <p>ეს მძლავრი ნაკრებია. 80-ადგილიანი რესტორნისთვის სამზარეულოთი, ხუთი მიმტანით და საწყობით — გამართლებულია. ბარისთვის 1–3 ბარმენით — ამ ფუნქციების უმეტესობა არასდროს გამოიყენება.</p>
+
+    <h2>რა სჭირდება პატარა ბარს</h2>
+    <ul>
+      <li>ქვითრის გახსნა სტუმარზე ან მაგიდაზე</li>
+      <li>კატალოგიდან პოზიციების დამატება</li>
+      <li>ქვითრის დახურვა გადახდის მეთოდის არჩევით (ნაღდი / ბარათი)</li>
+      <li>მიმდინარე შემოსავლისა და ღია ქვითრების ნახვა</li>
+      <li>PDF ანგარიში თვის ბოლოს</li>
+    </ul>
+    <p>ხუთი პუნქტი. ამისთვის $2 000 ტერმინალი არ სჭირდება — სმარტფონზე ბრაუზერი გჭირდება, რაც ყველა ბარმენს უკვე აქვს.</p>
+
+    <h2>შედარება: POS vs მარტივი ვებ-გადაწყვეტა</h2>
+    <table class="compTable">
+      <thead>
+        <tr>
+          <th>კრიტერიუმი</th>
+          <th>POS სისტემა</th>
+          <th>Checki</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>შესვლის ღირებულება</td>
+          <td class="no">$1 000-დან</td>
+          <td class="yes">უფასო</td>
+        </tr>
+        <tr>
+          <td>ინსტალაცია და კონფიგურაცია</td>
+          <td class="no">1–3 დღე</td>
+          <td class="yes">30 წუთი</td>
+        </tr>
+        <tr>
+          <td>საკუთარი აღჭურვილობა</td>
+          <td class="no">სავალდებულო</td>
+          <td class="yes">ნებისმიერი სმარტფონი</td>
+        </tr>
+        <tr>
+          <td>პერსონალის ტრენინგი</td>
+          <td class="no">რამდენიმე დღე</td>
+          <td class="yes">5–10 წუთი</td>
+        </tr>
+        <tr>
+          <td>ქვითრებისა და შემოსავლის აღრიცხვა</td>
+          <td class="yes">კი</td>
+          <td class="yes">კი</td>
+        </tr>
+        <tr>
+          <td>საწყობი და ტექკარტები</td>
+          <td class="yes">კი</td>
+          <td class="no">არა</td>
+        </tr>
+        <tr>
+          <td>ფისკალური ქვითრები</td>
+          <td class="maybe">ქვეყნიდან დამოკიდებული</td>
+          <td class="no">არა</td>
+        </tr>
+        <tr>
+          <td>PDF ანგარიშები</td>
+          <td class="yes">კი</td>
+          <td class="yes">კი</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>როდის სჭირდება POS სისტემა</h2>
+    <p>გულწრფელად — არის სიტუაციები, სადაც POS-ის გარეშე ვერ გახვალ:</p>
+    <ol>
+      <li><strong>კანონი მოითხოვს ფისკალურ ქვითრებს.</strong> ზოგიერთ ქვეყანაში სერტიფიცირებული ტერმინალი სჭირდება. საქართველოში პატენტის სისტემაზე მყოფი მცირე ბიზნესისთვის ეს ხშირად ასე არ არის.</li>
+      <li><strong>სრულფასოვანი სამზარეულო გაქვს.</strong> თუ მზარეულები, ტექკარტები და სამზარეულოს ეკრანების შეკვეთებია — სრული სისტემა გჭირდება.</li>
+      <li><strong>რამდენიმე წერტილს ერთიანი საწყობით მართავ.</strong> ამ შემთხვევაში ინტეგრაცია სჭირდება.</li>
+    </ol>
+    <p>თუ ვერც ერთი პუნქტი არ გეხება — ზედმეტს იხდი.</p>
+
+    <h2>როდის POS სისტემა მხოლოდ უშლის ხელს</h2>
+    <p>პატარა ბარები, რომლებმაც „სწორი" სისტემა დაამონტაჟეს, ხშირად ერთსა და იმავე პრობლემებს აწყდებიან:</p>
+    <ul>
+      <li><strong>პერსონალი საბოტაჟს აკეთებს.</strong> რთული ინტერფეისი — ბარმენი პიკის საათებში ტოვებს და რვეულში წერს.</li>
+      <li><strong>ტექნიკა იშლება.</strong> ტერმინალი გაიყინა, პრინტერი არ ბეჭდავს, სერვის ინჟინერი სჭირდება. ბარი დგას.</li>
+      <li><strong>ის-ისთვის იხდი რასაც არ იყენებ.</strong> ყოველწლიური ლიცენზია, საწყობის ფუნქციები რომელსაც არავინ ეხება, განახლებები რომლებიც სხვა რამეს არღვევს.</li>
+    </ul>
+
+    <div class="verdict">
+      <p><strong>დასკვნა:</strong> პატარა ბარს 1–3 ბარმენით და მარტივი მენიუთი POS სისტემა არ სჭირდება. სჭირდება ინსტრუმენტი, რომელიც „ქვითრის გახსნა → პოზიციების დამატება → გადახდით დახურვა" სწრაფად, ტელეფონიდან, აღჭურვილობის ინსტალაციის გარეშე ასრულებს.</p>
+    </div>
+
+    <h2>როგორ დავიწყოთ POS-ის გარეშე</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="stepN">1</div>
+        <div class="stepText">დაარეგისტრირე დაწესებულება — 2 წუთი, ბარათი არ სჭირდება.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">2</div>
+        <div class="stepText">დაამატე კატალოგში პოზიციები: სახელი, ფასი, კატეგორია.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">3</div>
+        <div class="stepText">აჩვენე ბარმენებს ქვითრის გახსნა და პოზიციის დამატება — 5 წუთი.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">4</div>
+        <div class="stepText">იმუშავე. დღის ბოლოს გახსენი ანგარიში და ნახე შემოსავალი.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h3 data-i="cta_h3">Попробуйте Checki бесплатно</h3>
+    <p data-i="cta_p">Никакого оборудования, никаких лицензий. Регистрация за 2 минуты.</p>
+    <a class="ctaBtn" href="/#register" data-i="cta_btn">Начать бесплатно</a>
+  </div>
+</div>
+
+<footer>© 2026 Checki · <a href="/blog/" data-i="blog_link">Блог</a> · <a href="/">checki.ge</a></footer>
+
+<script>
+const LANG_KEY = "checki_lang";
+const T = {
+  ru: {
+    nav_blog: "Блог", nav_login: "Войти", nav_cta: "Попробовать",
+    tag: "POS системы",
+    h1: "Нужна ли POS-система маленькому бару? Честный ответ",
+    date: "8 апреля 2026", read: "5 мин читать",
+    lead: "Продавцы ресторанного оборудования скажут: нужна. Но маленький бар с тремя барменами — это не ресторан. Разберёмся когда POS-система реально необходима, а когда это переплата за ненужную сложность.",
+    cta_h3: "Попробуйте Checki бесплатно",
+    cta_p: "Никакого оборудования, никаких лицензий. Регистрация за 2 минуты.",
+    cta_btn: "Начать бесплатно",
+    blog_link: "Блог",
+  },
+  en: {
+    nav_blog: "Blog", nav_login: "Login", nav_cta: "Try free",
+    tag: "POS Systems",
+    h1: "Does a Small Bar Need a POS System? An Honest Answer",
+    date: "Apr 8, 2026", read: "5 min read",
+    lead: "Restaurant equipment vendors will say yes. But a small bar with three bartenders isn't a restaurant. Let's figure out when a POS system is genuinely necessary — and when it's overpaying for complexity you don't need.",
+    cta_h3: "Try Checki free",
+    cta_p: "No hardware, no licenses. Register in 2 minutes.",
+    cta_btn: "Start free",
+    blog_link: "Blog",
+  },
+  ka: {
+    nav_blog: "ბლოგი", nav_login: "შესვლა", nav_cta: "სცადე",
+    tag: "POS სისტემები",
+    h1: "სჭირდება თუ არა POS სისტემა პატარა ბარს? გულწრფელი პასუხი",
+    date: "8 აპრ 2026", read: "5 წთ კითხვა",
+    lead: "სარესტორნო აღჭურვილობის გამყიდველები იტყვიან: სჭირდება. მაგრამ სამი ბარმენის პატარა ბარი რესტორანი არ არის. გავარკვიოთ, როდის სჭირდება POS სისტემა და როდის ეს ზედმეტი ხარჯია.",
+    cta_h3: "სცადეთ Checki უფასოდ",
+    cta_p: "აღჭურვილობის გარეშე, ლიცენზიის გარეშე. რეგისტრაცია 2 წუთში.",
+    cta_btn: "უფასოდ დაწყება",
+    blog_link: "ბლოგი",
+  },
+};
+
+const LANG_LABELS = { en: "🇬🇧 EN", ru: "🇷🇺 RU", ka: "🇬🇪 KA" };
+
+function apply(lang) {
+  localStorage.setItem(LANG_KEY, lang);
+  const t = T[lang] || T.ru;
+  document.querySelectorAll("[data-i]").forEach(el => {
+    if (t[el.dataset.i] !== undefined) el.textContent = t[el.dataset.i];
+  });
+  document.documentElement.lang = lang;
+  const dropBtn = document.getElementById("langDropBtn");
+  if (dropBtn) dropBtn.textContent = (LANG_LABELS[lang] || lang.toUpperCase()) + " ▾";
+  document.querySelectorAll(".langOpt").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".navDrawerLang").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".lang-block").forEach(el => { el.hidden = el.dataset.lang !== lang; });
+}
+
+const langDropBtn = document.getElementById("langDropBtn");
+const langDropMenu = document.getElementById("langDropMenu");
+const navBurger = document.getElementById("navBurger");
+const navDrawer = document.getElementById("navDrawer");
+
+if (langDropBtn) langDropBtn.addEventListener("click", e => { e.stopPropagation(); langDropMenu.classList.toggle("open"); });
+document.querySelectorAll(".langOpt").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); langDropMenu.classList.remove("open"); }));
+document.querySelectorAll(".navDrawerLang").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); navDrawer.classList.remove("open"); }));
+if (navBurger) navBurger.addEventListener("click", e => { e.stopPropagation(); navDrawer.classList.toggle("open"); });
+document.addEventListener("click", () => { langDropMenu?.classList.remove("open"); navDrawer?.classList.remove("open"); });
+
+apply(localStorage.getItem(LANG_KEY) || "ru");
+</script>
+</body>
+</html>

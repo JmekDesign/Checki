@@ -24,6 +24,7 @@
     token = t || "";
     setTokenStore(token);
     $("btnLogout").classList.toggle("hide", !token);
+    var helpBtn = $("btnHelp"); if (helpBtn) helpBtn.classList.toggle("hide", !token);
   };
   setToken(token);
 
@@ -69,6 +70,7 @@
       toast("OK");
       await loadOpen();
       show("screenOpen", r.token);
+      if(window.CHK?.help) window.CHK.help.init();
     }catch(e){ toast("Login error: " + e.message); }
   };
 

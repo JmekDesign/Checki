@@ -2,14 +2,21 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M2ZHXFCW');</script>
+  <!-- End Google Tag Manager -->
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230f1116'/><text y='24' x='4' font-size='22' font-family='system-ui,sans-serif' font-weight='800' fill='%2349d17c'>C</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
 
   <!-- SEO -->
-  <title>Checki — Программа учёта заказов для бара с телефона | Без кассы</title>
-  <meta name="description" content="Открывайте счета, добавляйте позиции и закрывайте заказы прямо со смартфона. Checki — простая POS-система для баров и кафе в Грузии. Бесплатный старт, без оборудования." />
+  <title>Checki — Bar Management from Your Phone. No POS</title>
+  <meta name="description" content="Open tabs, add orders, track revenue — all from a browser on any smartphone. No hardware, no training. Free access for bars in Tbilisi and Georgia." />
   <meta name="keywords" content="программа для бара, приложение для бармена, pos система для бара, bar management georgia, бар без кассы, учёт заказов бар, bar tab management tbilisi, ბარის მართვის პროგრამა" />
   <link rel="canonical" href="https://checki.ge/" />
+  <link rel="alternate" hreflang="ru" href="https://checki.ge/" />
+  <link rel="alternate" hreflang="en" href="https://checki.ge/" />
+  <link rel="alternate" hreflang="ka" href="https://checki.ge/" />
+  <link rel="alternate" hreflang="x-default" href="https://checki.ge/" />
 
   <!-- Open Graph -->
   <meta property="og:type"        content="website" />
@@ -77,15 +84,6 @@
   }
   </script>
 
-  <!-- Google Analytics 4 — replace G-6YEDJ6Z2QZ with your Measurement ID -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6YEDJ6Z2QZ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-6YEDJ6Z2QZ');
-  </script>
-
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -118,8 +116,9 @@
       border-bottom: 1px solid var(--border);
       gap: 12px;
     }
-    .logo { font-size: 20px; font-weight: 800; letter-spacing: -.5px; color: var(--text); flex: none; }
-    .logo span { color: var(--accent); }
+    .navLeft { display: flex; align-items: center; gap: 2px; }
+    .navLogo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; margin-right: 4px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    .navLogoText { font-size: 17px; font-weight: 800; color: var(--text); }
     .navRight { display: flex; align-items: center; gap: 8px; }
     /* Language dropdown */
     .langDrop { position: relative; }
@@ -155,6 +154,13 @@
     }
     .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
     .langOpt.active { color: var(--text); }
+    .navLink {
+      background: none; border: none; color: var(--muted);
+      transition: color .15s; padding-left: 4px; padding-right: 4px;
+    }
+    .navLink:hover { color: var(--text); }
+    .navLink.active { color: var(--text); }
+    .navLeft .navLink { margin-left: 16px; font-size: 15px; }
     .navLogin {
       background: none; border: 1px solid var(--border);
       color: var(--text); transition: border-color .15s;
@@ -169,10 +175,16 @@
     /* Mobile burger */
     .navBurger {
       display: none; background: none; border: 1px solid var(--border);
-      color: var(--text); padding: 10px 0; width: 40px; border-radius: 10px; cursor: pointer;
-      font-size: 18px; box-sizing: border-box; line-height: 1; flex-shrink: 0;
+      color: var(--text); padding: 10px 13px; border-radius: 10px; cursor: pointer;
+      box-sizing: border-box; line-height: 1; flex-shrink: 0;
       align-items: center; justify-content: center;
       -webkit-tap-highlight-color: transparent;
+    }
+    .navBurgerLines {
+      display: flex; flex-direction: column; gap: 5px; width: 18px;
+    }
+    .navBurgerLine {
+      height: 2px; border-radius: 1px; background: var(--text);
     }
     .navDrawer {
       display: none; position: absolute; top: calc(100% + 8px); right: 0;
@@ -197,7 +209,7 @@
     }
     .navDrawerLang:hover, .navDrawerLang.active { background: rgba(73,209,124,.12); color: var(--accent); }
     @media (max-width: 520px) {
-      .navLogin, .langDrop { display: none; }
+      .navLogin, .langDrop, .navLeft .navLink { display: none; }
       .navBurger { display: flex; }
       .navRight { position: relative; }
     }
@@ -283,21 +295,26 @@
     }
     .screensTrack::-webkit-scrollbar { display: none; }
     .screenCard {
-      flex: 0 0 auto; scroll-snap-align: center;
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      flex: 0 0 240px; scroll-snap-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
     }
     .screenPhone {
       width: 200px; border-radius: 32px; overflow: hidden;
       box-shadow: 0 8px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.08);
-      background: #0f1116;
+      background: #0f1116; flex-shrink: 0;
     }
     .screenPhone img { display: block; width: 100%; height: auto; }
-    .screenCaption {
-      font-size: 13px; font-weight: 600; color: var(--muted); text-align: center;
+    .screenText { text-align: center; padding: 0 8px; }
+    .screenTitle {
+      font-size: 14px; font-weight: 700; color: var(--text);
+      margin-bottom: 6px; line-height: 1.3;
+    }
+    .screenDesc {
+      font-size: 12px; color: var(--muted); line-height: 1.55;
     }
     @media (min-width: 700px) {
-      .screensTrack { justify-content: center; flex-wrap: wrap; overflow-x: visible; padding: 0 24px 0; }
-      .screenPhone { width: 180px; }
+      .screensTrack { padding: 0 40px 20px; }
+      .screenCard { flex: 0 0 240px; }
     }
 
     /* ── FEATURES ── */
@@ -317,6 +334,19 @@
       text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
     }
     h2 { font-size: clamp(22px, 6vw, 34px); font-weight: 800; letter-spacing: -.02em; margin-bottom: 36px; }
+
+    /* ── BLOG ── */
+    .blogCards { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 640px) { .blogCards { grid-template-columns: repeat(3, 1fr); } }
+    .blogCard {
+      display: block; text-decoration: none; color: var(--text);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px; transition: border-color .15s;
+    }
+    .blogCard:hover { border-color: rgba(255,255,255,.22); }
+    .blogCardTag { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .blogCardTitle { font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 12px; }
+    .blogCardMeta { font-size: 12px; color: var(--muted); }
 
     /* ── FORM ── */
     .formCard {
@@ -360,9 +390,18 @@
   </style>
 </head>
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2ZHXFCW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
 <nav>
-  <div class="logo">Checki<span>.</span></div>
+  <div class="navLeft">
+    <a class="navLogo" href="/">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" style="flex-shrink:0"><rect width="32" height="32" rx="8" fill="#141418"/><text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text><circle cx="23" cy="24" r="3.5" fill="#49d17c"/></svg>
+      <span class="navLogoText">Checki</span>
+    </a>
+    <a class="navBtn navLink" href="/blog/" data-i="nav_blog">Blog</a>
+  </div>
   <div class="navRight">
     <div class="langDrop" id="langDrop">
       <button class="langDropBtn" id="langDropBtn">🇬🇧 EN ▾</button>
@@ -375,9 +414,16 @@
     <a class="navBtn navLogin" href="https://admin.checki.ge" data-i="nav_login">Login</a>
     <a class="navBtn navCta" href="#register" data-i="nav_cta">Попробовать бесплатно</a>
     <!-- Mobile burger -->
-    <button class="navBurger" id="navBurger" aria-label="Menu">☰</button>
+    <button class="navBurger" id="navBurger" aria-label="Menu">
+      <div class="navBurgerLines">
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+      </div>
+    </button>
     <div class="navDrawer" id="navDrawer">
       <a class="navDrawerItem" href="https://admin.checki.ge" data-i="nav_login">Login</a>
+      <a class="navDrawerItem" href="/blog/" data-i="nav_blog">Blog</a>
       <div class="navDrawerSep"></div>
       <div class="navDrawerLangs">
         <button class="navDrawerLang" data-lang="ka">🇬🇪 KA</button>
@@ -462,37 +508,55 @@
       <div class="screenPhone">
         <img src="/screenshots/open-checks.jpg" alt="Open checks" loading="lazy" />
       </div>
-      <div class="screenCaption" data-i="screens_cap1">Открытые чеки</div>
+      <div class="screenText">
+        <div class="screenTitle" data-i="screens_title1">Все чеки — одним взглядом</div>
+        <div class="screenDesc" data-i="screens_desc1">На главном экране видно каждый открытый стол: имя гостя, время и сумму. Нажми — и сразу переходишь к нужному чеку.</div>
+      </div>
     </div>
     <div class="screenCard">
       <div class="screenPhone">
         <img src="/screenshots/check-detail.jpg" alt="Check detail" loading="lazy" />
       </div>
-      <div class="screenCaption" data-i="screens_cap2">Чек с позициями</div>
+      <div class="screenText">
+        <div class="screenTitle" data-i="screens_title2">Добавляй позиции за секунды</div>
+        <div class="screenDesc" data-i="screens_desc2">Начни вводить название — Checki сам найдёт позицию из каталога и подставит цену. Или нажми быструю кнопку для топовых позиций.</div>
+      </div>
     </div>
     <div class="screenCard">
       <div class="screenPhone">
         <img src="/screenshots/archive.jpg" alt="Archive" loading="lazy" />
       </div>
-      <div class="screenCaption" data-i="screens_cap3">Архив и выручка</div>
+      <div class="screenText">
+        <div class="screenTitle" data-i="screens_title3">История и выручка в одном месте</div>
+        <div class="screenDesc" data-i="screens_desc3">Архив хранит все закрытые чеки с фильтром по датам. Видно выручку за день, неделю или месяц — наличными и картой отдельно.</div>
+      </div>
     </div>
     <div class="screenCard">
       <div class="screenPhone">
         <img src="/screenshots/catalog.jpg" alt="Catalog" loading="lazy" />
       </div>
-      <div class="screenCaption" data-i="screens_cap4">Каталог продуктов</div>
+      <div class="screenText">
+        <div class="screenTitle" data-i="screens_title4">Каталог, который управляет сам собой</div>
+        <div class="screenDesc" data-i="screens_desc4">Новые позиции появляются автоматически с первого заказа. Менеджер задаёт цены и категории — бармен сразу работает со структурированным меню.</div>
+      </div>
     </div>
     <div class="screenCard">
       <div class="screenPhone">
         <img src="/screenshots/venue.jpg" alt="Venue" loading="lazy" />
       </div>
-      <div class="screenCaption" data-i="screens_cap5">Персонал и статистика</div>
+      <div class="screenText">
+        <div class="screenTitle" data-i="screens_title5">Персонал и смены под контролем</div>
+        <div class="screenDesc" data-i="screens_desc5">Создай аккаунты для барменов за минуту. Смотри кто и когда работал, отслеживай каждую смену — всё из браузера на телефоне.</div>
+      </div>
     </div>
     <div class="screenCard">
       <div class="screenPhone">
         <img src="/screenshots/supplies.jpg" alt="Supplies" loading="lazy" />
       </div>
-      <div class="screenCaption" data-i="screens_cap6">Закупки</div>
+      <div class="screenText">
+        <div class="screenTitle" data-i="screens_title6">Учёт закупок без таблиц</div>
+        <div class="screenDesc" data-i="screens_desc6">Фиксируй поставки прямо в системе: что пришло, от кого и на сколько. История закупок всегда под рукой — никаких отдельных таблиц.</div>
+      </div>
     </div>
   </div>
 </div>
@@ -564,6 +628,35 @@
   </div>
 </section>
 
+<!-- GEO -->
+<section>
+  <div class="sectionLabel" data-i="geo_label">Тбилиси и Грузия</div>
+  <h2 data-i="geo_h2">Создано для баров Грузии.</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="stepNum">🇬🇪</div>
+      <div class="stepText">
+        <h3 data-i="geo1_h">Работает в GEL</h3>
+        <p data-i="geo1_p">Все чеки и отчёты в грузинских лари. Никаких конвертаций и дополнительных настроек — Checki сразу готов к работе в Грузии.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="stepNum">📍</div>
+      <div class="stepText">
+        <h3 data-i="geo2_h">Тбилиси, Батуми, вся Грузия</h3>
+        <p data-i="geo2_p">Сотни небольших баров работают без кассового аппарата — и это законно для малого бизнеса на патентной системе. Checki помогает вести учёт без дорогой POS-системы.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="stepNum">⚡</div>
+      <div class="stepText">
+        <h3 data-i="geo3_h">Регистрация за 2 минуты</h3>
+        <p data-i="geo3_p">Не нужно ждать одобрения, подписывать договоры или покупать оборудование. Зарегистрировал заведение — и сразу работаешь. Бесплатно.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- REGISTER -->
 <section id="register">
   <div class="sectionLabel" data-i="reg_label">Начать</div>
@@ -609,11 +702,70 @@
 <section id="faq">
   <div class="sectionLabel" data-i="faq_label">FAQ</div>
   <h2 data-i="faq_h2">Frequently asked questions</h2>
-  <div class="steps" id="faqList"></div>
+  <div class="steps" id="faqList">
+    <div class="step">
+      <div class="stepNum" style="font-size:18px">?</div>
+      <div class="stepText">
+        <h3 style="margin-bottom:6px">Do I need a cash register to use Checki?</h3>
+        <p>No. Checki runs in any smartphone browser — no hardware, no cash register, no printer required. Just a phone with internet.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="stepNum" style="font-size:18px">?</div>
+      <div class="stepText">
+        <h3 style="margin-bottom:6px">How is Checki different from iiko or Square?</h3>
+        <p>iiko and Square are built for large restaurants with expensive hardware and long setup. Checki is for bars and small cafes: ready in 5 minutes, runs on your personal phone, zero installation.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="stepNum" style="font-size:18px">?</div>
+      <div class="stepText">
+        <h3 style="margin-bottom:6px">Can I manage multiple venues?</h3>
+        <p>Yes. Checki supports multiple venues under one account. Each venue's data is fully isolated — staff from one bar cannot see another's orders.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="stepNum" style="font-size:18px">?</div>
+      <div class="stepText">
+        <h3 style="margin-bottom:6px">How do I track bar tabs without a POS system?</h3>
+        <p>A bartender opens a tab, adds items from the smart catalog, and closes with payment method. The manager sees live revenue and stats. All in a phone browser, nothing to install.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section>
+  <div class="sectionLabel" data-i="blog_label">Blog</div>
+  <h2 data-i="blog_h2">From the blog</h2>
+  <div class="blogCards">
+
+    <a class="blogCard" href="/blog/kak-schitat-vyruchku-v-bare/">
+      <div class="blogCardTag" data-i="blog_tag1">Analytics</div>
+      <div class="blogCardTitle" data-i="blog_title1">How to Track Bar Revenue — Simply and Accurately</div>
+      <div class="blogCardMeta"><span data-i="blog_date1">Apr 8, 2026</span> · <span data-i="blog_read1">6 min</span></div>
+    </a>
+
+    <a class="blogCard" href="/blog/nuzhna-li-pos-malomu-baru/">
+      <div class="blogCardTag" data-i="blog_tag2">POS Systems</div>
+      <div class="blogCardTitle" data-i="blog_title2">Does a Small Bar Need a POS System? An Honest Answer</div>
+      <div class="blogCardMeta"><span data-i="blog_date2">Apr 8, 2026</span> · <span data-i="blog_read2">5 min</span></div>
+    </a>
+
+    <a class="blogCard" href="/blog/checki-vs-spacem/">
+      <div class="blogCardTag" data-i="blog_tag3">Comparison</div>
+      <div class="blogCardTitle" data-i="blog_title3">Checki vs SpaceM — Which One to Choose for Your Bar</div>
+      <div class="blogCardMeta"><span data-i="blog_date3">Apr 8, 2026</span> · <span data-i="blog_read3">5 min</span></div>
+    </a>
+
+  </div>
+  <div style="text-align:center;margin-top:28px">
+    <a href="/blog/" style="font-size:14px;color:var(--muted);text-decoration:none" data-i="blog_all">All articles →</a>
+  </div>
 </section>
 
 <footer>
-  © 2026 Checki · <a href="mailto:hello@checki.ge">hello@checki.ge</a>
+  © 2026 Checki · <a href="mailto:hello@checki.ge">hello@checki.ge</a> · <a href="/blog/">Blog</a>
 </footer>
 
 <script>
@@ -623,6 +775,7 @@ const ADMIN = "https://admin.checki.ge";
 /* ── i18n ── */
 const T = {
   ru: {
+    nav_blog:    "Блог",
     nav_login:   "Войти",
     nav_cta:     "Попробовать",
     badge:       "Бесплатный доступ · Открытое бета-тестирование",
@@ -646,9 +799,18 @@ const T = {
     prob3_h:     "Бумага и Excel не дают картину",
     prob3_p:     "Никогда не знаешь что продаётся, какая выручка сегодня и какой официант работал. Checki показывает это в реальном времени.",
     screens_label: "Как это выглядит",
-    screens_cap1: "Открытые чеки", screens_cap2: "Чек с позициями",
-    screens_cap3: "Архив и выручка", screens_cap4: "Каталог продуктов",
-    screens_cap5: "Персонал и статистика", screens_cap6: "Закупки",
+    screens_title1: "Все чеки — одним взглядом",
+    screens_desc1:  "На главном экране видно каждый открытый стол: имя гостя, время и сумму. Нажми — и сразу переходишь к нужному чеку.",
+    screens_title2: "Добавляй позиции за секунды",
+    screens_desc2:  "Начни вводить название — Checki сам найдёт позицию из каталога и подставит цену. Или нажми быструю кнопку для топовых позиций.",
+    screens_title3: "История и выручка в одном месте",
+    screens_desc3:  "Архив хранит все закрытые чеки с фильтром по датам. Видно выручку за день, неделю или месяц — наличными и картой отдельно.",
+    screens_title4: "Каталог, который управляет сам собой",
+    screens_desc4:  "Новые позиции появляются автоматически с первого заказа. Менеджер задаёт цены и категории — бармен сразу работает со структурированным меню.",
+    screens_title5: "Персонал и смены под контролем",
+    screens_desc5:  "Создай аккаунты для барменов за минуту. Смотри кто и когда работал, отслеживай каждую смену — всё из браузера на телефоне.",
+    screens_title6: "Учёт закупок без таблиц",
+    screens_desc6:  "Фиксируй поставки прямо в системе: что пришло, от кого и на сколько. История закупок всегда под рукой — никаких отдельных таблиц.",
     how_label:   "Как это работает",
     how_h2:      "Три шага — и чек закрыт.",
     how1_h:      "Открыть чек",
@@ -665,6 +827,10 @@ const T = {
     f4_h: "Аналитика и отчёты",  f4_p: "Выручка, топ позиций, разбивка по оплате — за любой период. Экспорт PDF-отчёта одной кнопкой.",
     f5_h: "Команда без возни",   f5_p: "Менеджер создаёт аккаунты для персонала за минуту. У каждого свой уровень доступа.",
     f6_h: "Данные только ваши",  f6_p: "Каждое заведение видит только свои чеки и каталог. Токенная авторизация, данные изолированы.",
+    geo_label: "Тбилиси и Грузия", geo_h2: "Создано для баров Грузии.",
+    geo1_h: "Работает в GEL", geo1_p: "Все чеки и отчёты в грузинских лари. Никаких конвертаций и дополнительных настроек — Checki сразу готов к работе в Грузии.",
+    geo2_h: "Тбилиси, Батуми, вся Грузия", geo2_p: "Сотни небольших баров работают без кассового аппарата — и это законно для малого бизнеса на патентной системе. Checki помогает вести учёт без дорогой POS-системы.",
+    geo3_h: "Регистрация за 2 минуты", geo3_p: "Не нужно ждать одобрения, подписывать договоры или покупать оборудование. Зарегистрировал заведение — и сразу работаешь. Бесплатно.",
     reg_label:   "Начать",
     reg_h2:      "Зарегистрируй заведение.",
     reg_title:   "Бесплатный доступ",
@@ -691,6 +857,10 @@ const T = {
     ok_msg:      "✓ Готово! ",
     ok_link:     "Открыть Checki →",
     loading:     "Создаём…",
+    blog_label: "Блог", blog_h2: "Из блога", blog_all: "Все статьи →",
+    blog_tag1: "Аналитика",  blog_title1: "Как считать выручку в баре — просто и точно",       blog_date1: "8 апр 2026", blog_read1: "6 мин",
+    blog_tag2: "POS системы", blog_title2: "Нужна ли POS-система маленькому бару? Честный ответ", blog_date2: "8 апр 2026", blog_read2: "5 мин",
+    blog_tag3: "Сравнение",  blog_title3: "Checki vs SpaceM — что выбрать бару в Грузии",      blog_date3: "8 апр 2026", blog_read3: "5 мин",
     faq_label:   "Вопросы и ответы",
     faq_h2:      "Часто задаваемые вопросы",
     faq: [
@@ -701,6 +871,7 @@ const T = {
     ],
   },
   en: {
+    nav_blog:    "Blog",
     nav_login:   "Login",
     nav_cta:     "Start free",
     badge:       "Free access · Open beta",
@@ -724,9 +895,18 @@ const T = {
     prob3_h:     "Paper and Excel give no picture",
     prob3_p:     "You never know what's selling, today's revenue, or which staff member is performing. Checki shows it all in real time.",
     screens_label: "See it in action",
-    screens_cap1: "Open checks", screens_cap2: "Check detail",
-    screens_cap3: "Archive & revenue", screens_cap4: "Product catalog",
-    screens_cap5: "Staff & stats", screens_cap6: "Supplies",
+    screens_title1: "All open tabs at a glance",
+    screens_desc1:  "The main screen shows every open table: guest name, time, and running total. Tap any row — open that tab instantly.",
+    screens_title2: "Add items in seconds",
+    screens_desc2:  "Start typing the name — Checki finds it from the catalog and fills the price. Or tap a quick-pick chip for your top-sellers.",
+    screens_title3: "History and revenue in one place",
+    screens_desc3:  "Archive keeps all closed tabs with a date filter. See revenue for the day, week, or month — cash and card shown separately.",
+    screens_title4: "A catalog that manages itself",
+    screens_desc4:  "New items appear automatically from the first order. Manager sets prices and categories — bartender works with a structured menu right away.",
+    screens_title5: "Staff and shifts under control",
+    screens_desc5:  "Create accounts for bartenders in one minute. See who worked and when, track every shift — all from your phone's browser.",
+    screens_title6: "Track supplies without spreadsheets",
+    screens_desc6:  "Log deliveries right in the system: what came in, from whom, and for how much. Procurement history always at hand — no separate spreadsheets needed.",
     how_label:   "How it works",
     how_h2:      "Three steps, tab closed.",
     how1_h:      "Open a tab",
@@ -743,6 +923,10 @@ const T = {
     f4_h: "Analytics & reports",  f4_p: "Revenue, top products, payment breakdown — for any period. Export PDF report in one tap.",
     f5_h: "Team without hassle",  f5_p: "Manager creates staff accounts in a minute. Each person has their own access level.",
     f6_h: "Your data only",       f6_p: "Each venue sees only its own tabs and catalog. Token-based auth, fully isolated.",
+    geo_label: "Tbilisi & Georgia", geo_h2: "Built for bars in Georgia.",
+    geo1_h: "Works in GEL", geo1_p: "All tabs and reports in Georgian lari. No conversions, no extra setup — Checki is ready for Georgia out of the box.",
+    geo2_h: "Tbilisi, Batumi, all of Georgia", geo2_p: "Hundreds of small bars operate without a cash register — and for small businesses on the patent system, that's perfectly legal. Checki helps you track orders without an expensive POS.",
+    geo3_h: "Register in 2 minutes", geo3_p: "No approval waiting, no contracts, no hardware to buy. Register your venue and start right away. Free.",
     reg_label:   "Get started",
     reg_h2:      "Register your venue.",
     reg_title:   "Free access",
@@ -769,6 +953,10 @@ const T = {
     ok_msg:      "✓ Done! ",
     ok_link:     "Open Checki →",
     loading:     "Creating…",
+    blog_label: "Blog", blog_h2: "From the blog", blog_all: "All articles →",
+    blog_tag1: "Analytics",   blog_title1: "How to Track Bar Revenue — Simply and Accurately",          blog_date1: "Apr 8, 2026", blog_read1: "6 min",
+    blog_tag2: "POS Systems",  blog_title2: "Does a Small Bar Need a POS System? An Honest Answer",    blog_date2: "Apr 8, 2026", blog_read2: "5 min",
+    blog_tag3: "Comparison",  blog_title3: "Checki vs SpaceM — Which One to Choose for Your Bar",      blog_date3: "Apr 8, 2026", blog_read3: "5 min",
     faq_label:   "FAQ",
     faq_h2:      "Frequently asked questions",
     faq: [
@@ -779,6 +967,7 @@ const T = {
     ],
   },
   ka: {
+    nav_blog:    "ბლოგი",
     nav_login:   "შესვლა",
     nav_cta:     "სცადე",
     badge:       "უფასო წვდომა · ღია ბეტა",
@@ -802,9 +991,18 @@ const T = {
     prob3_h:     "ქაღალდი და Excel სრულ სურათს არ იძლევა",
     prob3_p:     "არასდროს იცი რა იყიდება, რა შემოსავალია დღეს. Checki ამას რეალურ დროში გვიჩვენებს.",
     screens_label: "როგორ გამოიყურება",
-    screens_cap1: "ღია ჩეკები", screens_cap2: "ჩეკის დეტალი",
-    screens_cap3: "არქივი და შემოსავალი", screens_cap4: "პროდუქტების კატალოგი",
-    screens_cap5: "პერსონალი და სტატისტიკა", screens_cap6: "შესყიდვები",
+    screens_title1: "ყველა ღია ჩეკი ერთ მზერაში",
+    screens_desc1:  "მთავარ ეკრანზე ჩანს ყველა ღია მაგიდა: სტუმრის სახელი, დრო და ჯამი. დაჭერით — სასურველ ჩეკზე გადადი.",
+    screens_title2: "პოზიციების დამატება წამებში",
+    screens_desc2:  "დაიწყე სახელის აკრეფა — Checki კატალოგიდან მოძებნის და ფასს ჩაუსვამს. ან შეეხე სწრაფ ღილაკს პოპულარული პოზიციებისთვის.",
+    screens_title3: "ისტორია და შემოსავალი ერთ ადგილას",
+    screens_desc3:  "არქივი ინახავს ყველა დახურულ ჩეკს თარიღის ფილტრით. ნახე შემოსავალი დღის, კვირის ან თვის განმავლობაში — ნაღდი და ბარათი ცალ-ცალკე.",
+    screens_title4: "კატალოგი, რომელიც თავად მართავს თავს",
+    screens_desc4:  "ახალი პოზიციები პირველი შეკვეთიდანვე ავტომატურად ჩნდება. მენეჯერი ადგენს ფასებს — ბარმენი სტრუქტურირებულ მენიუს იღებს მაშინვე.",
+    screens_title5: "პერსონალი და ცვლები კონტროლის ქვეშ",
+    screens_desc5:  "შექმენი ბარმენების ანგარიშები ერთ წუთში. ნახე ვინ და როდის მუშაობდა — ყველაფერი ხელმისაწვდომია ტელეფონის ბრაუზერიდან.",
+    screens_title6: "შესყიდვების აღრიცხვა ცხრილების გარეშე",
+    screens_desc6:  "ჩაიწერე მიწოდებები სისტემაში: რა მოვიდა, ვისგან და რა ღირდა. შესყიდვების ისტორია ყოველთვის ხელთაა — ცალკე ცხრილები საჭირო არ არის.",
     how_label:   "როგორ მუშაობს",
     how_h2:      "სამი ნაბიჯი — ჩეკი დახურულია.",
     how1_h:      "გახსენი ჩეკი",
@@ -821,6 +1019,10 @@ const T = {
     f4_h: "ანალიტიკა და ანგარიშები", f4_p: "შემოსავალი, ტოპ პოზიციები, გადახდების სტრუქტურა. PDF ანგარიში ერთი ღილაკით.",
     f5_h: "გუნდი პრობლემის გარეშე", f5_p: "მენეჯერი პერსონალისთვის ანგარიშებს წუთში ქმნის.",
     f6_h: "მხოლოდ შენი მონაცემები", f6_p: "თითოეული დაწესებულება მხოლოდ საკუთარ ჩეკებსა და კატალოგს ხედავს.",
+    geo_label: "თბილისი და საქართველო", geo_h2: "შექმნილია საქართველოს ბარებისთვის.",
+    geo1_h: "მუშაობს GEL-ში", geo1_p: "ყველა ქვითარი და ანგარიში ქართულ ლარში. კონვერტაციის გარეშე — Checki საქართველოსთვის მზადაა.",
+    geo2_h: "თბილისი, ბათუმი, მთელი საქართველო", geo2_p: "ასობით პატარა ბარი საკასო აპარატის გარეშე მუშაობს — და ეს კანონიერია პატარა ბიზნესისთვის. Checki გეხმარება ძვირი POS-ის გარეშე.",
+    geo3_h: "რეგისტრაცია 2 წუთში", geo3_p: "დამტკიცების ლოდინი, კონტრაქტები ან აღჭურვილობის ყიდვა საჭირო არ არის. დაარეგისტრირე და დაიწყე მუშაობა. უფასოდ.",
     reg_label:   "დაწყება",
     reg_h2:      "დაარეგისტრირე დაწესებულება.",
     reg_title:   "უფასო წვდომა",
@@ -847,6 +1049,10 @@ const T = {
     ok_msg:      "✓ მზადაა! ",
     ok_link:     "Checki-ს გახსნა →",
     loading:     "იქმნება…",
+    blog_label: "ბლოგი", blog_h2: "ბლოგიდან", blog_all: "ყველა სტატია →",
+    blog_tag1: "ანალიტიკა",   blog_title1: "როგორ დავთვალოთ ბარის შემოსავალი — მარტივად და ზუსტად",      blog_date1: "8 აპრ 2026", blog_read1: "6 წთ",
+    blog_tag2: "POS სისტემები", blog_title2: "სჭირდება თუ არა POS სისტემა პატარა ბარს? გულწრფელი პასუხი", blog_date2: "8 აპრ 2026", blog_read2: "5 წთ",
+    blog_tag3: "შედარება",    blog_title3: "Checki vs SpaceM — რომელი აირჩიოს ბარმა საქართველოში",        blog_date3: "8 აპრ 2026", blog_read3: "5 წთ",
     faq_label:   "კითხვები",
     faq_h2:      "ხშირად დასმული კითხვები",
     faq: [

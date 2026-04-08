@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Checki — Staff</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230f1116'/><text y='24' x='4' font-size='22' font-family='system-ui,sans-serif' font-weight='800' fill='%2349d17c'>C</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
   <link rel="stylesheet" href="./app.css">
 </head>
 <body>
@@ -32,16 +32,24 @@
     <div class="topWrap" id="topWrap">
       <div class="top">
         <div class="topLeft">
+          <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" style="flex-shrink:0;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none"><rect width="32" height="32" rx="8" fill="#141418"/><text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text><circle cx="23" cy="24" r="3.5" fill="#49d17c"/></svg>
           <span class="brandName" id="brandName">Checki</span>
-          <button class="btnGear hide" id="btnVenue" title="Venue settings">⚙</button>
+          <button class="btnIcon hide" id="btnVenue" title="Venue settings" style="color:var(--muted)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
         </div>
-        <button class="btnIcon btnIconDanger hide" id="btnLogout" title="Logout">
+        <div style="display:flex;align-items:center;gap:4px">
+          <button class="btnIcon hide" id="btnHelp" title="How to use" style="color:var(--muted)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </button>
+          <button class="btnIcon btnIconDanger hide" id="btnLogout" title="Logout">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
             <polyline points="16 17 21 12 16 7"/>
             <line x1="21" y1="12" x2="9" y2="12"/>
           </svg>
-        </button>
+          </button>
+        </div>
       </div>
       <div class="tabBar hide" id="tabBar">
         <button class="tabBtn" id="tabOpen">Open checks</button>
@@ -311,5 +319,6 @@
   </div>
 
   <script defer src="./main.js"></script>
+<script src="./game.js"></script>
 </body>
 </html>

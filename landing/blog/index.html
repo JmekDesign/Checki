@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M2ZHXFCW');</script>
+  <!-- End Google Tag Manager -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blog — Checki</title>
+  <meta name="description" content="Practical guides for bar and cafe owners: how to manage orders, choose software, and run your venue without expensive hardware." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #0f1116; --surface: #161b24; --border: rgba(255,255,255,.10); --text: #f0f2f5; --muted: #7a8497; --accent: #49d17c; --accent2: #2eb865; }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent2); }
+
+    nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(15,17,22,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); gap: 12px; }
+    .navLeft { display: flex; align-items: center; gap: 2px; }
+    .navLogo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; margin-right: 4px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    .navLogoText { font-size: 17px; font-weight: 800; color: var(--text); }
+    .navRight { display: flex; align-items: center; gap: 8px; position: relative; }
+    .navBtn { box-sizing: border-box; display: block; line-height: 1; padding: 10px 14px; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none; cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+    .langDrop { position: relative; }
+    .langDropBtn { background: none; border: 1px solid var(--border); color: var(--muted); font-size: 12px; font-weight: 700; padding: 10px 10px; border-radius: 10px; cursor: pointer; letter-spacing: .04em; transition: all .15s; display: flex; align-items: center; gap: 4px; box-sizing: border-box; line-height: 1; flex-shrink: 0; -webkit-tap-highlight-color: transparent; font-family: inherit; }
+    .langDropBtn:hover { color: var(--text); }
+    .langDropMenu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; min-width: 110px; z-index: 200; }
+    .langDropMenu.open { display: block; }
+    .langOpt { display: block; width: 100%; text-align: left; background: none; border: none; padding: 9px 14px; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .langOpt.active { color: var(--text); }
+    .navLink { background: none; border: none; color: var(--muted); transition: color .15s; padding-left: 4px; padding-right: 4px; }
+    .navLink:hover { color: var(--text); }
+    .navLink.active { color: var(--text); }
+    .navLeft .navLink { margin-left: 16px; font-size: 15px; }
+    .navLogin { background: none; border: 1px solid var(--border); color: var(--text); transition: border-color .15s; }
+    .navLogin:hover { border-color: rgba(255,255,255,.3); }
+    .navCta { background: var(--accent); color: #0f1116; padding-left: 18px; padding-right: 18px; transition: background .15s; }
+    .navCta:hover { background: var(--accent2); color: #0f1116; }
+    .navBurger { display: none; background: none; border: 1px solid var(--border); color: var(--text); padding: 10px 13px; border-radius: 10px; cursor: pointer; box-sizing: border-box; line-height: 1; flex-shrink: 0; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+    .navBurgerLines { display: flex; flex-direction: column; gap: 5px; width: 18px; }
+    .navBurgerLine { height: 2px; border-radius: 1px; background: var(--text); }
+    .navDrawer { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 6px; min-width: 200px; z-index: 200; flex-direction: column; gap: 2px; }
+    .navDrawer.open { display: flex; }
+    .navDrawerItem { display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 10px; background: none; border: none; color: var(--text); font-weight: 700; font-size: 14px; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .navDrawerItem:hover { background: rgba(255,255,255,.06); }
+    .navDrawerItem.accent { color: var(--accent); }
+    .navDrawerItem.active-blog { color: var(--accent); }
+    .navDrawerSep { height: 1px; background: var(--border); margin: 4px 2px; }
+    .navDrawerLangs { display: flex; gap: 4px; padding: 2px 4px 4px; }
+    .navDrawerLang { flex: 1; height: 34px; border-radius: 8px; border: none; background: rgba(255,255,255,.04); color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .1s; font-family: inherit; }
+    .navDrawerLang:hover, .navDrawerLang.active { background: rgba(73,209,124,.12); color: var(--accent); }
+    @media (max-width: 520px) { .navLogin, .langDrop, .navLeft .navLink { display: none; } .navBurger { display: flex; } }
+
+    .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    h1 { font-size: clamp(24px, 6vw, 36px); font-weight: 800; letter-spacing: -.02em; margin-bottom: 8px; }
+    .subtitle { font-size: 15px; color: var(--muted); margin-bottom: 48px; }
+
+    .cards { display: flex; flex-direction: column; gap: 20px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; display: block; text-decoration: none; color: var(--text); transition: border-color .15s; }
+    .card:hover { border-color: rgba(255,255,255,.2); color: var(--text); }
+    .cardTag { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .cardTitle { font-size: 20px; font-weight: 700; line-height: 1.3; margin-bottom: 10px; }
+    .cardExcerpt { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .cardMeta { font-size: 13px; color: var(--muted); display: flex; gap: 16px; }
+
+    footer { text-align: center; padding: 24px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2ZHXFCW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav>
+  <div class="navLeft">
+    <a class="navLogo" href="/">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" style="flex-shrink:0"><rect width="32" height="32" rx="8" fill="#141418"/><text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text><circle cx="23" cy="24" r="3.5" fill="#49d17c"/></svg>
+      <span class="navLogoText">Checki</span>
+    </a>
+    <a class="navBtn navLink" href="/blog/" data-i="nav_blog">Blog</a>
+  </div>
+  <div class="navRight">
+    <div class="langDrop" id="langDrop">
+      <button class="langDropBtn" id="langDropBtn">🇬🇧 EN ▾</button>
+      <div class="langDropMenu" id="langDropMenu">
+        <button class="langOpt" data-lang="ka">🇬🇪 Georgian</button>
+        <button class="langOpt" data-lang="en">🇬🇧 English</button>
+        <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
+      </div>
+    </div>
+    <a class="navBtn navLogin" href="https://admin.checki.ge" data-i="nav_login">Login</a>
+    <a class="navBtn navCta" href="/#register" data-i="nav_cta">Try free</a>
+    <button class="navBurger" id="navBurger" aria-label="Menu">
+      <div class="navBurgerLines">
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+      </div>
+    </button>
+    <div class="navDrawer" id="navDrawer">
+      <a class="navDrawerItem" href="https://admin.checki.ge" data-i="nav_login">Login</a>
+      <a class="navDrawerItem" href="/blog/" data-i="nav_blog">Blog</a>
+      <div class="navDrawerSep"></div>
+      <div class="navDrawerLangs">
+        <button class="navDrawerLang" data-lang="ka">🇬🇪 KA</button>
+        <button class="navDrawerLang" data-lang="en">🇬🇧 EN</button>
+        <button class="navDrawerLang" data-lang="ru">🇷🇺 RU</button>
+      </div>
+      <div class="navDrawerSep"></div>
+      <a class="navDrawerItem accent" href="/#register" data-i="nav_cta">Try free →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <h1 data-i="h1">Blog</h1>
+  <p class="subtitle" data-i="subtitle">Practical guides for bar and cafe owners.</p>
+
+  <div class="cards">
+
+    <a class="card" href="/blog/iiko-vs-prostye-resheniya/">
+      <div class="cardTag" data-i="tag1">Comparison</div>
+      <div class="cardTitle" data-i="title1">iiko vs r_keeper for a Small Bar: Do You Actually Need Them?</div>
+      <div class="cardExcerpt" data-i="excerpt1">An honest look at heavy restaurant systems vs simple alternatives. When iiko makes sense — and when it just gets in the way.</div>
+      <div class="cardMeta">
+        <span data-i="date1">Apr 1, 2026</span>
+        <span data-i="read1">5 min read</span>
+      </div>
+    </a>
+
+    <a class="card" href="/blog/run-bar-in-tbilisi/">
+      <div class="cardTag" data-i="tag2">Guide</div>
+      <div class="cardTitle" data-i="title2">How to Run a Bar in Tbilisi Without a POS System</div>
+      <div class="cardExcerpt" data-i="excerpt2">Opening a bar in Tbilisi? You don't need expensive terminal hardware to manage tabs and track revenue. Here's how it actually works.</div>
+      <div class="cardMeta">
+        <span data-i="date2">Mar 25, 2026</span>
+        <span data-i="read2">5 min read</span>
+      </div>
+    </a>
+
+    <a class="card" href="/blog/kak-vesti-uchet-bez-kassy/">
+      <div class="cardTag" data-i="tag3">Operations</div>
+      <div class="cardTitle" data-i="title3">How to Track Orders at a Bar Without a Cash Register</div>
+      <div class="cardExcerpt" data-i="excerpt3">A cash register and order tracking are different things. Here's how to control revenue and manage tabs using just a phone.</div>
+      <div class="cardMeta">
+        <span data-i="date3">Mar 20, 2026</span>
+        <span data-i="read3">5 min read</span>
+      </div>
+    </a>
+
+    <a class="card" href="/blog/kak-schitat-vyruchku-v-bare/">
+      <div class="cardTag" data-i="tag4">Analytics</div>
+      <div class="cardTitle" data-i="title4">How to Track Bar Revenue — Simply and Accurately</div>
+      <div class="cardExcerpt" data-i="excerpt4">Cash vs card, daily totals, top items. How to see what's happening in your bar without spreadsheets or manual counting.</div>
+      <div class="cardMeta">
+        <span data-i="date4">Apr 8, 2026</span>
+        <span data-i="read4">6 min read</span>
+      </div>
+    </a>
+
+    <a class="card" href="/blog/nuzhna-li-pos-malomu-baru/">
+      <div class="cardTag" data-i="tag5">POS Systems</div>
+      <div class="cardTitle" data-i="title5">Does a Small Bar Need a POS System? An Honest Answer</div>
+      <div class="cardExcerpt" data-i="excerpt5">Restaurant vendors will say yes. But a bar with 3 bartenders isn't a restaurant. Here's when POS is justified and when it's just overpaying.</div>
+      <div class="cardMeta">
+        <span data-i="date5">Apr 8, 2026</span>
+        <span data-i="read5">5 min read</span>
+      </div>
+    </a>
+
+    <a class="card" href="/blog/checki-vs-spacem/">
+      <div class="cardTag" data-i="tag6">Comparison</div>
+      <div class="cardTitle" data-i="title6">Checki vs SpaceM — Which One to Choose for Your Bar in Georgia</div>
+      <div class="cardExcerpt" data-i="excerpt6">SpaceM is popular among restaurants in Georgia. Checki is built for bars. A side-by-side look at price, features, and who each one suits.</div>
+      <div class="cardMeta">
+        <span data-i="date6">Apr 8, 2026</span>
+        <span data-i="read6">5 min read</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<footer>© 2026 Checki · <a href="/">checki.ge</a></footer>
+
+<script>
+const LANG_KEY = "checki_lang";
+
+const T = {
+  en: {
+    nav_blog: "Blog", nav_login: "Login", nav_cta: "Try free",
+    h1: "Blog",
+    subtitle: "Practical guides for bar and cafe owners.",
+    tag1: "Comparison",  title1: "iiko vs r_keeper for a Small Bar: Do You Actually Need Them?",      excerpt1: "An honest look at heavy restaurant systems vs simple alternatives. When iiko makes sense — and when it just gets in the way.", date1: "Apr 1, 2026",  read1: "5 min read",
+    tag2: "Guide",       title2: "How to Run a Bar in Tbilisi Without a POS System",                  excerpt2: "Opening a bar in Tbilisi? You don't need expensive terminal hardware to manage tabs and track revenue. Here's how it actually works.",            date2: "Mar 25, 2026", read2: "5 min read",
+    tag3: "Operations",  title3: "How to Track Orders at a Bar Without a Cash Register",              excerpt3: "A cash register and order tracking are different things. Here's how to control revenue and manage tabs using just a phone.",                       date3: "Mar 20, 2026", read3: "5 min read",
+    tag4: "Analytics",   title4: "How to Track Bar Revenue — Simply and Accurately",                  excerpt4: "Cash vs card, daily totals, top items. How to see what's happening in your bar without spreadsheets or manual counting.",                        date4: "Apr 8, 2026",  read4: "6 min read",
+    tag5: "POS Systems",  title5: "Does a Small Bar Need a POS System? An Honest Answer",             excerpt5: "Restaurant vendors will say yes. But a bar with 3 bartenders isn't a restaurant. Here's when POS is justified and when it's just overpaying.",  date5: "Apr 8, 2026",  read5: "5 min read",
+    tag6: "Comparison",  title6: "Checki vs SpaceM — Which One to Choose for Your Bar in Georgia",   excerpt6: "SpaceM is popular among restaurants in Georgia. Checki is built for bars. A side-by-side look at price, features, and who each one suits.",     date6: "Apr 8, 2026",  read6: "5 min read",
+  },
+  ru: {
+    nav_blog: "Блог", nav_login: "Войти", nav_cta: "Попробовать",
+    h1: "Блог",
+    subtitle: "Практические руководства для владельцев баров и кафе.",
+    tag1: "Выбор системы", title1: "iiko и r_keeper для маленького бара: нужны ли они на самом деле", excerpt1: "Честное сравнение тяжёлых ресторанных систем и простых решений. Когда iiko оправдан, а когда только мешает работе.",                          date1: "1 апр 2026",   read1: "5 мин читать",
+    tag2: "Руководство",   title2: "Как открыть бар в Тбилиси без POS-системы",                      excerpt2: "Нужна ли дорогая POS-система для небольшого бара в Тбилиси? Разбираем реальную альтернативу и почему большинство баров обходится без неё.",    date2: "25 мар 2026",  read2: "5 мин читать",
+    tag3: "Учёт",          title3: "Как вести учёт заказов в баре без кассы",                        excerpt3: "Кассовый аппарат и учёт заказов — разные вещи. Рассказываем как контролировать выручку и управлять чеками только с телефоном.",                 date3: "20 мар 2026",  read3: "5 мин читать",
+    tag4: "Аналитика",     title4: "Как считать выручку в баре — просто и точно",                    excerpt4: "Наличные и карта отдельно, выручка по дням, топ позиций. Как видеть картину в баре без таблиц и ручного подсчёта.",                            date4: "8 апр 2026",   read4: "6 мин читать",
+    tag5: "POS системы",   title5: "Нужна ли POS-система маленькому бару? Честный ответ",            excerpt5: "Продавцы оборудования скажут: нужна. Но бар с тремя барменами — не ресторан. Разбираем когда POS оправдан, а когда это переплата.",             date5: "8 апр 2026",   read5: "5 мин читать",
+    tag6: "Сравнение",     title6: "Checki vs SpaceM — что выбрать бару в Грузии",                   excerpt6: "SpaceM популярен среди ресторанов Грузии. Checki сделан для баров. Сравнение по цене, функциям и кому что подходит.",                          date6: "8 апр 2026",   read6: "5 мин читать",
+  },
+  ka: {
+    nav_blog: "ბლოგი", nav_login: "შესვლა", nav_cta: "სცადე",
+    h1: "ბლოგი",
+    subtitle: "პრაქტიკული სახელმძღვანელოები ბარებისა და კაფეების მფლობელებისთვის.",
+    tag1: "შედარება",    title1: "iiko და r_keeper პატარა ბარისთვის: სჭირდება თუ არა?",             excerpt1: "პატიოსანი შედარება მძიმე სისტემებსა და მარტივ გადაწყვეტებს შორის. როდის ღირს iiko — და როდის ხელს უშლის.",                                   date1: "1 აპრ 2026",   read1: "5 წთ კითხვა",
+    tag2: "გზამკვლევი",  title2: "როგორ ვმართოთ ბარი თბილისში POS სისტემის გარეშე",                excerpt2: "გჭირდებათ ძვირი POS სისტემა პატარა ბარისთვის? ვხსნით რეალურ ალტერნატივას და რატომ მუშაობს ბარების უმეტესობა მის გარეშე.",                     date2: "25 მარ 2026",  read2: "5 წთ კითხვა",
+    tag3: "აღრიცხვა",   title3: "როგორ ვაწარმოოთ შეკვეთების აღრიცხვა ბარში სალაროს გარეშე",      excerpt3: "სალარო აპარატი და შეკვეთების აღრიცხვა სხვადასხვა რამ არის. ვხსნით როგორ გააკონტროლოთ შემოსავალი მხოლოდ ტელეფონით.",                          date3: "20 მარ 2026",  read3: "5 წთ კითხვა",
+    tag4: "ანალიტიკა",  title4: "როგორ დავთვალოთ ბარის შემოსავალი — მარტივად და ზუსტად",         excerpt4: "ნაღდი და ბარათი ცალ-ცალკე, ყოველდღიური შემოსავალი, ტოპ პოზიციები. ცხრილებისა და ხელით დათვლის გარეშე.",                                       date4: "8 აპრ 2026",   read4: "6 წთ კითხვა",
+    tag5: "POS სისტემები", title5: "სჭირდება თუ არა POS სისტემა პატარა ბარს? გულწრფელი პასუხი", excerpt5: "აღჭურვილობის გამყიდველები იტყვიან: სჭირდება. მაგრამ სამი ბარმენის ბარი რესტორანი არ არის. ვხსნით როდის ღირს POS.",                              date5: "8 აპრ 2026",   read5: "5 წთ კითხვა",
+    tag6: "შედარება",   title6: "Checki vs SpaceM — რომელი აირჩიოს ბარმა საქართველოში",          excerpt6: "SpaceM პოპულარულია საქართველოს რესტორნებში. Checki ბარებისთვის არის შექმნილი. შედარება ფასით, ფუნქციებით და ვინ რას შეესაბამება.",                date6: "8 აპრ 2026",   read6: "5 წთ კითხვა",
+  },
+};
+
+const LANG_LABELS = { en: "🇬🇧 EN", ru: "🇷🇺 RU", ka: "🇬🇪 KA" };
+
+function apply(lang) {
+  localStorage.setItem(LANG_KEY, lang);
+  const t = T[lang] || T.en;
+  document.querySelectorAll("[data-i]").forEach(el => {
+    if (t[el.dataset.i] !== undefined) el.textContent = t[el.dataset.i];
+  });
+  document.documentElement.lang = lang;
+  const dropBtn = document.getElementById("langDropBtn");
+  if (dropBtn) dropBtn.textContent = (LANG_LABELS[lang] || lang.toUpperCase()) + " ▾";
+  document.querySelectorAll(".langOpt").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".navDrawerLang").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+}
+
+const langDropBtn = document.getElementById("langDropBtn");
+const langDropMenu = document.getElementById("langDropMenu");
+const navBurger = document.getElementById("navBurger");
+const navDrawer = document.getElementById("navDrawer");
+
+if (langDropBtn) langDropBtn.addEventListener("click", e => { e.stopPropagation(); langDropMenu.classList.toggle("open"); });
+document.querySelectorAll(".langOpt").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); langDropMenu.classList.remove("open"); }));
+document.querySelectorAll(".navDrawerLang").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); navDrawer.classList.remove("open"); }));
+if (navBurger) navBurger.addEventListener("click", e => { e.stopPropagation(); navDrawer.classList.toggle("open"); });
+document.addEventListener("click", () => { langDropMenu?.classList.remove("open"); navDrawer?.classList.remove("open"); });
+
+apply(localStorage.getItem(LANG_KEY) || "en");
+</script>
+</body>
+</html>

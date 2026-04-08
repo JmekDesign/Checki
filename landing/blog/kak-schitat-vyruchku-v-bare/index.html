@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M2ZHXFCW');</script>
+  <!-- End Google Tag Manager -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Как считать выручку в баре — просто и точно</title>
+  <meta name="description" content="Объясняем, как вести учёт выручки в баре: наличные и карта отдельно, разбивка по дням и неделям. Checki делает это автоматически." />
+  <link rel="canonical" href="https://checki.ge/blog/kak-schitat-vyruchku-v-bare/" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0f1116;
+      --surface: #161b24;
+      --border:  rgba(255,255,255,.10);
+      --text:    #f0f2f5;
+      --muted:   #7a8497;
+      --accent:  #49d17c;
+      --accent2: #2eb865;
+    }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; line-height: 1.75; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent2); }
+
+    nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(15,17,22,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); gap: 12px; }
+    .navLeft { display: flex; align-items: center; gap: 2px; }
+    .navLogo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; margin-right: 4px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    .navLogoText { font-size: 17px; font-weight: 800; color: var(--text); }
+    .navRight { display: flex; align-items: center; gap: 8px; position: relative; }
+    .navBtn { box-sizing: border-box; display: block; line-height: 1; padding: 10px 14px; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none; cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+    .langDrop { position: relative; }
+    .langDropBtn { background: none; border: 1px solid var(--border); color: var(--muted); font-size: 12px; font-weight: 700; padding: 10px 10px; border-radius: 10px; cursor: pointer; letter-spacing: .04em; transition: all .15s; display: flex; align-items: center; gap: 4px; box-sizing: border-box; line-height: 1; flex-shrink: 0; -webkit-tap-highlight-color: transparent; font-family: inherit; }
+    .langDropBtn:hover { color: var(--text); }
+    .langDropMenu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; min-width: 110px; z-index: 200; }
+    .langDropMenu.open { display: block; }
+    .langOpt { display: block; width: 100%; text-align: left; background: none; border: none; padding: 9px 14px; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .langOpt.active { color: var(--text); }
+    .navLink { background: none; border: none; color: var(--muted); transition: color .15s; padding-left: 4px; padding-right: 4px; }
+    .navLink:hover { color: var(--text); }
+    .navLink.active { color: var(--text); }
+    .navLeft .navLink { margin-left: 16px; font-size: 15px; }
+    .navLogin { background: none; border: 1px solid var(--border); color: var(--text); transition: border-color .15s; }
+    .navLogin:hover { border-color: rgba(255,255,255,.3); }
+    .navCta { background: var(--accent); color: #0f1116; padding-left: 18px; padding-right: 18px; transition: background .15s; }
+    .navCta:hover { background: var(--accent2); color: #0f1116; }
+    .navBurger { display: none; background: none; border: 1px solid var(--border); color: var(--text); padding: 10px 13px; border-radius: 10px; cursor: pointer; box-sizing: border-box; line-height: 1; flex-shrink: 0; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+    .navBurgerLines { display: flex; flex-direction: column; gap: 5px; width: 18px; }
+    .navBurgerLine { height: 2px; border-radius: 1px; background: var(--text); }
+    .navDrawer { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 6px; min-width: 200px; z-index: 200; flex-direction: column; gap: 2px; }
+    .navDrawer.open { display: flex; }
+    .navDrawerItem { display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 10px; background: none; border: none; color: var(--text); font-weight: 700; font-size: 14px; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .navDrawerItem:hover { background: rgba(255,255,255,.06); }
+    .navDrawerItem.accent { color: var(--accent); }
+    .navDrawerSep { height: 1px; background: var(--border); margin: 4px 2px; }
+    .navDrawerLangs { display: flex; gap: 4px; padding: 2px 4px 4px; }
+    .navDrawerLang { flex: 1; height: 34px; border-radius: 8px; border: none; background: rgba(255,255,255,.04); color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .1s; font-family: inherit; }
+    .navDrawerLang:hover, .navDrawerLang.active { background: rgba(73,209,124,.12); color: var(--accent); }
+    @media (max-width: 520px) { .navLogin, .langDrop, .navLeft .navLink { display: none; } .navBurger { display: flex; } }
+
+    .wrap { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .tag { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    h1 { font-size: clamp(26px, 6vw, 38px); font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin-bottom: 16px; }
+    .meta { font-size: 14px; color: var(--muted); margin-bottom: 40px; display: flex; gap: 16px; }
+    .lead { font-size: 18px; color: rgba(240,242,245,.8); line-height: 1.7; margin-bottom: 32px; border-left: 3px solid var(--accent); padding-left: 16px; }
+
+    .body p { font-size: 16px; margin-bottom: 20px; }
+    .body h2 { font-size: 22px; font-weight: 700; margin: 40px 0 14px; letter-spacing: -.01em; }
+    .body ol, .body ul { padding-left: 24px; margin-bottom: 20px; }
+    .body li { font-size: 16px; margin-bottom: 8px; }
+    .body strong { color: var(--text); font-weight: 600; }
+
+    .steps { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin: 24px 0; }
+    .step { display: flex; gap: 14px; margin-bottom: 16px; }
+    .step:last-child { margin-bottom: 0; }
+    .stepN { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #0f1116; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .stepText { font-size: 15px; line-height: 1.6; }
+
+    .statRow { display: flex; gap: 12px; margin: 24px 0; flex-wrap: wrap; }
+    .statBox { flex: 1; min-width: 140px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .statLabel { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; }
+    .statVal { font-size: 26px; font-weight: 800; color: var(--accent); }
+    .statSub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; margin-top: 48px; }
+    .cta h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .cta p { font-size: 15px; color: var(--muted); margin-bottom: 20px; }
+    .ctaBtn { display: inline-block; background: var(--accent); color: #0f1116; font-weight: 700; font-size: 15px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+    .ctaBtn:hover { background: var(--accent2); color: #0f1116; }
+
+    footer { text-align: center; padding: 24px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2ZHXFCW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav>
+  <div class="navLeft">
+    <a class="navLogo" href="/">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" style="flex-shrink:0"><rect width="32" height="32" rx="8" fill="#141418"/><text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text><circle cx="23" cy="24" r="3.5" fill="#49d17c"/></svg>
+      <span class="navLogoText">Checki</span>
+    </a>
+    <a class="navBtn navLink" href="/blog/" data-i="nav_blog">Blog</a>
+  </div>
+  <div class="navRight">
+    <div class="langDrop" id="langDrop">
+      <button class="langDropBtn" id="langDropBtn">🇷🇺 RU ▾</button>
+      <div class="langDropMenu" id="langDropMenu">
+        <button class="langOpt" data-lang="ka">🇬🇪 Georgian</button>
+        <button class="langOpt" data-lang="en">🇬🇧 English</button>
+        <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
+      </div>
+    </div>
+    <a class="navBtn navLogin" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+    <a class="navBtn navCta" href="/#register" data-i="nav_cta">Попробовать</a>
+    <button class="navBurger" id="navBurger" aria-label="Menu">
+      <div class="navBurgerLines">
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+      </div>
+    </button>
+    <div class="navDrawer" id="navDrawer">
+      <a class="navDrawerItem" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+      <a class="navDrawerItem" href="/blog/" data-i="nav_blog">Блог</a>
+      <div class="navDrawerSep"></div>
+      <div class="navDrawerLangs">
+        <button class="navDrawerLang" data-lang="ka">🇬🇪 KA</button>
+        <button class="navDrawerLang" data-lang="en">🇬🇧 EN</button>
+        <button class="navDrawerLang" data-lang="ru">🇷🇺 RU</button>
+      </div>
+      <div class="navDrawerSep"></div>
+      <a class="navDrawerItem accent" href="/#register" data-i="nav_cta">Попробовать →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="tag" data-i="tag">Аналитика</div>
+  <h1 data-i="h1">Как считать выручку в баре — просто и точно</h1>
+  <div class="meta">
+    <span data-i="date">8 апреля 2026</span>
+    <span data-i="read">6 мин читать</span>
+  </div>
+  <p class="lead" data-i="lead">Многие бары до сих пор считают выручку в конце смены: достают деньги из ящика и складывают. Это работает — пока не нужно понять, почему во вторник вышло на 30% меньше, чем в пятницу.</p>
+
+  <!-- RU body -->
+  <div class="body lang-block" data-lang="ru">
+    <p>Правильный учёт выручки в баре — это не бухгалтерия. Это инструмент управления: вы видите, что происходит прямо сейчас, можете сравнить дни и периоды, и принимаете решения на основе реальных данных, а не ощущений.</p>
+
+    <h2>Что нужно фиксировать</h2>
+    <p>Минимальный набор для любого бара:</p>
+    <ul>
+      <li><strong>Выручка наличными</strong> — отдельно от карточных платежей</li>
+      <li><strong>Выручка картой</strong> — терминал даёт свою сводку, нужно сверять</li>
+      <li><strong>Количество чеков</strong> — сколько гостей обслужили</li>
+      <li><strong>Средний чек</strong> — выручка ÷ количество чеков</li>
+      <li><strong>Топ позиций</strong> — что продаётся лучше всего</li>
+    </ul>
+    <p>Это всё что нужно для нормального управления небольшим баром. Более сложный склад, технологические карты и себестоимость — это следующий уровень, который нужен далеко не всем.</p>
+
+    <h2>Почему разделять наличные и карту важно</h2>
+    <p>На первый взгляд неважно — деньги есть деньги. Но на практике разделение решает три проблемы:</p>
+    <ol>
+      <li><strong>Инкассация.</strong> Вы точно знаете, сколько наличных должно быть в кассе — и можете сверить. Если не хватает, сразу видно.</li>
+      <li><strong>Комиссии банка.</strong> Карточные платежи приходят на счёт за вычетом эквайринговой комиссии. Без разделения вы не поймёте почему выручка «на руках» не сходится с выручкой на счёте.</li>
+      <li><strong>Контроль персонала.</strong> Если бармен принял наличные, но закрыл чек как карту — это заметно при сверке.</li>
+    </ol>
+
+    <h2>Как это делать без Excel и таблиц</h2>
+    <p>Самый простой способ — чтобы система делала это автоматически во время работы. Каждый раз, когда бармен закрывает чек, он выбирает способ оплаты: наличные или карта. Система суммирует сама.</p>
+    <p>В конце смены менеджер открывает сводку — и видит:</p>
+
+    <div class="statRow">
+      <div class="statBox">
+        <div class="statLabel">Наличные</div>
+        <div class="statVal">₾ 840</div>
+        <div class="statSub">14 чеков</div>
+      </div>
+      <div class="statBox">
+        <div class="statLabel">Карта</div>
+        <div class="statVal">₾ 1 260</div>
+        <div class="statSub">19 чеков</div>
+      </div>
+      <div class="statBox">
+        <div class="statLabel">Итого</div>
+        <div class="statVal">₾ 2 100</div>
+        <div class="statSub">33 чека</div>
+      </div>
+    </div>
+
+    <p>Никаких ручных подсчётов. Никаких Excel-файлов. Одна страница в браузере телефона.</p>
+
+    <h2>Сравнение по дням и неделям</h2>
+    <p>Знать сегодняшнюю выручку — хорошо. Сравнить её с прошлой неделей — уже полезно. Чтобы понять, растёт бар или нет, нужно смотреть динамику.</p>
+    <p>Базовые вопросы, на которые должна отвечать аналитика:</p>
+    <ul>
+      <li>В какой день недели выручка стабильно выше?</li>
+      <li>Есть ли сезонность — летние месяцы против зимних?</li>
+      <li>Как изменилась выручка после того, как вы добавили новую позицию в меню?</li>
+      <li>Какой бармен закрывает больше чеков?</li>
+    </ul>
+    <p>Эти данные позволяют принимать конкретные решения: когда выводить больше персонала, что убрать из меню, какие дни акцентировать в рекламе.</p>
+
+    <h2>Что делать с данными в конце месяца</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="stepN">1</div>
+        <div class="stepText"><strong>Сформируйте PDF-отчёт за месяц.</strong> Любая нормальная система делает это одной кнопкой. В отчёте — выручка по дням, разбивка наличные/карта, топ позиций.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">2</div>
+        <div class="stepText"><strong>Сравните с предыдущим месяцем.</strong> Рост или падение? Если падение — в какие дни и почему? Праздники, погода, конкуренты?</div>
+      </div>
+      <div class="step">
+        <div class="stepN">3</div>
+        <div class="stepText"><strong>Передайте отчёт бухгалтеру.</strong> Если бар работает как ИП — это исходные данные для декларации. Бухгалтер скажет «спасибо» за готовые цифры.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">4</div>
+        <div class="stepText"><strong>Скорректируйте план на следующий месяц.</strong> Например: удвоить запасы в пятницу и субботу, убрать из меню три позиции которые почти не продаются.</div>
+      </div>
+    </div>
+
+    <h2>Типичные ошибки</h2>
+    <p><strong>Считать выручку только раз в месяц.</strong> Проблемы нарастают незаметно — поздно видите тренд. Лучше смотреть каждый день по 2 минуты.</p>
+    <p><strong>Не разделять смены.</strong> Если два бармена работают в одной системе без разграничения, непонятно кто сколько закрыл. Плохо и для контроля, и для расчёта зарплат.</p>
+    <p><strong>Доверять только памяти.</strong> «Кажется, прошлая пятница была лучше» — не управление баром. Данные нужны зафиксированные, иначе они исчезают.</p>
+
+    <h2>Итог</h2>
+    <p>Считать выручку в баре несложно — если система делает это сама в процессе работы. Бармен закрывает чеки, выбирает оплату, и всё. Менеджер в любой момент открывает отчёт и видит картину. Никаких таблиц, никаких расчётов вручную — только данные, которые уже собраны.</p>
+  </div>
+
+  <!-- EN body -->
+  <div class="body lang-block" data-lang="en" hidden>
+    <p>Proper revenue tracking at a bar isn't accounting. It's a management tool: you see what's happening right now, compare days and periods, and make decisions based on real data — not gut feelings.</p>
+
+    <h2>What to track</h2>
+    <p>The minimum set for any bar:</p>
+    <ul>
+      <li><strong>Cash revenue</strong> — separate from card payments</li>
+      <li><strong>Card revenue</strong> — the terminal gives its own summary, cross-check it</li>
+      <li><strong>Number of checks</strong> — how many guests you served</li>
+      <li><strong>Average check</strong> — revenue ÷ number of checks</li>
+      <li><strong>Top items</strong> — what sells best</li>
+    </ul>
+    <p>This is everything you need to properly manage a small bar. More complex inventory, recipe cards, and cost of goods are the next level — not every bar needs that.</p>
+
+    <h2>Why separating cash and card matters</h2>
+    <p>At first glance it seems irrelevant — money is money. But in practice, the split solves three problems:</p>
+    <ol>
+      <li><strong>Cash count.</strong> You know exactly how much cash should be in the drawer — and can verify it. If something's missing, you see it immediately.</li>
+      <li><strong>Bank fees.</strong> Card payments arrive in your account minus the acquiring commission. Without the split you can't understand why the revenue "in hand" doesn't match the account balance.</li>
+      <li><strong>Staff control.</strong> If a bartender took cash but closed the check as card — it's visible during reconciliation.</li>
+    </ol>
+
+    <h2>How to do it without Excel</h2>
+    <p>The simplest approach: let the system do it automatically during service. Each time a bartender closes a check, they select the payment method: cash or card. The system totals everything itself.</p>
+    <p>At the end of the shift, the manager opens the summary and sees:</p>
+
+    <div class="statRow">
+      <div class="statBox">
+        <div class="statLabel">Cash</div>
+        <div class="statVal">₾ 840</div>
+        <div class="statSub">14 checks</div>
+      </div>
+      <div class="statBox">
+        <div class="statLabel">Card</div>
+        <div class="statVal">₾ 1 260</div>
+        <div class="statSub">19 checks</div>
+      </div>
+      <div class="statBox">
+        <div class="statLabel">Total</div>
+        <div class="statVal">₾ 2 100</div>
+        <div class="statSub">33 checks</div>
+      </div>
+    </div>
+
+    <p>No manual calculations. No spreadsheets. One page in a phone browser.</p>
+
+    <h2>Comparing days and weeks</h2>
+    <p>Knowing today's revenue is good. Comparing it to last week is useful. To understand whether the bar is growing, you need to watch the trend.</p>
+    <p>Basic questions your analytics should answer:</p>
+    <ul>
+      <li>Which day of the week consistently earns more?</li>
+      <li>Is there seasonality — summer months vs winter?</li>
+      <li>How did revenue change after adding a new item to the menu?</li>
+      <li>Which bartender closes more checks?</li>
+    </ul>
+    <p>This data lets you make concrete decisions: when to schedule more staff, what to remove from the menu, which days to focus your advertising on.</p>
+
+    <h2>What to do with the data at month end</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="stepN">1</div>
+        <div class="stepText"><strong>Generate a PDF report for the month.</strong> Any decent system does this with one tap. The report includes daily revenue, cash/card breakdown, top items.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">2</div>
+        <div class="stepText"><strong>Compare to the previous month.</strong> Growth or decline? If decline — on which days and why? Holidays, weather, competitors?</div>
+      </div>
+      <div class="step">
+        <div class="stepN">3</div>
+        <div class="stepText"><strong>Share the report with your accountant.</strong> If your bar operates as a sole trader — this is the source data for your tax return. Your accountant will appreciate ready numbers.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">4</div>
+        <div class="stepText"><strong>Adjust the plan for next month.</strong> For example: double stock for Friday and Saturday, remove three items from the menu that barely sell.</div>
+      </div>
+    </div>
+
+    <h2>Common mistakes</h2>
+    <p><strong>Counting revenue only once a month.</strong> Problems accumulate unnoticed — you see the trend too late. Better to check every day for 2 minutes.</p>
+    <p><strong>Not separating shifts.</strong> If two bartenders work in the same system without tracking, you can't tell who closed what. Bad for control, bad for calculating wages.</p>
+    <p><strong>Trusting memory.</strong> "Last Friday seemed better" — that's not managing a bar. Data needs to be recorded, otherwise it disappears.</p>
+
+    <h2>Summary</h2>
+    <p>Tracking bar revenue isn't complicated — if the system does it automatically during service. The bartender closes checks, selects payment, and that's it. The manager opens a report at any moment and sees the full picture. No spreadsheets, no manual calculations — just data that's already been collected.</p>
+  </div>
+
+  <!-- KA body -->
+  <div class="body lang-block" data-lang="ka" hidden>
+    <p>ბარში შემოსავლის სწორი აღრიცხვა არ არის ბუღალტერია. ეს მართვის ინსტრუმენტია: ხედავ რა ხდება ახლა, ადარებ დღეებსა და პერიოდებს, გადაწყვეტილებებს ღებულობ რეალური მონაცემების მიხედვით და არა შეგრძნებებით.</p>
+
+    <h2>რა უნდა დაფიქსირდეს</h2>
+    <p>მინიმალური ნაკრები ნებისმიერი ბარისთვის:</p>
+    <ul>
+      <li><strong>ნაღდი შემოსავალი</strong> — ბარათის გადახდებისგან ცალკე</li>
+      <li><strong>ბარათის შემოსავალი</strong> — ტერმინალი საკუთარ შეჯამებას გვაძლევს, სჭირდება გადამოწმება</li>
+      <li><strong>ქვითრების რაოდენობა</strong> — რამდენი სტუმარი მოვემსახურეთ</li>
+      <li><strong>საშუალო ქვითარი</strong> — შემოსავალი ÷ ქვითრების რაოდენობა</li>
+      <li><strong>ტოპ პოზიციები</strong> — რა იყიდება ყველაზე კარგად</li>
+    </ul>
+    <p>ეს ყველაფერია, რაც პატარა ბარის ნორმალური მართვისთვის გჭირდება.</p>
+
+    <h2>რატომ არის მნიშვნელოვანი ნაღდის და ბარათის გამიჯვნა</h2>
+    <p>ერთი შეხედვით არარელევანტურია — ფული ფულია. მაგრამ პრაქტიკაში გამიჯვნა სამ პრობლემას წყვეტს:</p>
+    <ol>
+      <li><strong>ნაღდის დათვლა.</strong> ზუსტად იცი, რამდენი ნაღდი უნდა იყოს სალაროში — და შეგიძლია გადაამოწმო.</li>
+      <li><strong>ბანკის საკომისიოები.</strong> ბარათის გადახდები ანგარიშზე ექვაირინგის საკომისიოს გამოკლებით შემოდის.</li>
+      <li><strong>პერსონალის კონტროლი.</strong> თუ ბარმენმა ნაღდი მიიღო, მაგრამ ქვითარი ბარათად დახურა — შედარებისას ჩანს.</li>
+    </ol>
+
+    <h2>როგორ გავაკეთოთ Excel-ის გარეშე</h2>
+    <p>ყველაზე მარტივი გზა: სისტემა ამას მუშაობის განმავლობაში ავტომატურად აკეთებდეს. ყოველ ჯერზე, როდესაც ბარმენი ქვითარს ხურავს, ირჩევს გადახდის მეთოდს: ნაღდი ან ბარათი. სისტემა თავად ჯამავს.</p>
+    <p>ცვლის ბოლოს მენეჯერი ხსნის შეჯამებას და ხედავს:</p>
+
+    <div class="statRow">
+      <div class="statBox">
+        <div class="statLabel">ნაღდი</div>
+        <div class="statVal">₾ 840</div>
+        <div class="statSub">14 ქვითარი</div>
+      </div>
+      <div class="statBox">
+        <div class="statLabel">ბარათი</div>
+        <div class="statVal">₾ 1 260</div>
+        <div class="statSub">19 ქვითარი</div>
+      </div>
+      <div class="statBox">
+        <div class="statLabel">სულ</div>
+        <div class="statVal">₾ 2 100</div>
+        <div class="statSub">33 ქვითარი</div>
+      </div>
+    </div>
+
+    <p>ხელით გამოთვლა არ სჭირდება. ცხრილები არ სჭირდება. ტელეფონის ბრაუზერში ერთი გვერდი.</p>
+
+    <h2>დღეებისა და კვირების შედარება</h2>
+    <p>დღევანდელი შემოსავლის ცოდნა კარგია. გასულ კვირასთან შედარება — სასარგებლოა. იმის გასაგებად, იზრდება ბარი თუ არა, ტენდენცია უნდა გაკონტროლდეს.</p>
+    <p>ძირითადი კითხვები, რომლებსაც ანალიტიკა უნდა პასუხობდეს:</p>
+    <ul>
+      <li>კვირის რომელ დღეს არის შემოსავალი სტაბილურად მაღალი?</li>
+      <li>არის სეზონურობა — ზაფხულის თვეები ზამთრის წინააღმდეგ?</li>
+      <li>როგორ შეიცვალა შემოსავალი მენიუში ახალი პოზიციის დამატების შემდეგ?</li>
+      <li>რომელი ბარმენი ხურავს მეტ ქვითარს?</li>
+    </ul>
+    <p>ეს მონაცემები კონკრეტული გადაწყვეტილებების მისაღებად გვეხმარება.</p>
+
+    <h2>რა გავაკეთოთ მონაცემებით თვის ბოლოს</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="stepN">1</div>
+        <div class="stepText"><strong>შექმენი PDF ანგარიში თვისთვის.</strong> ნებისმიერი ნორმალური სისტემა ამას ერთი დაჭერით აკეთებს. ანგარიშში — ყოველდღიური შემოსავალი, ნაღდი/ბარათის დაყოფა, ტოპ პოზიციები.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">2</div>
+        <div class="stepText"><strong>შეადარე წინა თვეს.</strong> ზრდა თუ კლება? კლება რომელ დღეებში და რატომ? არდადეგები, ამინდი, კონკურენტები?</div>
+      </div>
+      <div class="step">
+        <div class="stepN">3</div>
+        <div class="stepText"><strong>გადაეცი ანგარიში ბუღალტერს.</strong> თუ ბარი ინდივიდუალური მეწარმის სახით მუშაობს — ეს დეკლარაციის საწყისი მონაცემებია.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">4</div>
+        <div class="stepText"><strong>შეასწორე გეგმა მომავალი თვისთვის.</strong> მაგალითად: გაანახევრე მარაგი პარასკევს და შაბათს, ამოიღე სამი პოზიცია, რომელიც თითქმის არ იყიდება.</div>
+      </div>
+    </div>
+
+    <h2>გავრცელებული შეცდომები</h2>
+    <p><strong>შემოსავლის დათვლა მხოლოდ თვეში ერთხელ.</strong> პრობლემები შეუმჩნევლად გროვდება — ტენდენციას გვიანდება. უმჯობესია ყოველ დღე 2 წუთი.</p>
+    <p><strong>ცვლების გაუმიჯნავობა.</strong> თუ ორი ბარმენი ერთ სისტემაში გამიჯვნის გარეშე მუშაობს, გაუგებარია ვინ რამდენი დახურა.</p>
+    <p><strong>მხოლოდ მეხსიერებაზე დაყრდნობა.</strong> „ჩანდა, გასული პარასკევი უკეთესი იყო" — ეს ბარის მართვა არ არის. მონაცემები უნდა ჩაიწეროს.</p>
+
+    <h2>შეჯამება</h2>
+    <p>ბარში შემოსავლის დათვლა რთული არ არის — თუ სისტემა მუშაობის დროს ამას ავტომატურად აკეთებს. ბარმენი ხურავს ქვითრებს, ირჩევს გადახდას, და სულ ეს. მენეჯერი ნებისმიერ დროს ხსნის ანგარიშს და ხედავს სრულ სურათს.</p>
+  </div>
+
+  <div class="cta">
+    <h3 data-i="cta_h3">Попробуйте Checki бесплатно</h3>
+    <p data-i="cta_p">Выручка по дням, разбивка наличные/карта, PDF-отчёт — всё уже включено.</p>
+    <a class="ctaBtn" href="/#register" data-i="cta_btn">Начать бесплатно</a>
+  </div>
+</div>
+
+<footer>© 2026 Checki · <a href="/blog/" data-i="blog_link">Блог</a> · <a href="/">checki.ge</a></footer>
+
+<script>
+const LANG_KEY = "checki_lang";
+const T = {
+  ru: {
+    nav_blog: "Блог", nav_login: "Войти", nav_cta: "Попробовать",
+    tag: "Аналитика",
+    h1: "Как считать выручку в баре — просто и точно",
+    date: "8 апреля 2026", read: "6 мин читать",
+    lead: "Многие бары до сих пор считают выручку в конце смены: достают деньги из ящика и складывают. Это работает — пока не нужно понять, почему во вторник вышло на 30% меньше, чем в пятницу.",
+    cta_h3: "Попробуйте Checki бесплатно",
+    cta_p: "Выручка по дням, разбивка наличные/карта, PDF-отчёт — всё уже включено.",
+    cta_btn: "Начать бесплатно",
+    blog_link: "Блог",
+  },
+  en: {
+    nav_blog: "Blog", nav_login: "Login", nav_cta: "Try free",
+    tag: "Analytics",
+    h1: "How to Track Bar Revenue — Simply and Accurately",
+    date: "Apr 8, 2026", read: "6 min read",
+    lead: "Many bars still count revenue at the end of a shift: pull money from the drawer and add it up. That works — until you need to understand why Tuesday brought in 30% less than Friday.",
+    cta_h3: "Try Checki free",
+    cta_p: "Daily revenue, cash/card breakdown, PDF reports — all included.",
+    cta_btn: "Start free",
+    blog_link: "Blog",
+  },
+  ka: {
+    nav_blog: "ბლოგი", nav_login: "შესვლა", nav_cta: "სცადე",
+    tag: "ანალიტიკა",
+    h1: "როგორ დავთვალოთ ბარის შემოსავალი — მარტივად და ზუსტად",
+    date: "8 აპრ 2026", read: "6 წთ კითხვა",
+    lead: "ბევრი ბარი კვლავ ცვლის ბოლოს ითვლის შემოსავალს: ყუთიდან ფულს იღებს და ადის. ეს მუშაობს — სანამ არ გჭირდება გაიგო, რატომ სამშაბათს 30%-ით ნაკლები გამოვიდა ვიდრე პარასკევს.",
+    cta_h3: "სცადეთ Checki უფასოდ",
+    cta_p: "ყოველდღიური შემოსავალი, ნაღდი/ბარათის დაყოფა, PDF ანგარიში — ყველაფერი შეტანილია.",
+    cta_btn: "უფასოდ დაწყება",
+    blog_link: "ბლოგი",
+  },
+};
+
+const LANG_LABELS = { en: "🇬🇧 EN", ru: "🇷🇺 RU", ka: "🇬🇪 KA" };
+
+function apply(lang) {
+  localStorage.setItem(LANG_KEY, lang);
+  const t = T[lang] || T.ru;
+  document.querySelectorAll("[data-i]").forEach(el => {
+    if (t[el.dataset.i] !== undefined) el.textContent = t[el.dataset.i];
+  });
+  document.documentElement.lang = lang;
+  const dropBtn = document.getElementById("langDropBtn");
+  if (dropBtn) dropBtn.textContent = (LANG_LABELS[lang] || lang.toUpperCase()) + " ▾";
+  document.querySelectorAll(".langOpt").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".navDrawerLang").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".lang-block").forEach(el => { el.hidden = el.dataset.lang !== lang; });
+}
+
+const langDropBtn = document.getElementById("langDropBtn");
+const langDropMenu = document.getElementById("langDropMenu");
+const navBurger = document.getElementById("navBurger");
+const navDrawer = document.getElementById("navDrawer");
+
+if (langDropBtn) langDropBtn.addEventListener("click", e => { e.stopPropagation(); langDropMenu.classList.toggle("open"); });
+document.querySelectorAll(".langOpt").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); langDropMenu.classList.remove("open"); }));
+document.querySelectorAll(".navDrawerLang").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); navDrawer.classList.remove("open"); }));
+if (navBurger) navBurger.addEventListener("click", e => { e.stopPropagation(); navDrawer.classList.toggle("open"); });
+document.addEventListener("click", () => { langDropMenu?.classList.remove("open"); navDrawer?.classList.remove("open"); });
+
+apply(localStorage.getItem(LANG_KEY) || "ru");
+</script>
+</body>
+</html>

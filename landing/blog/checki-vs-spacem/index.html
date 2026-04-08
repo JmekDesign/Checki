@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M2ZHXFCW');</script>
+  <!-- End Google Tag Manager -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Checki vs SpaceM — сравнение для баров Грузии</title>
+  <meta name="description" content="Сравниваем Checki и SpaceM: цена, простота, функции. Что выбрать небольшому бару в Тбилиси и Грузии?" />
+  <link rel="canonical" href="https://checki.ge/blog/checki-vs-spacem/" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0f1116;
+      --surface: #161b24;
+      --border:  rgba(255,255,255,.10);
+      --text:    #f0f2f5;
+      --muted:   #7a8497;
+      --accent:  #49d17c;
+      --accent2: #2eb865;
+    }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; line-height: 1.75; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent2); }
+
+    nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(15,17,22,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); gap: 12px; }
+    .navLeft { display: flex; align-items: center; gap: 2px; }
+    .navLogo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; margin-right: 4px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    .navLogoText { font-size: 17px; font-weight: 800; color: var(--text); }
+    .navRight { display: flex; align-items: center; gap: 8px; position: relative; }
+    .navBtn { box-sizing: border-box; display: block; line-height: 1; padding: 10px 14px; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none; cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+    .langDrop { position: relative; }
+    .langDropBtn { background: none; border: 1px solid var(--border); color: var(--muted); font-size: 12px; font-weight: 700; padding: 10px 10px; border-radius: 10px; cursor: pointer; letter-spacing: .04em; transition: all .15s; display: flex; align-items: center; gap: 4px; box-sizing: border-box; line-height: 1; flex-shrink: 0; -webkit-tap-highlight-color: transparent; font-family: inherit; }
+    .langDropBtn:hover { color: var(--text); }
+    .langDropMenu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; min-width: 110px; z-index: 200; }
+    .langDropMenu.open { display: block; }
+    .langOpt { display: block; width: 100%; text-align: left; background: none; border: none; padding: 9px 14px; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .langOpt.active { color: var(--text); }
+    .navLink { background: none; border: none; color: var(--muted); transition: color .15s; padding-left: 4px; padding-right: 4px; }
+    .navLink:hover { color: var(--text); }
+    .navLeft .navLink { margin-left: 16px; font-size: 15px; }
+    .navLogin { background: none; border: 1px solid var(--border); color: var(--text); transition: border-color .15s; }
+    .navLogin:hover { border-color: rgba(255,255,255,.3); }
+    .navCta { background: var(--accent); color: #0f1116; padding-left: 18px; padding-right: 18px; transition: background .15s; }
+    .navCta:hover { background: var(--accent2); color: #0f1116; }
+    .navBurger { display: none; background: none; border: 1px solid var(--border); color: var(--text); padding: 10px 13px; border-radius: 10px; cursor: pointer; box-sizing: border-box; line-height: 1; flex-shrink: 0; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+    .navBurgerLines { display: flex; flex-direction: column; gap: 5px; width: 18px; }
+    .navBurgerLine { height: 2px; border-radius: 1px; background: var(--text); }
+    .navDrawer { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 6px; min-width: 200px; z-index: 200; flex-direction: column; gap: 2px; }
+    .navDrawer.open { display: flex; }
+    .navDrawerItem { display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 10px; background: none; border: none; color: var(--text); font-weight: 700; font-size: 14px; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .navDrawerItem:hover { background: rgba(255,255,255,.06); }
+    .navDrawerItem.accent { color: var(--accent); }
+    .navDrawerSep { height: 1px; background: var(--border); margin: 4px 2px; }
+    .navDrawerLangs { display: flex; gap: 4px; padding: 2px 4px 4px; }
+    .navDrawerLang { flex: 1; height: 34px; border-radius: 8px; border: none; background: rgba(255,255,255,.04); color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .1s; font-family: inherit; }
+    .navDrawerLang:hover, .navDrawerLang.active { background: rgba(73,209,124,.12); color: var(--accent); }
+    @media (max-width: 520px) { .navLogin, .langDrop, .navLeft .navLink { display: none; } .navBurger { display: flex; } }
+
+    .wrap { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .tag { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    h1 { font-size: clamp(26px, 6vw, 38px); font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin-bottom: 16px; }
+    .meta { font-size: 14px; color: var(--muted); margin-bottom: 40px; display: flex; gap: 16px; }
+    .lead { font-size: 18px; color: rgba(240,242,245,.8); line-height: 1.7; margin-bottom: 32px; border-left: 3px solid var(--accent); padding-left: 16px; }
+
+    .body p { font-size: 16px; margin-bottom: 20px; }
+    .body h2 { font-size: 22px; font-weight: 700; margin: 40px 0 14px; letter-spacing: -.01em; }
+    .body ol, .body ul { padding-left: 24px; margin-bottom: 20px; }
+    .body li { font-size: 16px; margin-bottom: 8px; }
+    .body strong { color: var(--text); font-weight: 600; }
+
+    .compTable { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+    .compTable th { text-align: left; padding: 10px 14px; color: var(--muted); font-weight: 600; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    .compTable td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.05); vertical-align: top; }
+    .compTable tr:last-child td { border-bottom: none; }
+    .compTable .yes { color: var(--accent); font-weight: 700; }
+    .compTable .no { color: #e05c5c; font-weight: 700; }
+    .compTable .maybe { color: #d4a843; font-weight: 700; }
+    .compTable .colH { background: rgba(73,209,124,.04); }
+
+    .verdict { background: rgba(73,209,124,.07); border: 1px solid rgba(73,209,124,.2); border-radius: 14px; padding: 24px; margin: 32px 0; }
+    .verdict strong { color: var(--accent); }
+
+    .useCase { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; margin: 16px 0; }
+    .useCase h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--accent); }
+    .useCase p { font-size: 15px; margin-bottom: 0; color: rgba(240,242,245,.8); }
+
+    .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; margin-top: 48px; }
+    .cta h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .cta p { font-size: 15px; color: var(--muted); margin-bottom: 20px; }
+    .ctaBtn { display: inline-block; background: var(--accent); color: #0f1116; font-weight: 700; font-size: 15px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+    .ctaBtn:hover { background: var(--accent2); color: #0f1116; }
+
+    footer { text-align: center; padding: 24px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2ZHXFCW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav>
+  <div class="navLeft">
+    <a class="navLogo" href="/">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" style="flex-shrink:0"><rect width="32" height="32" rx="8" fill="#141418"/><text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text><circle cx="23" cy="24" r="3.5" fill="#49d17c"/></svg>
+      <span class="navLogoText">Checki</span>
+    </a>
+    <a class="navBtn navLink" href="/blog/" data-i="nav_blog">Blog</a>
+  </div>
+  <div class="navRight">
+    <div class="langDrop" id="langDrop">
+      <button class="langDropBtn" id="langDropBtn">🇷🇺 RU ▾</button>
+      <div class="langDropMenu" id="langDropMenu">
+        <button class="langOpt" data-lang="ka">🇬🇪 Georgian</button>
+        <button class="langOpt" data-lang="en">🇬🇧 English</button>
+        <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
+      </div>
+    </div>
+    <a class="navBtn navLogin" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+    <a class="navBtn navCta" href="/#register" data-i="nav_cta">Попробовать</a>
+    <button class="navBurger" id="navBurger" aria-label="Menu">
+      <div class="navBurgerLines">
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+      </div>
+    </button>
+    <div class="navDrawer" id="navDrawer">
+      <a class="navDrawerItem" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+      <a class="navDrawerItem" href="/blog/" data-i="nav_blog">Блог</a>
+      <div class="navDrawerSep"></div>
+      <div class="navDrawerLangs">
+        <button class="navDrawerLang" data-lang="ka">🇬🇪 KA</button>
+        <button class="navDrawerLang" data-lang="en">🇬🇧 EN</button>
+        <button class="navDrawerLang" data-lang="ru">🇷🇺 RU</button>
+      </div>
+      <div class="navDrawerSep"></div>
+      <a class="navDrawerItem accent" href="/#register" data-i="nav_cta">Попробовать →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="tag" data-i="tag">Сравнение</div>
+  <h1 data-i="h1">Checki vs SpaceM — что выбрать бару в Грузии</h1>
+  <div class="meta">
+    <span data-i="date">8 апреля 2026</span>
+    <span data-i="read">5 мин читать</span>
+  </div>
+  <p class="lead" data-i="lead">SpaceM популярен среди ресторанов и кофеен Грузии. Checki сделан специально для баров. Разбираемся, в чём разница и кому что подходит.</p>
+
+  <!-- RU body -->
+  <div class="body lang-block" data-lang="ru">
+    <p>Когда ищешь систему для бара в Тбилиси, SpaceM появляется в поиске одним из первых — грузинская разработка, понятный интерфейс, хорошо известна среди местных рестораторов. Checki — более узкая система, созданная именно для баров без сложной кухни. В чём реальная разница?</p>
+
+    <h2>SpaceM: что это и для кого</h2>
+    <p>SpaceM — грузинская POS-платформа, ориентированная на кафе, рестораны и ритейл. Предлагает управление меню, столами, заказами, складом и интеграцию с фискальными системами Грузии. Это полноценное решение для заведений со сложной структурой: несколько залов, кухня, официанты.</p>
+    <p>Система требует установки, настройки и часто — отдельного устройства (планшет или терминал). Для полноценного ресторана это оправдано. Для небольшого бара — возможно лишнее.</p>
+
+    <h2>Checki: что это и для кого</h2>
+    <p>Checki — веб-приложение для баров. Никакого оборудования: открываешь в браузере на любом смартфоне и начинаешь работать. Фокус — на трёх операциях: открыть чек, добавить позиции, закрыть с оплатой. Плюс аналитика для менеджера: выручка, топ позиций, PDF-отчёт.</p>
+    <p>Нет склада, нет технологических карт, нет кухонных дисплеев. Но если ваш бар не нуждается в этих функциях — их отсутствие делает систему проще и быстрее.</p>
+
+    <h2>Сравнение по ключевым параметрам</h2>
+    <table class="compTable">
+      <thead>
+        <tr>
+          <th>Параметр</th>
+          <th>SpaceM</th>
+          <th class="colH">Checki</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Целевая аудитория</td>
+          <td>Кафе, рестораны, ритейл</td>
+          <td class="colH">Бары, небольшие кафе</td>
+        </tr>
+        <tr>
+          <td>Начало работы</td>
+          <td class="maybe">Установка и настройка</td>
+          <td class="colH yes">Браузер, 30 минут</td>
+        </tr>
+        <tr>
+          <td>Своё устройство</td>
+          <td class="no">Нужен планшет/терминал</td>
+          <td class="colH yes">Любой смартфон</td>
+        </tr>
+        <tr>
+          <td>Управление чеками</td>
+          <td class="yes">Да</td>
+          <td class="colH yes">Да</td>
+        </tr>
+        <tr>
+          <td>Складской учёт</td>
+          <td class="yes">Да</td>
+          <td class="colH no">Нет</td>
+        </tr>
+        <tr>
+          <td>Интеграция с фискальным</td>
+          <td class="yes">Да (Грузия)</td>
+          <td class="colH no">Нет</td>
+        </tr>
+        <tr>
+          <td>Аналитика выручки</td>
+          <td class="yes">Да</td>
+          <td class="colH yes">Да</td>
+        </tr>
+        <tr>
+          <td>PDF-отчёты</td>
+          <td class="yes">Да</td>
+          <td class="colH yes">Да</td>
+        </tr>
+        <tr>
+          <td>Стоимость старта</td>
+          <td class="no">Платная подписка</td>
+          <td class="colH yes">Бесплатно</td>
+        </tr>
+        <tr>
+          <td>Скорость обучения персонала</td>
+          <td class="maybe">Несколько часов</td>
+          <td class="colH yes">5–10 минут</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Когда выбрать SpaceM</h2>
+    <div class="useCase">
+      <h4>SpaceM подходит если:</h4>
+      <p>У вас ресторан или кафе с полноценной кухней. Нужны технологические карты, складской учёт или интеграция с грузинскими фискальными системами. Есть бюджет на настройку и обучение, и вы готовы платить за подписку.</p>
+    </div>
+
+    <h2>Когда выбрать Checki</h2>
+    <div class="useCase">
+      <h4>Checki подходит если:</h4>
+      <p>У вас бар, небольшое кафе или место без сложной кухни. Персонал работает с телефонов, нужно быстро начать без покупки оборудования. Важна простота: бармен открывает чек за 3 секунды, а не разбирается в меню настроек.</p>
+    </div>
+
+    <h2>Честный вывод</h2>
+    <div class="verdict">
+      <p><strong>SpaceM</strong> — более полная система для заведений со сложной структурой. Если вам нужен склад и фискальные интеграции — это правильный выбор.</p>
+      <p style="margin-top:12px"><strong>Checki</strong> — если у вас бар, и вы хотите чтобы система работала с любого телефона барменов без установки, обучения и ежемесячных платежей с первого дня. Бесплатный старт, никаких обязательств.</p>
+    </div>
+
+    <p>Оба продукта решают реальные задачи. Вопрос только в том, какую задачу решаете именно вы.</p>
+  </div>
+
+  <!-- EN body -->
+  <div class="body lang-block" data-lang="en" hidden>
+    <p>When searching for a bar system in Tbilisi, SpaceM comes up near the top — a Georgian-built product, straightforward interface, well known among local restaurant operators. Checki is a narrower system, built specifically for bars without complex kitchens. What's the real difference?</p>
+
+    <h2>SpaceM: what it is and who it's for</h2>
+    <p>SpaceM is a Georgian POS platform aimed at cafes, restaurants, and retail. It offers menu management, table management, orders, inventory, and integration with Georgia's fiscal systems. It's a full solution for venues with complex structures: multiple dining areas, a kitchen, waitstaff.</p>
+    <p>The system requires installation, configuration, and often a dedicated device (tablet or terminal). For a full restaurant this is justified. For a small bar — possibly unnecessary.</p>
+
+    <h2>Checki: what it is and who it's for</h2>
+    <p>Checki is a web app for bars. No hardware: open it in a browser on any smartphone and start working. The focus is on three operations: open a tab, add items, close with payment. Plus analytics for the manager: revenue, top items, PDF report.</p>
+    <p>No inventory, no recipe cards, no kitchen displays. But if your bar doesn't need those features — their absence makes the system faster and simpler.</p>
+
+    <h2>Comparison by key parameters</h2>
+    <table class="compTable">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>SpaceM</th>
+          <th class="colH">Checki</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Target audience</td>
+          <td>Cafes, restaurants, retail</td>
+          <td class="colH">Bars, small cafes</td>
+        </tr>
+        <tr>
+          <td>Getting started</td>
+          <td class="maybe">Setup and configuration</td>
+          <td class="colH yes">Browser, 30 minutes</td>
+        </tr>
+        <tr>
+          <td>Own hardware</td>
+          <td class="no">Tablet/terminal needed</td>
+          <td class="colH yes">Any smartphone</td>
+        </tr>
+        <tr>
+          <td>Tab management</td>
+          <td class="yes">Yes</td>
+          <td class="colH yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Inventory tracking</td>
+          <td class="yes">Yes</td>
+          <td class="colH no">No</td>
+        </tr>
+        <tr>
+          <td>Fiscal integration</td>
+          <td class="yes">Yes (Georgia)</td>
+          <td class="colH no">No</td>
+        </tr>
+        <tr>
+          <td>Revenue analytics</td>
+          <td class="yes">Yes</td>
+          <td class="colH yes">Yes</td>
+        </tr>
+        <tr>
+          <td>PDF reports</td>
+          <td class="yes">Yes</td>
+          <td class="colH yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Cost to start</td>
+          <td class="no">Paid subscription</td>
+          <td class="colH yes">Free</td>
+        </tr>
+        <tr>
+          <td>Staff onboarding speed</td>
+          <td class="maybe">Several hours</td>
+          <td class="colH yes">5–10 minutes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>When to choose SpaceM</h2>
+    <div class="useCase">
+      <h4>SpaceM is the right fit if:</h4>
+      <p>You run a restaurant or cafe with a real kitchen. You need recipe cards, inventory tracking, or integration with Georgian fiscal systems. You have a budget for setup and training, and you're ready to pay a monthly subscription.</p>
+    </div>
+
+    <h2>When to choose Checki</h2>
+    <div class="useCase">
+      <h4>Checki is the right fit if:</h4>
+      <p>You run a bar, small cafe, or a venue without a complex kitchen. Staff works from their phones and you need to start fast without buying hardware. Simplicity matters: the bartender opens a tab in 3 seconds, not navigating through a settings menu.</p>
+    </div>
+
+    <h2>Honest verdict</h2>
+    <div class="verdict">
+      <p><strong>SpaceM</strong> is the more complete system for venues with complex structures. If you need inventory and fiscal integrations — it's the right choice.</p>
+      <p style="margin-top:12px"><strong>Checki</strong> is the right choice if you run a bar and want a system that works from any bartender's phone with no installation, no training, and no monthly fees from day one. Free to start, no commitments.</p>
+    </div>
+
+    <p>Both products solve real problems. The question is which problem you're actually trying to solve.</p>
+  </div>
+
+  <!-- KA body -->
+  <div class="body lang-block" data-lang="ka" hidden>
+    <p>თბილისში ბარის სისტემის ძიებისას SpaceM ერთ-ერთი პირველი ჩნდება — ქართული შემუშავება, გასაგები ინტერფეისი, კარგად ცნობილი ადგილობრივ რესტორატორებში. Checki უფრო ვიწრო სისტემაა, შექმნილი სპეციალურად რთული სამზარეულოს გარეშე ბარებისთვის. რა არის რეალური განსხვავება?</p>
+
+    <h2>SpaceM: რა არის და ვისთვის</h2>
+    <p>SpaceM ქართული POS პლატფორმაა, ორიენტირებული კაფეებზე, რესტორნებზე და საცალო ვაჭრობაზე. გთავაზობს მენიუს მართვას, მაგიდებს, შეკვეთებს, საწყობს და საქართველოს ფისკალურ სისტემებთან ინტეგრაციას. ეს სრული გადაწყვეტაა რთული სტრუქტურის დაწესებულებებისთვის.</p>
+    <p>სისტემა ინსტალაციას, კონფიგურაციას და ხშირად ცალკე მოწყობილობას (პლანშეტი ან ტერმინალი) მოითხოვს. სრული რესტორნისთვის ეს გამართლებულია. პატარა ბარისთვის — შესაძლოა ზედმეტია.</p>
+
+    <h2>Checki: რა არის და ვისთვის</h2>
+    <p>Checki ბარებისთვის განკუთვნილი ვებ-აპლიკაციაა. აღჭურვილობა არ სჭირდება: ნებისმიერ სმარტფონზე ბრაუზერში გახსენი და დაიწყე მუშაობა. ფოკუსი სამ ოპერაციაზეა: ქვითრის გახსნა, პოზიციების დამატება, გადახდით დახურვა. პლუს ანალიტიკა მენეჯერისთვის: შემოსავალი, ტოპ პოზიციები, PDF ანგარიში.</p>
+    <p>საწყობი, ტექნოლოგიური ბარათები, სამზარეულოს დისპლეები — არ არის. მაგრამ თუ ბარს ეს ფუნქციები არ სჭირდება — მათი არარსებობა სისტემას უფრო მარტივსა და სწრაფს ხდის.</p>
+
+    <h2>შედარება ძირითადი პარამეტრებით</h2>
+    <table class="compTable">
+      <thead>
+        <tr>
+          <th>პარამეტრი</th>
+          <th>SpaceM</th>
+          <th class="colH">Checki</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>სამიზნე აუდიტორია</td>
+          <td>კაფეები, რესტორნები, საცალო</td>
+          <td class="colH">ბარები, პატარა კაფეები</td>
+        </tr>
+        <tr>
+          <td>მუშაობის დაწყება</td>
+          <td class="maybe">ინსტალაცია და კონფიგურაცია</td>
+          <td class="colH yes">ბრაუზერი, 30 წუთი</td>
+        </tr>
+        <tr>
+          <td>საკუთარი მოწყობილობა</td>
+          <td class="no">პლანშეტი/ტერმინალი საჭიროა</td>
+          <td class="colH yes">ნებისმიერი სმარტფონი</td>
+        </tr>
+        <tr>
+          <td>ქვითრების მართვა</td>
+          <td class="yes">კი</td>
+          <td class="colH yes">კი</td>
+        </tr>
+        <tr>
+          <td>საწყობის აღრიცხვა</td>
+          <td class="yes">კი</td>
+          <td class="colH no">არა</td>
+        </tr>
+        <tr>
+          <td>ფისკალური ინტეგრაცია</td>
+          <td class="yes">კი (საქართველო)</td>
+          <td class="colH no">არა</td>
+        </tr>
+        <tr>
+          <td>შემოსავლის ანალიტიკა</td>
+          <td class="yes">კი</td>
+          <td class="colH yes">კი</td>
+        </tr>
+        <tr>
+          <td>PDF ანგარიშები</td>
+          <td class="yes">კი</td>
+          <td class="colH yes">კი</td>
+        </tr>
+        <tr>
+          <td>დაწყების ღირებულება</td>
+          <td class="no">ფასიანი გამოწერა</td>
+          <td class="colH yes">უფასო</td>
+        </tr>
+        <tr>
+          <td>პერსონალის სწავლების სიჩქარე</td>
+          <td class="maybe">რამდენიმე საათი</td>
+          <td class="colH yes">5–10 წუთი</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>როდის აირჩიოს SpaceM</h2>
+    <div class="useCase">
+      <h4>SpaceM შესაფერისია თუ:</h4>
+      <p>გაქვს რესტორანი ან კაფე სრული სამზარეულოთი. გჭირდება ტექნოლოგიური ბარათები, საწყობის აღრიცხვა ან ქართულ ფისკალურ სისტემებთან ინტეგრაცია. ინსტალაციისა და ტრენინგის ბიუჯეტი გაქვს და ყოველთვიურ გადახდაზე ხარ მზად.</p>
+    </div>
+
+    <h2>როდის აირჩიოს Checki</h2>
+    <div class="useCase">
+      <h4>Checki შესაფერისია თუ:</h4>
+      <p>გაქვს ბარი, პატარა კაფე ან ადგილი რთული სამზარეულოს გარეშე. პერსონალი ტელეფონებიდან მუშაობს, გჭირდება სწრაფად დაწყება აღჭურვილობის ყიდვის გარეშე. სიმარტივე მნიშვნელოვანია: ბარმენი ქვითარს 3 წამში ხსნის.</p>
+    </div>
+
+    <h2>გულწრფელი დასკვნა</h2>
+    <div class="verdict">
+      <p><strong>SpaceM</strong> — უფრო სრული სისტემაა რთული სტრუქტურის დაწესებულებებისთვის. თუ საწყობი და ფისკალური ინტეგრაციები გჭირდება — სწორი არჩევანია.</p>
+      <p style="margin-top:12px"><strong>Checki</strong> — სწორი არჩევანია თუ ბარი გაქვს და გინდა სისტემა, რომელიც ნებისმიერი ბარმენის ტელეფონიდან ინსტალაციის, ტრენინგის და ყოველთვიური გადახდის გარეშე მუშაობს. უფასო დაწყება, ვალდებულებების გარეშე.</p>
+    </div>
+
+    <p>ორივე პროდუქტი რეალურ პრობლემებს წყვეტს. კითხვა მხოლოდ ისაა, რომელ პრობლემას წყვეტ სინამდვილეში.</p>
+  </div>
+
+  <div class="cta">
+    <h3 data-i="cta_h3">Попробуйте Checki бесплатно</h3>
+    <p data-i="cta_p">Регистрация за 2 минуты. Никакого оборудования, никаких обязательств.</p>
+    <a class="ctaBtn" href="/#register" data-i="cta_btn">Начать бесплатно</a>
+  </div>
+</div>
+
+<footer>© 2026 Checki · <a href="/blog/" data-i="blog_link">Блог</a> · <a href="/">checki.ge</a></footer>
+
+<script>
+const LANG_KEY = "checki_lang";
+const T = {
+  ru: {
+    nav_blog: "Блог", nav_login: "Войти", nav_cta: "Попробовать",
+    tag: "Сравнение",
+    h1: "Checki vs SpaceM — что выбрать бару в Грузии",
+    date: "8 апреля 2026", read: "5 мин читать",
+    lead: "SpaceM популярен среди ресторанов и кофеен Грузии. Checki сделан специально для баров. Разбираемся, в чём разница и кому что подходит.",
+    cta_h3: "Попробуйте Checki бесплатно",
+    cta_p: "Регистрация за 2 минуты. Никакого оборудования, никаких обязательств.",
+    cta_btn: "Начать бесплатно",
+    blog_link: "Блог",
+  },
+  en: {
+    nav_blog: "Blog", nav_login: "Login", nav_cta: "Try free",
+    tag: "Comparison",
+    h1: "Checki vs SpaceM — Which One to Choose for Your Bar in Georgia",
+    date: "Apr 8, 2026", read: "5 min read",
+    lead: "SpaceM is popular among restaurants and cafes in Georgia. Checki is built specifically for bars. Let's break down the difference and which fits your needs.",
+    cta_h3: "Try Checki free",
+    cta_p: "Register in 2 minutes. No hardware, no commitments.",
+    cta_btn: "Start free",
+    blog_link: "Blog",
+  },
+  ka: {
+    nav_blog: "ბლოგი", nav_login: "შესვლა", nav_cta: "სცადე",
+    tag: "შედარება",
+    h1: "Checki vs SpaceM — რომელი აირჩიოს ბარმა საქართველოში",
+    date: "8 აპრ 2026", read: "5 წთ კითხვა",
+    lead: "SpaceM პოპულარულია საქართველოს რესტორნებსა და კაფეებში. Checki სპეციალურად ბარებისთვის არის შექმნილი. ვარჩევთ განსხვავებას და ვინ რას შეესაბამება.",
+    cta_h3: "სცადეთ Checki უფასოდ",
+    cta_p: "რეგისტრაცია 2 წუთში. აღჭურვილობის გარეშე, ვალდებულებების გარეშე.",
+    cta_btn: "უფასოდ დაწყება",
+    blog_link: "ბლოგი",
+  },
+};
+
+const LANG_LABELS = { en: "🇬🇧 EN", ru: "🇷🇺 RU", ka: "🇬🇪 KA" };
+
+function apply(lang) {
+  localStorage.setItem(LANG_KEY, lang);
+  const t = T[lang] || T.ru;
+  document.querySelectorAll("[data-i]").forEach(el => {
+    if (t[el.dataset.i] !== undefined) el.textContent = t[el.dataset.i];
+  });
+  document.documentElement.lang = lang;
+  const dropBtn = document.getElementById("langDropBtn");
+  if (dropBtn) dropBtn.textContent = (LANG_LABELS[lang] || lang.toUpperCase()) + " ▾";
+  document.querySelectorAll(".langOpt").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".navDrawerLang").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".lang-block").forEach(el => { el.hidden = el.dataset.lang !== lang; });
+}
+
+const langDropBtn = document.getElementById("langDropBtn");
+const langDropMenu = document.getElementById("langDropMenu");
+const navBurger = document.getElementById("navBurger");
+const navDrawer = document.getElementById("navDrawer");
+
+if (langDropBtn) langDropBtn.addEventListener("click", e => { e.stopPropagation(); langDropMenu.classList.toggle("open"); });
+document.querySelectorAll(".langOpt").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); langDropMenu.classList.remove("open"); }));
+document.querySelectorAll(".navDrawerLang").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); navDrawer.classList.remove("open"); }));
+if (navBurger) navBurger.addEventListener("click", e => { e.stopPropagation(); navDrawer.classList.toggle("open"); });
+document.addEventListener("click", () => { langDropMenu?.classList.remove("open"); navDrawer?.classList.remove("open"); });
+
+apply(localStorage.getItem(LANG_KEY) || "ru");
+</script>
+</body>
+</html>

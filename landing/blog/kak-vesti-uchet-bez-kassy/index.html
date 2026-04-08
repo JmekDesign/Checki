@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M2ZHXFCW');</script>
+  <!-- End Google Tag Manager -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Как вести учёт в баре без кассы — руководство</title>
+  <meta name="description" content="Рассказываем, как небольшой бар может считать выручку, вести заказы и управлять персоналом без кассового аппарата и лицензий." />
+  <link rel="canonical" href="https://checki.ge/blog/kak-vesti-uchet-bez-kassy/" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0f1116;
+      --surface: #161b24;
+      --border:  rgba(255,255,255,.10);
+      --text:    #f0f2f5;
+      --muted:   #7a8497;
+      --accent:  #49d17c;
+      --accent2: #2eb865;
+    }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; line-height: 1.75; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent2); }
+
+    nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(15,17,22,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); gap: 12px; }
+    .navLeft { display: flex; align-items: center; gap: 2px; }
+    .navLogo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; margin-right: 4px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+    .navLogoText { font-size: 17px; font-weight: 800; color: var(--text); }
+    .navRight { display: flex; align-items: center; gap: 8px; position: relative; }
+    .navBtn { box-sizing: border-box; display: block; line-height: 1; padding: 10px 14px; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 13px; white-space: nowrap; text-decoration: none; cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+    .langDrop { position: relative; }
+    .langDropBtn { background: none; border: 1px solid var(--border); color: var(--muted); font-size: 12px; font-weight: 700; padding: 10px 10px; border-radius: 10px; cursor: pointer; letter-spacing: .04em; transition: all .15s; display: flex; align-items: center; gap: 4px; box-sizing: border-box; line-height: 1; flex-shrink: 0; -webkit-tap-highlight-color: transparent; font-family: inherit; }
+    .langDropBtn:hover { color: var(--text); }
+    .langDropMenu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; min-width: 110px; z-index: 200; }
+    .langDropMenu.open { display: block; }
+    .langOpt { display: block; width: 100%; text-align: left; background: none; border: none; padding: 9px 14px; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .langOpt.active { color: var(--text); }
+    .navLink { background: none; border: none; color: var(--muted); transition: color .15s; padding-left: 4px; padding-right: 4px; }
+    .navLink:hover { color: var(--text); }
+    .navLink.active { color: var(--text); }
+    .navLeft .navLink { margin-left: 16px; font-size: 15px; }
+    .navLogin { background: none; border: 1px solid var(--border); color: var(--text); transition: border-color .15s; }
+    .navLogin:hover { border-color: rgba(255,255,255,.3); }
+    .navCta { background: var(--accent); color: #0f1116; padding-left: 18px; padding-right: 18px; transition: background .15s; }
+    .navCta:hover { background: var(--accent2); color: #0f1116; }
+    .navBurger { display: none; background: none; border: 1px solid var(--border); color: var(--text); padding: 10px 13px; border-radius: 10px; cursor: pointer; box-sizing: border-box; line-height: 1; flex-shrink: 0; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+    .navBurgerLines { display: flex; flex-direction: column; gap: 5px; width: 18px; }
+    .navBurgerLine { height: 2px; border-radius: 1px; background: var(--text); }
+    .navDrawer { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 6px; min-width: 200px; z-index: 200; flex-direction: column; gap: 2px; }
+    .navDrawer.open { display: flex; }
+    .navDrawerItem { display: flex; align-items: center; height: 42px; padding: 0 14px; border-radius: 10px; background: none; border: none; color: var(--text); font-weight: 700; font-size: 14px; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .1s; font-family: inherit; }
+    .navDrawerItem:hover { background: rgba(255,255,255,.06); }
+    .navDrawerItem.accent { color: var(--accent); }
+    .navDrawerItem.active-blog { color: var(--accent); }
+    .navDrawerSep { height: 1px; background: var(--border); margin: 4px 2px; }
+    .navDrawerLangs { display: flex; gap: 4px; padding: 2px 4px 4px; }
+    .navDrawerLang { flex: 1; height: 34px; border-radius: 8px; border: none; background: rgba(255,255,255,.04); color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .1s; font-family: inherit; }
+    .navDrawerLang:hover, .navDrawerLang.active { background: rgba(73,209,124,.12); color: var(--accent); }
+    @media (max-width: 520px) { .navLogin, .langDrop, .navLeft .navLink { display: none; } .navBurger { display: flex; } }
+
+    .wrap { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .tag { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    h1 { font-size: clamp(26px, 6vw, 38px); font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin-bottom: 16px; }
+    .meta { font-size: 14px; color: var(--muted); margin-bottom: 40px; display: flex; gap: 16px; }
+    .lead { font-size: 18px; color: rgba(240,242,245,.8); line-height: 1.7; margin-bottom: 32px; border-left: 3px solid var(--accent); padding-left: 16px; }
+
+    .body p { font-size: 16px; margin-bottom: 20px; }
+    .body h2 { font-size: 22px; font-weight: 700; margin: 40px 0 14px; letter-spacing: -.01em; }
+    .body ol, .body ul { padding-left: 24px; margin-bottom: 20px; }
+    .body li { font-size: 16px; margin-bottom: 8px; }
+    .body strong { color: var(--text); font-weight: 600; }
+
+    .steps { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin: 24px 0; }
+    .step { display: flex; gap: 14px; margin-bottom: 16px; }
+    .step:last-child { margin-bottom: 0; }
+    .stepN { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #0f1116; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .stepText { font-size: 15px; line-height: 1.6; }
+
+    .cta { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; margin-top: 48px; }
+    .cta h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .cta p { font-size: 15px; color: var(--muted); margin-bottom: 20px; }
+    .ctaBtn { display: inline-block; background: var(--accent); color: #0f1116; font-weight: 700; font-size: 15px; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+    .ctaBtn:hover { background: var(--accent2); color: #0f1116; }
+
+    footer { text-align: center; padding: 24px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2ZHXFCW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav>
+  <div class="navLeft">
+    <a class="navLogo" href="/">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" style="flex-shrink:0"><rect width="32" height="32" rx="8" fill="#141418"/><text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text><circle cx="23" cy="24" r="3.5" fill="#49d17c"/></svg>
+      <span class="navLogoText">Checki</span>
+    </a>
+    <a class="navBtn navLink" href="/blog/" data-i="nav_blog">Blog</a>
+  </div>
+  <div class="navRight">
+    <div class="langDrop" id="langDrop">
+      <button class="langDropBtn" id="langDropBtn">🇷🇺 RU ▾</button>
+      <div class="langDropMenu" id="langDropMenu">
+        <button class="langOpt" data-lang="ka">🇬🇪 Georgian</button>
+        <button class="langOpt" data-lang="en">🇬🇧 English</button>
+        <button class="langOpt" data-lang="ru">🇷🇺 Русский</button>
+      </div>
+    </div>
+    <a class="navBtn navLogin" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+    <a class="navBtn navCta" href="/#register" data-i="nav_cta">Попробовать</a>
+    <button class="navBurger" id="navBurger" aria-label="Menu">
+      <div class="navBurgerLines">
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+        <div class="navBurgerLine"></div>
+      </div>
+    </button>
+    <div class="navDrawer" id="navDrawer">
+      <a class="navDrawerItem" href="https://admin.checki.ge" data-i="nav_login">Войти</a>
+      <a class="navDrawerItem" href="/blog/" data-i="nav_blog">Блог</a>
+      <div class="navDrawerSep"></div>
+      <div class="navDrawerLangs">
+        <button class="navDrawerLang" data-lang="ka">🇬🇪 KA</button>
+        <button class="navDrawerLang" data-lang="en">🇬🇧 EN</button>
+        <button class="navDrawerLang" data-lang="ru">🇷🇺 RU</button>
+      </div>
+      <div class="navDrawerSep"></div>
+      <a class="navDrawerItem accent" href="/#register" data-i="nav_cta">Попробовать →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="tag" data-i="tag">Учёт</div>
+  <h1 data-i="h1">Как вести учёт заказов в баре без кассы</h1>
+  <div class="meta">
+    <span data-i="date">20 марта 2026</span>
+    <span data-i="read">5 мин читать</span>
+  </div>
+  <p class="lead" data-i="lead">Кассовая система и учёт заказов — разные вещи. Первая нужна для фискальных чеков, вторая — чтобы бармен не запутался, а менеджер понимал что происходит с выручкой.</p>
+
+  <!-- RU body -->
+  <div class="body lang-block" data-lang="ru">
+    <p>В Грузии сотни небольших баров и кафе работают без кассового аппарата — и это совершенно нормально. Если вы ведёте бар как ИП малого бизнеса, вам не нужен дорогой терминал чтобы знать: сколько чеков открыто, что в них добавили и сколько денег пришло за вечер.</p>
+
+    <h2>Почему маленькому бару не нужна касса</h2>
+    <p>Кассовый аппарат решает одну задачу — фискальный учёт для налоговой. Это не то же самое, что учёт заказов внутри заведения. Это разные задачи, и дорогая ресторанная система для второй задачи просто избыточна.</p>
+    <p>Небольшие заведения переплачивают за функции которыми никогда не пользуются: технологические карты, складской учёт, кухонные дисплеи, схемы зала. Всё это полезно для ресторана на 80 посадок с полноценной кухней. Для бара — лишний груз.</p>
+
+    <h2>Что реально нужно бармену</h2>
+    <p>Во время смены бармен делает три вещи:</p>
+    <ol>
+      <li>Открывает чек на гостя или стол</li>
+      <li>Добавляет позиции по мере заказа</li>
+      <li>Закрывает чек когда гость уходит, фиксируя наличные или карту</li>
+    </ol>
+    <p>Всё. Если система требует от бармена больше трёх кликов чтобы добавить пиво в чек — она слишком сложная. Персонал будет её обходить, и вы потеряете данные.</p>
+
+    <h2>Что нужно менеджеру</h2>
+    <p>Менеджеру или владельцу нужна картина сверху:</p>
+    <ul>
+      <li>Сколько денег пришло сегодня — наличными и картой отдельно</li>
+      <li>Какие позиции продаются лучше всего</li>
+      <li>История чеков за любой период</li>
+      <li>PDF-отчёт одной кнопкой</li>
+    </ul>
+    <p>Эта информация не требует кассы. Она требует нормального журнала чеков с аналитикой.</p>
+
+    <h2>Как это работает на практике</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="stepN">1</div>
+        <div class="stepText"><strong>Настройка каталога.</strong> Менеджер один раз заносит список позиций с ценами и категориями: Пиво, Вино, Коктейли, Еда. Можно добавлять на лету во время работы.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">2</div>
+        <div class="stepText"><strong>Открытие чека.</strong> Бармен входит в систему с телефона, нажимает «Новый чек», вводит имя гостя или номер стола. Три секунды.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">3</div>
+        <div class="stepText"><strong>Добавление позиций.</strong> Начинает вводить название — система находит нужное из каталога и подставляет цену. Популярные позиции — быстрые кнопки, одно касание.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">4</div>
+        <div class="stepText"><strong>Закрытие чека.</strong> Гость просит счёт — бармен закрывает чек, выбирает способ оплаты. Готово.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">5</div>
+        <div class="stepText"><strong>Аналитика для менеджера.</strong> В любой момент — текущие открытые чеки, выручка за смену, архив за любой период, PDF-отчёт.</div>
+      </div>
+    </div>
+
+    <h2>Никакого оборудования</h2>
+    <p>Всё что описано выше работает в браузере на обычном смартфоне. Не нужно покупать терминал или планшет, устанавливать приложение, подключать принтер или платить за лицензии на оборудование.</p>
+    <p>Достаточно телефона с интернетом — который у каждого бармена уже есть.</p>
+
+    <h2>Когда такой подход не подходит</h2>
+    <p>Честно: если у вас полноценный ресторан с кухней, технологическими картами и складским учётом продуктов — нужна полноценная система типа iiko или r_keeper. Они созданы именно для этого.</p>
+    <p>Но если у вас бар, небольшое кафе или место без сложной кухни — простое решение справится лучше. Быстрее, дешевле, и персонал не будет его саботировать.</p>
+
+    <h2>Итог</h2>
+    <p>Учёт заказов в баре — это не про кассу. Это про три вещи: открыть чек, добавить позиции, закрыть с оплатой. Всё остальное — отчёты для менеджера. Это можно сделать с телефона, без оборудования, за 5 минут от момента регистрации до первого чека.</p>
+  </div>
+
+  <!-- EN body -->
+  <div class="body lang-block" data-lang="en" hidden>
+    <p>In Georgia, hundreds of small bars and cafes operate without a cash register — and that's completely normal. If you run a bar as a small business sole trader, you don't need an expensive terminal to know how many tabs are open, what's on them, and how much money came in tonight.</p>
+
+    <h2>Why a small bar doesn't need a cash register</h2>
+    <p>A cash register solves one problem — fiscal reporting for the tax authority. That's not the same as tracking orders inside your venue. These are different tasks, and a full restaurant system is simply overkill for the second one.</p>
+    <p>Small venues overpay for features they'll never use: recipe cards, inventory management, kitchen displays, floor plans. All useful for an 80-seat restaurant with a full kitchen. For a bar — dead weight.</p>
+
+    <h2>What a bartender actually needs</h2>
+    <p>During a shift, a bartender does three things:</p>
+    <ol>
+      <li>Opens a tab for a guest or table</li>
+      <li>Adds items as ordered</li>
+      <li>Closes the tab when the guest leaves, recording cash or card</li>
+    </ol>
+    <p>That's it. If the system requires more than three taps to add a beer to a tab — it's too complicated. Staff will work around it, and you'll lose your data.</p>
+
+    <h2>What the manager needs</h2>
+    <p>The manager or owner needs the big picture:</p>
+    <ul>
+      <li>How much came in today — cash and card separately</li>
+      <li>Which items sell best</li>
+      <li>Check history for any period</li>
+      <li>PDF report with one tap</li>
+    </ul>
+    <p>This doesn't require a cash register. It requires a proper check log with analytics.</p>
+
+    <h2>How it works in practice</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="stepN">1</div>
+        <div class="stepText"><strong>Set up the catalog.</strong> The manager enters the item list once with prices and categories: Beer, Wine, Cocktails, Food. Items can be added on the fly during service.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">2</div>
+        <div class="stepText"><strong>Open a tab.</strong> The bartender logs in from their phone, taps "New check", enters the guest name or table number. Three seconds.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">3</div>
+        <div class="stepText"><strong>Add items.</strong> Start typing a name — the system finds it from the catalog and fills in the price. Popular items are quick-tap buttons, one touch.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">4</div>
+        <div class="stepText"><strong>Close the tab.</strong> Guest asks for the bill — bartender closes the check, selects payment method. Done.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">5</div>
+        <div class="stepText"><strong>Analytics for the manager.</strong> At any time — current open tabs, shift revenue, archive for any period, PDF report.</div>
+      </div>
+    </div>
+
+    <h2>No hardware required</h2>
+    <p>Everything described above runs in a browser on a regular smartphone. No need to buy a terminal or tablet, install an app, connect a printer, or pay for hardware licenses.</p>
+    <p>A phone with internet is enough — which every bartender already has.</p>
+
+    <h2>When this approach doesn't work</h2>
+    <p>To be honest: if you run a full restaurant with a kitchen, recipe cards, and inventory tracking — you need a full system like iiko or r_keeper. That's exactly what they're built for.</p>
+    <p>But if you have a bar, small cafe, or a place without a complex kitchen — a simple solution will serve you better. Faster, cheaper, and staff won't try to work around it.</p>
+
+    <h2>Summary</h2>
+    <p>Tracking orders in a bar isn't about a cash register. It's about three things: open a tab, add items, close with payment. Everything else is reporting for the manager. This can be done from a phone, without hardware, in 5 minutes from registration to the first check.</p>
+  </div>
+
+  <!-- KA body -->
+  <div class="body lang-block" data-lang="ka" hidden>
+    <p>საქართველოში ასობით პატარა ბარი და კაფე სალარო აპარატის გარეშე მუშაობს — და ეს სრულიად ნორმალურია. თუ ბარს მცირე ბიზნესის ინდივიდუალური მეწარმის სახით მართავ, ძვირი ტერმინალი არ გჭირდება იმის სასანახავად: რამდენი ქვითარია ღია, რა ჩავამატეთ და რამდენი ფული შემოვიდა საღამოს.</p>
+
+    <h2>რატომ არ სჭირდება პატარა ბარს სალარო</h2>
+    <p>სალარო აპარატი ერთ ამოცანას წყვეტს — საგადასახადო ანგარიშგება. ეს არ ნიშნავს შეკვეთების შიდა აღრიცხვას. ეს სხვადასხვა ამოცანებია, და ძვირი სარესტორნო სისტემა მეორე ამოცანისთვის უბრალოდ ზედმეტია.</p>
+    <p>პატარა დაწესებულებები ფუნქციებისთვის ზედმეტს იხდიან, რომლებსაც არასდროს გამოიყენებენ: ტექნოლოგიური ბარათები, საწყობის აღრიცხვა, სამზარეულოს დისპლეები, დარბაზის სქემები. ყველაფერი ეს 80-ადგილიანი რესტორნისთვის სრული სამზარეულოთი გამოდგება. ბარისთვის — ზედმეტი ტვირთია.</p>
+
+    <h2>რა სჭირდება ბარმენს</h2>
+    <p>ცვლის განმავლობაში ბარმენი სამ რამეს აკეთებს:</p>
+    <ol>
+      <li>ხსნის ქვითარს სტუმარზე ან მაგიდაზე</li>
+      <li>ამატებს პოზიციებს შეკვეთისამებრ</li>
+      <li>ხურავს ქვითარს სტუმრის წასვლისას, ასახელებს ნაღდ ან ბარათის გადახდას</li>
+    </ol>
+    <p>სულ ეს. თუ სისტემა ბარმენს ლუდის ქვითარში დასამატებლად სამ დაჭერაზე მეტს მოითხოვს — ის ძალიან რთულია. პერსონალი გვერდს აუვლის, მონაცემებს კი დაკარგავ.</p>
+
+    <h2>რა სჭირდება მენეჯერს</h2>
+    <p>მენეჯერს ან მფლობელს ზოგადი სურათი სჭირდება:</p>
+    <ul>
+      <li>რამდენი შემოვიდა დღეს — ნაღდი და ბარათი ცალ-ცალკე</li>
+      <li>რომელი პოზიცია ყველაზე კარგად იყიდება</li>
+      <li>ქვითრების ისტორია ნებისმიერი პერიოდისთვის</li>
+      <li>PDF ანგარიში ერთი დაჭერით</li>
+    </ul>
+    <p>ეს ინფორმაცია სალაროს არ მოითხოვს. მოითხოვს ნორმალურ ქვითრების ჟურნალს ანალიტიკით.</p>
+
+    <h2>როგორ მუშაობს ეს პრაქტიკაში</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="stepN">1</div>
+        <div class="stepText"><strong>კატალოგის დაყენება.</strong> მენეჯერი ერთხელ შეაქვს პოზიციების სია ფასებითა და კატეგორიებით: ლუდი, ღვინო, კოქტეილი, საკვები. სამუშაოს განმავლობაში მიმდინარედ შეიძლება დამატება.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">2</div>
+        <div class="stepText"><strong>ქვითრის გახსნა.</strong> ბარმენი ტელეფონიდან შედის სისტემაში, ხება "ახალი ქვითარი", შეაქვს სტუმრის სახელი ან მაგიდის ნომერი. სამი წამი.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">3</div>
+        <div class="stepText"><strong>პოზიციების დამატება.</strong> იწყებს სახელის შეყვანას — სისტემა კატალოგიდან პოულობს და ფასს ჩასვამს. პოპულარული პოზიციები — სწრაფი ღილაკები, ერთი შეხება.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">4</div>
+        <div class="stepText"><strong>ქვითრის დახურვა.</strong> სტუმარი ანგარიშს ითხოვს — ბარმენი ხურავს ქვითარს, ირჩევს გადახდის მეთოდს. მზადაა.</div>
+      </div>
+      <div class="step">
+        <div class="stepN">5</div>
+        <div class="stepText"><strong>ანალიტიკა მენეჯერისთვის.</strong> ნებისმიერ დროს — მიმდინარე ღია ქვითრები, ცვლის შემოსავალი, ნებისმიერი პერიოდის არქივი, PDF ანგარიში.</div>
+      </div>
+    </div>
+
+    <h2>აღჭურვილობა არ სჭირდება</h2>
+    <p>ზემოთ აღწერილი ყველაფერი ჩვეულებრივ სმარტფონზე ბრაუზერში მუშაობს. ტერმინალი ან პლანშეტი არ გჭირდება, აპლიკაციის ინსტალაცია, პრინტერის მიერთება ან aღჭurvilобis ლიცენზიები.</p>
+    <p>ინტერნეტიანი ტელეფონი საკმარისია — რაც ყველა ბარმენს უკვე აქვს.</p>
+
+    <h2>როდის არ გამოდგება ეს მიდგომა</h2>
+    <p>გულწრფელად: თუ სრულფასოვანი რესტორანი გაქვს სამზარეულოთი, ტექკარტებით და საწყობის აღრიცხვით — სრული სისტემა გჭირდება, iiko ან r_keeper ტიპის. ისინი სწორედ ამისთვის არიან შექმნილი.</p>
+    <p>მაგრამ თუ ბარი, პატარა კაფე ან რთული სამზარეულოს გარეშე ადგილი გაქვს — მარტივი გადაწყვეტა უკეთ გაართმევს თავს. სწრაფი, იაფი, და პერსონალი მას არ გაუვლის გვერდს.</p>
+
+    <h2>შეჯამება</h2>
+    <p>ბარში შეკვეთების აღრიცხვა სალაროს შესახებ არ არის. ეს სამ რამეზეა: გახსენი ქვითარი, დაამატე პოზიციები, დახუჭე გადახდით. დანარჩენი — ანგარიშები მენეჯერისთვის. ეს ტელეფონიდან შეიძლება, აღჭურვილობის გარეშე, 5 წუთში რეგისტრაციიდან პირველ ქვითრამდე.</p>
+  </div>
+
+  <div class="cta">
+    <h3 data-i="cta_h3">Попробуйте Checki бесплатно</h3>
+    <p data-i="cta_p">Регистрация за 2 минуты. Никакого оборудования, никаких договоров.</p>
+    <a class="ctaBtn" href="/#register" data-i="cta_btn">Начать бесплатно</a>
+  </div>
+</div>
+
+<footer>© 2026 Checki · <a href="/blog/" data-i="blog_link">Блог</a> · <a href="/">checki.ge</a></footer>
+
+<script>
+const LANG_KEY = "checki_lang";
+const T = {
+  ru: {
+    nav_blog: "Блог", nav_login: "Войти", nav_cta: "Попробовать",
+    back: "← Блог", tag: "Учёт",
+    h1: "Как вести учёт заказов в баре без кассы",
+    date: "20 марта 2026", read: "5 мин читать",
+    lead: "Кассовая система и учёт заказов — разные вещи. Первая нужна для фискальных чеков, вторая — чтобы бармен не запутался, а менеджер понимал что происходит с выручкой.",
+    cta_h3: "Попробуйте Checki бесплатно",
+    cta_p: "Регистрация за 2 минуты. Никакого оборудования, никаких договоров.",
+    cta_btn: "Начать бесплатно",
+    blog_link: "Блог",
+  },
+  en: {
+    nav_blog: "Blog", nav_login: "Login", nav_cta: "Try free",
+    back: "← Blog", tag: "Operations",
+    h1: "How to Track Orders at a Bar Without a Cash Register",
+    date: "Mar 20, 2026", read: "5 min read",
+    lead: "A cash register and order tracking are two different things. The first is for fiscal receipts, the second is so the bartender doesn't get confused and the manager understands what's happening with revenue.",
+    cta_h3: "Try Checki free",
+    cta_p: "Register in 2 minutes. No hardware, no contracts.",
+    cta_btn: "Start free",
+    blog_link: "Blog",
+  },
+  ka: {
+    nav_blog: "ბლოგი", nav_login: "შესვლა", nav_cta: "სცადე",
+    back: "← ბლოგი", tag: "აღრიცხვა",
+    h1: "როგორ ვაწარმოოთ შეკვეთების აღრიცხვა ბარში სალაროს გარეშე",
+    date: "20 მარ 2026", read: "5 წთ კითხვა",
+    lead: "სალარო სისტემა და შეკვეთების აღრიცხვა სხვადასხვა რამ არის. პირველი ფისკალური ქვითრებისთვის სჭირდება, მეორე — რომ ბარმენი არ დაიბნეს და მენეჯერმა შემოსავლის სურათი ნახოს.",
+    cta_h3: "სცადეთ Checki უფასოდ",
+    cta_p: "რეგისტრაცია 2 წუთში. აღჭურვილობის გარეშე, კონტრაქტის გარეშე.",
+    cta_btn: "უფასოდ დაწყება",
+    blog_link: "ბლოგი",
+  },
+};
+
+const LANG_LABELS = { en: "🇬🇧 EN", ru: "🇷🇺 RU", ka: "🇬🇪 KA" };
+
+function apply(lang) {
+  localStorage.setItem(LANG_KEY, lang);
+  const t = T[lang] || T.ru;
+  document.querySelectorAll("[data-i]").forEach(el => {
+    if (t[el.dataset.i] !== undefined) el.textContent = t[el.dataset.i];
+  });
+  document.documentElement.lang = lang;
+  const dropBtn = document.getElementById("langDropBtn");
+  if (dropBtn) dropBtn.textContent = (LANG_LABELS[lang] || lang.toUpperCase()) + " ▾";
+  document.querySelectorAll(".langOpt").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".navDrawerLang").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  document.querySelectorAll(".lang-block").forEach(el => { el.hidden = el.dataset.lang !== lang; });
+}
+
+const langDropBtn = document.getElementById("langDropBtn");
+const langDropMenu = document.getElementById("langDropMenu");
+const navBurger = document.getElementById("navBurger");
+const navDrawer = document.getElementById("navDrawer");
+
+if (langDropBtn) langDropBtn.addEventListener("click", e => { e.stopPropagation(); langDropMenu.classList.toggle("open"); });
+document.querySelectorAll(".langOpt").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); langDropMenu.classList.remove("open"); }));
+document.querySelectorAll(".navDrawerLang").forEach(b => b.addEventListener("click", () => { apply(b.dataset.lang); navDrawer.classList.remove("open"); }));
+if (navBurger) navBurger.addEventListener("click", e => { e.stopPropagation(); navDrawer.classList.toggle("open"); });
+document.addEventListener("click", () => { langDropMenu?.classList.remove("open"); navDrawer?.classList.remove("open"); });
+
+apply(localStorage.getItem(LANG_KEY) || "ru");
+</script>
+</body>
+</html>
