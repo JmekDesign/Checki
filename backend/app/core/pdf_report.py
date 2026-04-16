@@ -48,7 +48,7 @@ def generate_report(
     total_revenue: float,
     avg_check: float,
     payments: list[dict[str, Any]],
-    top_products: list[dict[str, Any]],
+    items_by_check: dict[str, list[dict[str, Any]]],
     checks: list[dict[str, Any]],
 ) -> bytes:
     pdf = FPDF()
@@ -136,28 +136,6 @@ def generate_report(
             black()
         pdf.ln(5)
 
-    # ── Top products ─────────────────────────────────────────────────
-    if top_products:
-        bold(9)
-        grey()
-        pdf.cell(W, 5, "TOP PRODUCTS", new_x="LMARGIN", new_y="NEXT")
-        black()
-        for i, p in enumerate(top_products[:7], 1):
-            name = str(p.get("name") or "—")
-            qty = int(p.get("qty") or 0)
-            rev = float(p.get("revenue") or 0)
-            grey()
-            reg(9)
-            pdf.cell(W * 0.06, 6, f"{i}.")
-            black()
-            reg(9)
-            pdf.cell(W * 0.62, 6, name)
-            grey()
-            pdf.cell(W * 0.12, 6, f"{_TIMES}{qty}", align="R")
-            black()
-            pdf.cell(W * 0.20, 6, f"{_m(rev)} {_LARI}", align="R", new_x="LMARGIN", new_y="NEXT")
-        pdf.ln(5)
-
     rule()
 
     # ── Checks grouped by day ─────────────────────────────────────────
@@ -189,5 +167,18 @@ def generate_report(
         pdf.cell(W * 0.15, 6, pay)
         black()
         pdf.cell(W * 0.20, 6, f"{_m(total)} {_LARI}", align="R", new_x="LMARGIN", new_y="NEXT")
+
+        check_id = str(c.get("id") or "")
+        for item in items_by_check.get(check_id, []):
+            iname = str(item.get("name") or "—")
+            iqty = item.get("qty") or 0
+            iltotal = float(item.get("line_total") or 0)
+            grey()
+            reg(8)
+            pdf.cell(W * 0.09, 5, "")
+            pdf.cell(W * 0.55, 5, iname)
+            pdf.cell(W * 0.16, 5, f"{_TIMES}{iqty:g}", align="R")
+            pdf.cell(W * 0.20, 5, f"{_m(iltotal)} {_LARI}", align="R", new_x="LMARGIN", new_y="NEXT")
+        black()
 
     return bytes(pdf.output())

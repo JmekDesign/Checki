@@ -58,31 +58,39 @@ def archive_report(
         ]
 
         cur.execute(  # noqa: S608
-            f"SELECT ci.name_snapshot, sum(ci.qty), sum(ci.line_total)"
-            f" FROM check_items ci JOIN checks c ON ci.check_id = c.id"
-            f" WHERE {wsql} GROUP BY ci.name_snapshot ORDER BY sum(ci.qty) DESC LIMIT 7;",
-            tuple(params),
-        )
-        top_products: list[dict[str, Any]] = [
-            {"name": r[0], "qty": float(r[1]), "revenue": float(r[2])} for r in cur.fetchall()
-        ]
-
-        cur.execute(  # noqa: S608
-            f"SELECT c.shift_number, c.guest_name_snapshot, c.closed_at,"
+            f"SELECT c.id, c.shift_number, c.guest_name_snapshot, c.closed_at,"
             f" c.total, c.payment_method"
             f" FROM checks c WHERE {wsql} ORDER BY c.closed_at ASC LIMIT 500;",
             tuple(params),
         )
         checks: list[dict[str, Any]] = [
             {
-                "number": str(r[0]) if r[0] is not None else "",
-                "guest": r[1] or "—",
-                "closed_at": r[2].isoformat() if r[2] else "",
-                "total": float(r[3] or 0),
-                "payment_method": r[4] or "",
+                "id": str(r[0]),
+                "number": str(r[1]) if r[1] is not None else "",
+                "guest": r[2] or "—",
+                "closed_at": r[3].isoformat() if r[3] else "",
+                "total": float(r[4] or 0),
+                "payment_method": r[5] or "",
             }
             for r in cur.fetchall()
         ]
+
+        check_ids = [c["id"] for c in checks]
+        items_by_check: dict[str, list[dict[str, Any]]] = {}
+        if check_ids:
+            placeholders = ",".join(["%s"] * len(check_ids))
+            cur.execute(  # noqa: S608
+                f"SELECT ci.check_id, ci.name_snapshot, ci.qty, ci.line_total"
+                f" FROM check_items ci"
+                f" WHERE ci.check_id IN ({placeholders})"
+                f" ORDER BY ci.check_id, ci.id;",
+                tuple(check_ids),
+            )
+            for row in cur.fetchall():
+                cid = str(row[0])
+                items_by_check.setdefault(cid, []).append(
+                    {"name": row[1] or "—", "qty": float(row[2] or 0), "line_total": float(row[3] or 0)}
+                )
     finally:
         with contextlib.suppress(Exception):
             db_release(conn)
@@ -95,7 +103,7 @@ def archive_report(
         total_revenue=total_revenue,
         avg_check=avg_check,
         payments=payments,
-        top_products=top_products,
+        items_by_check=items_by_check,
         checks=checks,
     )
     return Response(
