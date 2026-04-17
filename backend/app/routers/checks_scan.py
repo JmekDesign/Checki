@@ -4,6 +4,7 @@ import base64
 import contextlib
 import json
 import logging
+import re
 import urllib.error
 import urllib.request
 from typing import Any
@@ -20,8 +21,27 @@ logger = logging.getLogger(__name__)
 _MAX_BYTES = 20 * 1024 * 1024  # 20 MB
 
 _PROMPT = """Parse this handwritten bar/restaurant paper check photo.
-Return ONLY a JSON object (no markdown, no explanation):
+Return ONLY a JSON object (no markdown, no explanation).
 
+CRITICAL HANDWRITING RULES — read carefully before parsing:
+
+1. SIZE SUFFIXES are always LETTERS, never digits:
+   - S = Small, M = Medium, L = Large, XL = Extra Large
+   - Handwritten S often looks like 5, B like 8, G like 9
+   - "Hoegaarden S" is correct — "Hoegaarden 5" means you misread S as 5
+   - If a product name ends in a lone digit (5, 8, 9), it is almost certainly a misread letter → set confidence="low"
+
+2. QUANTITY NOTATION "X+Y" on one row means TWO SEPARATE ITEMS of different sizes:
+   - "2+1" = qty 2 of the standard + qty 1 of a variant (e.g. small)
+   - Split into two separate items in the output
+
+3. Use confidence="low" whenever:
+   - Any character in the name or qty is ambiguous
+   - A digit could be a letter or vice versa
+   - The quantity notation is non-standard (e.g. 2+1, crossed out, corrected)
+   - You are making an interpretation rather than reading clearly
+
+Return format:
 {
   "guest": "table or guest name at top of check, or null",
   "items": [
@@ -29,12 +49,11 @@ Return ONLY a JSON object (no markdown, no explanation):
   ]
 }
 
-Rules:
-- guest: name or table number written at the top, null if absent
+- guest: name/table at top, null if absent
 - items: only filled rows, skip blank lines
-- qty: integer quantity, default 1 if unclear
-- unit_price: unit price if clearly visible, null if missing or illegible
-- confidence: "high" if name and qty are clearly readable, "low" if handwriting is hard to read"""
+- qty: integer
+- unit_price: numeric if clearly visible, null otherwise
+- confidence: "high" only if you are certain; default to "low" when in doubt"""
 
 
 def _call_vision(image_bytes: bytes, mime: str, api_key: str) -> dict[str, Any]:
@@ -73,6 +92,14 @@ def _call_vision(image_bytes: bytes, mime: str, api_key: str) -> dict[str, Any]:
     if text.startswith("```"):
         text = "\n".join(text.split("\n")[1:]).rstrip("`").strip()
     return dict(json.loads(text))
+
+
+_SUSPICIOUS_SUFFIX = re.compile(r"\s[5-9]\s*$")  # lone digit at end → likely misread S/B/G
+
+
+def _is_suspicious(name: str) -> bool:
+    """Return True if the name looks like it contains a misread character."""
+    return bool(_SUSPICIOUS_SUFFIX.search(name))
 
 
 def _find_product(name: str, venue_id: str, cur: Any) -> tuple[str | None, float | None]:  # noqa: ANN401
@@ -143,6 +170,10 @@ async def scan_check(
             scan_conf = str(item.get("confidence") or "high")
 
             product_id, catalog_price = _find_product(name, venue_id, cur)
+
+            # Post-processing: override confidence to low for suspicious names
+            if _is_suspicious(name) or product_id is None:
+                scan_conf = "low"
 
             # Resolve price: catalog → scanned → 0 (0 = needs attention)
             if catalog_price is not None:
