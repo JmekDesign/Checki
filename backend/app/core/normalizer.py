@@ -163,12 +163,7 @@ MOST IMPORTANT — NAME PRESERVATION:
 - Do NOT rename "Beer Small" → it is a valid distinct product, keep it as "Beer Small"
 - Do NOT rename "Glintveyn" → keep as "Glintveyn", just set category to Wine
 - Do NOT rename "Draft Beer" → keep as "Draft Beer"
-- Size/variant suffixes (Small, Large, 0.5, Double) must be preserved exactly
-- Single-letter size suffixes S, M, L and two-letter XL are size indicators — ALWAYS preserve them:
-  "Hoegaarden S" → "Hoegaarden S" (NOT "Hoegaarden")
-  "Beer L" → "Beer L"
-  "Heineken XL" → "Heineken XL"
-  Never strip a trailing S, M, L, or XL from a drink name — it means Small/Medium/Large/Extra Large
+- Size/variant suffixes (S, M, L, XL, Small, Large, 0.5, Double) must be preserved exactly
 
 MULTI-WORD NAMES — NEVER drop the second word, always correct its spelling:
 - "Negroni Sauer" → "Negroni Sour"  (fix typo, keep both words — it's a real cocktail variant)
