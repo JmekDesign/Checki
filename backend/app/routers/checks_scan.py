@@ -50,9 +50,13 @@ def _build_prompt(catalog: list[dict[str, Any]]) -> str:  # noqa: ANN401
     )
     return (
         _PROMPT_BASE
-        + "\n\nVenue product catalog — if a scanned item matches an entry here "
-        "(by name similarity and/or price), use the catalog name exactly:\n"
+        + "\n\nVenue product catalog — use this ONLY to normalize names:\n"
         + lines
+        + "\n\nRules for catalog matching:\n"
+        "- If a scanned name clearly matches a catalog entry (name + price agree), "
+        "use the catalog name exactly.\n"
+        "- If no clear match, keep the name exactly as written on the check.\n"
+        "- NEVER drop or merge items — return every row you see, even if not in the catalog."
     )
 
 
