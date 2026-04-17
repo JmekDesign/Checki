@@ -20,42 +20,25 @@ logger = logging.getLogger(__name__)
 
 _MAX_BYTES = 20 * 1024 * 1024  # 20 MB
 
-_PROMPT = """Parse this handwritten bar/restaurant paper check photo.
+_PROMPT = """Read this handwritten bar/restaurant check photo and extract the items.
 Return ONLY a JSON object (no markdown, no explanation).
 
-CRITICAL HANDWRITING RULES — read carefully before parsing:
+You are a smart reader — understand the check naturally, like a bartender would.
+Size letters (S, M, L, XL) are common in drink names. Handwritten letters can
+resemble digits (S≈5, B≈8). Use context to decide.
+Set confidence="low" whenever anything is ambiguous or you are making an interpretation.
 
-1. SIZE SUFFIXES are always LETTERS, never digits:
-   - S = Small, M = Medium, L = Large, XL = Extra Large
-   - Handwritten S often looks like 5, B like 8, G like 9
-   - "Hoegaarden S" is correct — "Hoegaarden 5" means you misread S as 5
-   - If a product name ends in a lone digit (5, 8, 9), it is almost certainly a misread letter → set confidence="low"
-
-2. QUANTITY NOTATION "X+Y" on one row means TWO SEPARATE ITEMS:
-   - "Hoegaarden 2+1" → item 1: name="Hoegaarden", qty=2 + item 2: name="Hoegaarden S", qty=1
-   - The second qty (after +) is typically a smaller size variant — append "S" to the name
-   - Both items get confidence="low" since the split is an interpretation
-   - Do NOT produce duplicate rows with the same name — if you see "2+1", produce exactly 2 items
-
-3. Use confidence="low" whenever:
-   - Any character in the name or qty is ambiguous
-   - A digit could be a letter or vice versa
-   - The quantity notation is non-standard (e.g. 2+1, crossed out, corrected)
-   - You are making an interpretation rather than reading clearly
-
-Return format:
 {
-  "guest": "table or guest name at top of check, or null",
+  "guest": "table or guest identifier at the top, or null",
   "items": [
     {"name": "product name", "qty": 1, "unit_price": 8.0, "confidence": "high"}
   ]
 }
 
-- guest: name/table at top, null if absent
-- items: only filled rows, skip blank lines
+- guest: null if not present
 - qty: integer
 - unit_price: numeric if clearly visible, null otherwise
-- confidence: "high" only if you are certain; default to "low" when in doubt"""
+- confidence: "high" only if certain, "low" when in any doubt"""
 
 
 def _call_vision(image_bytes: bytes, mime: str, api_key: str) -> dict[str, Any]:
