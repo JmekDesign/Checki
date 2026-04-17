@@ -50,6 +50,8 @@ All beers: lager, ale, stout, draft, bottled. Includes all local Georgian beers.
   "beer small" / "small beer"         → {"name":"Beer Small","category":"Beer"}
   "heineken" / "heiniken"             → {"name":"Heineken","category":"Beer"}
   "hoegaarden" / "hoeg"               → {"name":"Hoegaarden","category":"Beer"}
+  "hoegaarden s" / "hoeg s"           → {"name":"Hoegaarden S","category":"Beer"}
+  "hoegaarden l" / "hoeg l"           → {"name":"Hoegaarden L","category":"Beer"}
   "guinness" / "gines"                → {"name":"Guinness","category":"Beer"}
   "kazbegi" / "казбеги"               → {"name":"Kazbegi","category":"Beer"}
   "natakhtari" / "натахтари"          → {"name":"Natakhtari","category":"Beer"}
@@ -162,6 +164,11 @@ MOST IMPORTANT — NAME PRESERVATION:
 - Do NOT rename "Glintveyn" → keep as "Glintveyn", just set category to Wine
 - Do NOT rename "Draft Beer" → keep as "Draft Beer"
 - Size/variant suffixes (Small, Large, 0.5, Double) must be preserved exactly
+- Single-letter size suffixes S, M, L and two-letter XL are size indicators — ALWAYS preserve them:
+  "Hoegaarden S" → "Hoegaarden S" (NOT "Hoegaarden")
+  "Beer L" → "Beer L"
+  "Heineken XL" → "Heineken XL"
+  Never strip a trailing S, M, L, or XL from a drink name — it means Small/Medium/Large/Extra Large
 
 MULTI-WORD NAMES — NEVER drop the second word, always correct its spelling:
 - "Negroni Sauer" → "Negroni Sour"  (fix typo, keep both words — it's a real cocktail variant)
