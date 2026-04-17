@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 _MAX_BYTES = 20 * 1024 * 1024  # 20 MB
 
-_PROMPT = """Read this handwritten bar/restaurant check photo and extract the items.
+_PROMPT_BASE = """Read this handwritten bar/restaurant check photo and extract the items.
 Return ONLY a JSON object (no markdown, no explanation).
 
 You are a smart reader — understand the check naturally, like a bartender would.
@@ -41,7 +41,39 @@ Set confidence="low" whenever anything is ambiguous or you are making an interpr
 - confidence: "high" only if certain, "low" when in any doubt"""
 
 
-def _call_vision(image_bytes: bytes, mime: str, api_key: str) -> dict[str, Any]:
+def _build_prompt(catalog: list[dict[str, Any]]) -> str:  # noqa: ANN401
+    if not catalog:
+        return _PROMPT_BASE
+    lines = "\n".join(
+        "- " + p["name"] + (f" ({p['price']:.2f} \u20be)" if p["price"] is not None else "")
+        for p in catalog
+    )
+    return (
+        _PROMPT_BASE
+        + "\n\nVenue product catalog — if a scanned item matches an entry here "
+        "(by name similarity and/or price), use the catalog name exactly:\n"
+        + lines
+    )
+
+
+def _load_catalog(venue_id: str, cur: Any) -> list[dict[str, Any]]:  # noqa: ANN401
+    cur.execute(
+        """
+        SELECT name, last_price
+        FROM products
+        WHERE venue_id = %s AND active = TRUE
+        ORDER BY name
+        LIMIT 150
+        """,
+        (venue_id,),
+    )
+    return [
+        {"name": row[0], "price": float(row[1]) if row[1] is not None else None}
+        for row in cur.fetchall()
+    ]
+
+
+def _call_vision(image_bytes: bytes, mime: str, api_key: str, prompt: str) -> dict[str, Any]:
     b64 = base64.b64encode(image_bytes).decode()
     payload = json.dumps({
         "model": "gpt-4o",
@@ -49,7 +81,7 @@ def _call_vision(image_bytes: bytes, mime: str, api_key: str) -> dict[str, Any]:
         "messages": [{
             "role": "user",
             "content": [
-                {"type": "text", "text": _PROMPT},
+                {"type": "text", "text": prompt},
                 {"type": "image_url", "image_url": {
                     "url": f"data:{mime};base64,{b64}",
                     "detail": "high",
@@ -83,18 +115,11 @@ _SUSPICIOUS_SUFFIX = re.compile(r"\s[5-9]\s*$")  # lone digit at end → likely 
 
 
 def _is_suspicious(name: str) -> bool:
-    """Return True if the name looks like it contains a misread character."""
     return bool(_SUSPICIOUS_SUFFIX.search(name))
 
 
 def _find_product(name: str, venue_id: str, cur: Any) -> tuple[str | None, float | None]:  # noqa: ANN401
-    """Find product by exact name match only.
-
-    Intentionally strict: fuzzy matching causes different variants (e.g. "Hoegaarden" vs
-    "Hoegaarden S") to share the same product_id, which makes check_items merge them into
-    one row. Exact match ensures separate items stay separate; unmatched names are added as
-    manual items, which also upserts them into the catalog automatically.
-    """
+    """Find product by exact name match only."""
     cur.execute(
         """
         SELECT id, last_price
@@ -130,8 +155,19 @@ async def scan_check(
 
     mime = image.content_type or "image/jpeg"
 
+    # Load catalog before calling vision — inject into prompt so AI can match names
+    conn = db_conn()
     try:
-        parsed = _call_vision(content, mime, settings.openai_api_key)
+        cur = conn.cursor()
+        catalog = _load_catalog(venue_id, cur)
+    finally:
+        with contextlib.suppress(Exception):
+            db_release(conn)
+
+    prompt = _build_prompt(catalog)
+
+    try:
+        parsed = _call_vision(content, mime, settings.openai_api_key, prompt)
     except HTTPException:
         raise
     except Exception as exc:
@@ -141,9 +177,9 @@ async def scan_check(
     raw_items: list[Any] = parsed.get("items") or []
     guest: str | None = (parsed.get("guest") or None)
 
-    conn = db_conn()
+    conn2 = db_conn()
     try:
-        cur = conn.cursor()
+        cur2 = conn2.cursor()
         result_items: list[dict[str, Any]] = []
 
         for item in raw_items:
@@ -154,13 +190,11 @@ async def scan_check(
             unit_price = item.get("unit_price")
             scan_conf = str(item.get("confidence") or "high")
 
-            product_id, catalog_price = _find_product(name, venue_id, cur)
+            product_id, catalog_price = _find_product(name, venue_id, cur2)
 
-            # Post-processing: override confidence to low for suspicious names
             if _is_suspicious(name) or product_id is None:
                 scan_conf = "low"
 
-            # Resolve price: catalog → scanned → 0 (0 = needs attention)
             if catalog_price is not None:
                 price: float = catalog_price
                 confidence = scan_conf
@@ -180,6 +214,6 @@ async def scan_check(
             })
     finally:
         with contextlib.suppress(Exception):
-            db_release(conn)
+            db_release(conn2)
 
     return {"guest": guest, "items": result_items}
