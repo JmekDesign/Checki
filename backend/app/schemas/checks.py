@@ -34,3 +34,9 @@ class AddLineIn(BaseModel):
 
 class CheckCloseIn(BaseModel):
     payment_method: str | None = None
+
+
+class ItemPatchIn(BaseModel):
+    name: str | None = None
+    price: float | None = None
+    qty: int | None = None

@@ -289,7 +289,14 @@
       const el = document.createElement("div");
       el.className = "item";
       el.setAttribute("data-item-id", String(itemId));
-      if (isLowConf) el.style.cssText = "background:rgba(255,170,0,0.08);border-left:2px solid #f0a500";
+      if (isLowConf) {
+        el.style.cssText = "background:rgba(255,170,0,0.08);border-left:2px solid #f0a500;cursor:pointer";
+        el.title = "Tap to fix this item";
+        el.addEventListener("click", (e) => {
+          if (e.target.closest(".qtyCtl")) return; // don't intercept +/- buttons
+          openScanEdit(itemId, name, price, q);
+        });
+      }
       el.innerHTML = `
         <div class="lineLeft">
           <div class="lineTitle"><b>${escapeHtml(name)}</b>${isLowConf ? ' <span style="color:#f0a500;font-size:11px">⚠ check</span>' : ""}</div>
@@ -342,6 +349,63 @@
     const spacer = document.createElement("div");
     spacer.style.height = "70px";
     list.appendChild(spacer);
+  }
+
+  /* ── Scan item edit modal ── */
+  (function(){
+    const back = $("scanEditBack");
+    const nameEl = $("scanEditName");
+    const priceEl = $("scanEditPrice");
+    const qtyEl = $("scanEditQty");
+    const cancelBtn = $("scanEditCancel");
+    const saveBtn = $("scanEditSave");
+    if (!back) return;
+
+    let _editItemId = null;
+
+    cancelBtn.onclick = () => { back.classList.add("hide"); };
+    back.addEventListener("click", (e) => { if (e.target === back) back.classList.add("hide"); });
+
+    saveBtn.onclick = async () => {
+      const name = nameEl.value.trim();
+      const price = parseFloat(priceEl.value);
+      const qty = parseInt(qtyEl.value, 10);
+      if (!name) { toast("Name is required"); return; }
+      if (isNaN(price) || price < 0) { toast("Enter a valid price"); return; }
+      if (!qty || qty < 1) { toast("Qty must be at least 1"); return; }
+      saveBtn.disabled = true;
+      try {
+        await api(`/api/checks/${currentCheckId}/items/${_editItemId}`, {
+          method: "PATCH",
+          body: JSON.stringify({ name, price, qty }),
+        });
+        // Remove from low-confidence tracking — item is now reviewed
+        if (window.CHK?.scan?.lowConfidenceIds) {
+          window.CHK.scan.lowConfidenceIds.delete(String(_editItemId));
+        }
+        back.classList.add("hide");
+        await loadCheck();
+        toast("Item updated");
+      } catch(e) {
+        toast("Save: " + e.message);
+      } finally {
+        saveBtn.disabled = false;
+      }
+    };
+
+    window._openScanEdit = function(itemId, name, price, qty) {
+      _editItemId = String(itemId);
+      nameEl.value = name;
+      priceEl.value = price;
+      qtyEl.value = qty;
+      back.classList.remove("hide");
+      nameEl.focus();
+      nameEl.select();
+    };
+  })();
+
+  function openScanEdit(itemId, name, price, qty) {
+    if (window._openScanEdit) window._openScanEdit(itemId, name, price, qty);
   }
 
   function resetAddForm(){
