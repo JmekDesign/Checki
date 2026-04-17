@@ -31,9 +31,11 @@ CRITICAL HANDWRITING RULES — read carefully before parsing:
    - "Hoegaarden S" is correct — "Hoegaarden 5" means you misread S as 5
    - If a product name ends in a lone digit (5, 8, 9), it is almost certainly a misread letter → set confidence="low"
 
-2. QUANTITY NOTATION "X+Y" on one row means TWO SEPARATE ITEMS of different sizes:
-   - "2+1" = qty 2 of the standard + qty 1 of a variant (e.g. small)
-   - Split into two separate items in the output
+2. QUANTITY NOTATION "X+Y" on one row means TWO SEPARATE ITEMS:
+   - "Hoegaarden 2+1" → item 1: name="Hoegaarden", qty=2 + item 2: name="Hoegaarden S", qty=1
+   - The second qty (after +) is typically a smaller size variant — append "S" to the name
+   - Both items get confidence="low" since the split is an interpretation
+   - Do NOT produce duplicate rows with the same name — if you see "2+1", produce exactly 2 items
 
 3. Use confidence="low" whenever:
    - Any character in the name or qty is ambiguous
