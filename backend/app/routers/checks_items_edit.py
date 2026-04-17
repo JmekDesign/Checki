@@ -8,6 +8,7 @@ from uuid import UUID
 from fastapi import APIRouter, Header, HTTPException
 
 from ..core.security import require_user
+from ..core.utils import normalize_key
 from ..db.conn import db_conn, db_release
 from ..schemas.checks import ItemPatchIn
 
@@ -95,6 +96,26 @@ def check_item_patch(
             "UPDATE checks SET total = total + %s WHERE id = %s;",
             (delta_total, str(check_id)),
         )
+
+        # Upsert corrected name+price into product catalog
+        key = normalize_key(new_name)
+        cur.execute(
+            "SELECT id FROM products WHERE venue_id = %s AND search_key = %s;",
+            (venue_id, key),
+        )
+        ex = cur.fetchone()
+        if ex:
+            cur.execute(
+                "UPDATE products SET name = %s, last_price = %s WHERE id = %s;",
+                (new_name, new_price, ex[0]),
+            )
+        else:
+            cur.execute(
+                "INSERT INTO products"
+                " (venue_id, name, search_key, last_price, category, needs_normalization)"
+                " VALUES (%s, %s, %s, %s, %s, TRUE);",
+                (venue_id, new_name, key, new_price, "Other"),
+            )
 
         conn.commit()
         return {
