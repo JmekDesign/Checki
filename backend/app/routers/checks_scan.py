@@ -76,17 +76,21 @@ def _call_vision(image_bytes: bytes, mime: str, api_key: str) -> dict[str, Any]:
 
 
 def _find_product(name: str, venue_id: str, cur: Any) -> tuple[str | None, float | None]:  # noqa: ANN401
-    """Find best-matching active product by name (ILIKE + trigram similarity)."""
+    """Find product by exact name match only.
+
+    Intentionally strict: fuzzy matching causes different variants (e.g. "Hoegaarden" vs
+    "Hoegaarden S") to share the same product_id, which makes check_items merge them into
+    one row. Exact match ensures separate items stay separate; unmatched names are added as
+    manual items, which also upserts them into the catalog automatically.
+    """
     cur.execute(
         """
         SELECT id, last_price
         FROM products
-        WHERE venue_id = %s AND active = TRUE
-          AND (name ILIKE %s OR name %% %s)
-        ORDER BY similarity(name, %s) DESC
+        WHERE venue_id = %s AND active = TRUE AND lower(name) = lower(%s)
         LIMIT 1
         """,
-        (venue_id, f"%{name}%", name, name),
+        (venue_id, name),
     )
     row = cur.fetchone()
     if row:

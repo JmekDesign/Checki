@@ -126,7 +126,7 @@
     });
     guestNameEl.addEventListener("focus", ()=>{
       const q = guestNameEl.value.trim();
-      loadGuestSuggest(q);
+      if (q) loadGuestSuggest(q);
     });
     guestNameEl.addEventListener("blur", ()=>{
       setTimeout(hideGuestSuggest, 150);

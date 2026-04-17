@@ -11,7 +11,7 @@
     const toast = CHK.toast || console.log;
     const btn = $("btnScanCheck");
     const origText = btn ? btn.textContent : "";
-    if (btn) { btn.disabled = true; btn.textContent = "…"; }
+    if (btn) { btn.disabled = true; btn.textContent = "⏳ Scanning…"; }
 
     try {
       const token = CHK.getToken ? CHK.getToken() : "";
