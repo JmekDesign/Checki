@@ -285,12 +285,14 @@
       const lt = Number(it.line_total ?? (price*q));
 
       const category = it.category || "";
+      const isLowConf = window.CHK?.scan?.lowConfidenceIds?.has(String(itemId));
       const el = document.createElement("div");
       el.className = "item";
       el.setAttribute("data-item-id", String(itemId));
+      if (isLowConf) el.style.cssText = "background:rgba(255,170,0,0.08);border-left:2px solid #f0a500";
       el.innerHTML = `
         <div class="lineLeft">
-          <div class="lineTitle"><b>${escapeHtml(name)}</b></div>
+          <div class="lineTitle"><b>${escapeHtml(name)}</b>${isLowConf ? ' <span style="color:#f0a500;font-size:11px">⚠ check</span>' : ""}</div>
           <div class="lineMeta">
             <span>${escapeHtml(String(q))}</span>
             <span>×</span>

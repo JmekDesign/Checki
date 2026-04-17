@@ -21,6 +21,7 @@
       await load("./catalog.js");
       await load("./supplies.js");
       await load("./app.js"); // legacy (will be removed gradually)
+      await load("./scan.js");
       await load("./help.js");
     }catch(err){
       console.error(err);

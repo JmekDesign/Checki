@@ -267,9 +267,11 @@
         <input class="inp" id="guestName" placeholder='Example: "Table 7 / Ira"' autocomplete="off" />
         <div id="guestSuggestBox" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--surface,#161b24);border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;z-index:50"></div>
       </div>
-      <div class="row" style="margin-top:10px">
+      <div class="row" style="margin-top:10px;gap:8px">
         <button class="btn primary" id="btnCreateCheck">Open check</button>
+        <button class="btn" id="btnScanCheck">📷 Scan</button>
       </div>
+      <input type="file" id="scanFileInput" accept="image/*" capture="environment" style="display:none" />
     </div>
 
     <!-- CHECK -->
