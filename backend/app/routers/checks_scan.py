@@ -23,16 +23,21 @@ _MAX_BYTES = 20 * 1024 * 1024  # 20 MB
 _PROMPT_BASE = """Read this handwritten bar/restaurant check photo and extract the items.
 Return ONLY a JSON object (no markdown, no explanation).
 
-Read it like a bartender who knows their own bar. For each row on the check:
-1. Understand what the person meant — abbreviations, size letters (S=Small, M=Medium,
-   L=Large, XL=Extra Large), handwriting quirks (S can look like 5, B like 8).
-2. If a catalog is provided below: match each item to the catalog entry that best fits
-   by meaning (name + price context). When you are confident it is the same product,
-   use the catalog name exactly. If you are not sure — write the name as you read it.
-3. Set confidence="low" whenever you are guessing, the handwriting is ambiguous,
-   or you could not find a confident catalog match.
+Think like an experienced waiter or bartender reading their own check. You know food
+and drinks — use that knowledge. Staff write quickly: abbreviations, first names only,
+size letters (S=Small, M=Medium, L=Large, XL=Extra Large), local slang.
+Handwriting quirks: S can look like 5, B like 8, G like 9.
 
-Return one item per row on the check. Never merge or drop rows.
+For each row on the check:
+1. Understand what was meant — not just what letters are there.
+   "Morgan" at a bar = Captain Morgan. "Hoe S" = Hoegaarden Small.
+   "негрони" = Negroni. Use your knowledge of food & drink.
+2. If a catalog is provided: find the best semantic match by meaning + price.
+   When confident it's the same product, use the catalog name exactly.
+   If not sure — write the name as you read it.
+3. Set confidence="low" when handwriting is ambiguous or no confident catalog match.
+
+Return one item per row. Never merge or drop rows.
 
 {
   "guest": "table or guest identifier at the top, or null",

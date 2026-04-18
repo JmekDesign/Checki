@@ -222,17 +222,49 @@ def _call_openai(raw_name: str) -> tuple[str, str]:
 
 
 def _save_normalized(product_id: str, venue_id: str, canonical: str, category: str) -> None:
+    """Save normalized name. If canonical name already exists → merge duplicate into it."""
     conn = db_conn()
     try:
         cur = conn.cursor()
+
+        # Check for existing product with the same canonical name (potential duplicate)
         cur.execute(
             """
-            UPDATE products
-               SET name = %s, category = %s, search_key = %s, needs_normalization = FALSE
-             WHERE id = %s AND venue_id = %s;
+            SELECT id FROM products
+            WHERE venue_id = %s AND lower(name) = lower(%s) AND id != %s AND active = TRUE
+            LIMIT 1;
             """,
-            (canonical, category, normalize_key(canonical), product_id, venue_id),
+            (venue_id, canonical, product_id),
         )
+        existing = cur.fetchone()
+
+        if existing:
+            # Merge: repoint all check_items from duplicate → existing, then deactivate duplicate
+            keep_id = str(existing[0])
+            cur.execute(
+                "UPDATE check_items SET product_id = %s WHERE product_id = %s;",
+                (keep_id, product_id),
+            )
+            cur.execute(
+                "UPDATE products SET active = FALSE, needs_normalization = FALSE WHERE id = %s;",
+                (product_id,),
+            )
+            # Ensure the surviving product has the right category
+            cur.execute(
+                "UPDATE products SET category = %s, needs_normalization = FALSE WHERE id = %s;",
+                (category, keep_id),
+            )
+            logger.info("merged duplicate %r (id=%s) → existing id=%s", canonical, product_id, keep_id)
+        else:
+            cur.execute(
+                """
+                UPDATE products
+                   SET name = %s, category = %s, search_key = %s, needs_normalization = FALSE
+                 WHERE id = %s AND venue_id = %s;
+                """,
+                (canonical, category, normalize_key(canonical), product_id, venue_id),
+            )
+
         conn.commit()
     finally:
         db_release(conn)
