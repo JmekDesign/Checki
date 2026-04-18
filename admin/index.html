@@ -51,17 +51,21 @@
     <div class="topWrap" id="topWrap">
       <div class="top">
         <div class="topLeft">
-          <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true" style="flex-shrink:0;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none"><rect width="32" height="32" rx="8" fill="#141418"/><text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text><circle cx="23" cy="24" r="3.5" fill="#49d17c"/></svg>
+          <!-- New Checki logo — C-shape + green dot -->
+          <svg width="26" height="26" viewBox="0 0 144.8 144.8" aria-hidden="true" fill="none" style="flex-shrink:0;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;color:var(--text-0)">
+            <path fill="currentColor" d="M74.9,127.9c-14.2,0-28.4-5.4-39.3-16.2-21.6-21.6-21.6-56.9,0-78.5,21.6-21.6,56.9-21.6,78.5,0l-17.2,17.2c-12.1-12.1-31.9-12.1-44,0-12.1,12.1-12.1,31.9,0,44,12.1,12.1,31.9,12.1,44,0l17.2,17.2c-10.8,10.8-25,16.2-39.3,16.2Z"/>
+            <circle cx="74.9" cy="72.4" r="18.5" fill="#48d07b"/>
+          </svg>
           <span class="brandName" id="brandName">Checki</span>
-          <button class="btnIcon hide" id="btnVenue" title="Venue settings" style="color:var(--muted)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <!-- Gear icon — next to venue name, manager only -->
+          <button class="btnIcon hide" id="btnVenue" title="Venue settings">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </button>
         </div>
-        <div style="display:flex;align-items:center;gap:4px">
-          <button class="btnIcon hide" id="btnHelp" title="How to use" style="color:var(--muted)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </button>
-        </div>
+        <!-- Help button — GlassPill circle -->
+        <button class="btnIcon btnHelp hide" id="btnHelp" title="How to use">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>
+        </button>
       </div>
       <div class="tabBar hide" id="tabBar">
         <button class="tabBtn" id="tabOpen">Open checks</button>
@@ -206,10 +210,15 @@
 
     <!-- CATALOG (manager) -->
     <div class="card cardless hide" id="screenCatalog">
-      <div class="h1" style="margin-bottom:12px">Product catalog</div>
       <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
-        <button class="btn compact" id="btnBackToCatalog">← Back</button>
-        <button class="btn compact primary" id="btnAddProduct">+ Add</button>
+        <div class="h1" style="margin:0">Product catalog</div>
+        <div style="display:flex;gap:8px">
+          <button class="glassPill" id="btnBackToCatalog">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            Back
+          </button>
+          <button class="btn compact primary" id="btnAddProduct">+ Add</button>
+        </div>
       </div>
       <input class="inp" id="catalogSearch" placeholder="Search products…" style="margin-bottom:10px" />
       <div id="catalogList"></div>
@@ -221,10 +230,15 @@
 
     <!-- SUPPLIES: list -->
     <div class="card cardless hide" id="screenSupplies">
-      <div class="h1" style="margin-bottom:12px">Supplies</div>
       <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
-        <button class="btn compact" id="btnBackFromSupplies">← Back</button>
-        <button class="btn compact primary" id="btnNewSupply">+ New</button>
+        <div class="h1" style="margin:0">Supplies</div>
+        <div style="display:flex;gap:8px">
+          <button class="glassPill" id="btnBackFromSupplies">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            Back
+          </button>
+          <button class="btn compact primary" id="btnNewSupply">+ New</button>
+        </div>
       </div>
       <input class="inp" id="suppliesSearch" placeholder="Search orders…" style="margin-bottom:10px" />
       <div class="list" id="suppliesList"></div>
@@ -238,7 +252,7 @@
           <div class="h1" style="margin-bottom:4px">New supply</div>
           <div class="muted">Name the order</div>
         </div>
-        <button class="btn" id="btnBackFromNewSupply">← Back</button>
+        <button class="glassPill" id="btnBackFromNewSupply"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
       </div>
       <div class="hr"></div>
       <input class="inp" id="supplyTitle" placeholder='E.g. "Bar restock, spirits"' />
@@ -255,8 +269,8 @@
           <div class="muted" id="supplyDetailMeta" style="font-size:13px">—</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
-          <button class="btn compact" id="btnBackFromSupplyDetail">← Supplies</button>
-          <button class="btn danger" id="btnCloseSupply">Close</button>
+          <button class="glassPill" id="btnBackFromSupplyDetail"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Supplies</button>
+          <button class="glassPill danger" id="btnCloseSupply">Close</button>
         </div>
       </div>
       <div style="height:10px"></div>
@@ -278,12 +292,15 @@
 
     <!-- NEW CHECK -->
     <div class="card hide" id="screenNew">
-      <div class="row" style="justify-content:space-between">
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
         <div>
           <div class="h1" style="margin-bottom:4px">New check</div>
           <div class="muted">Guest / table</div>
         </div>
-        <button class="btn" id="btnBackOpen">← Back</button>
+        <button class="glassPill" id="btnBackOpen">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          Back
+        </button>
       </div>
       <div class="hr"></div>
       <div style="position:relative">
@@ -320,9 +337,12 @@
           <span class="lari">₾</span>
         </div>
       </div>
-      <div style="display:flex;gap:8px;padding:0 0 12px;justify-content:space-between">
-        <button class="btn compact" id="btnBackFromCheck">← Checks</button>
-        <button class="btn danger" id="btnCloseCheck">Close</button>
+      <div style="display:flex;gap:8px;padding:0 0 12px;justify-content:flex-end">
+        <button class="glassPill" id="btnBackFromCheck">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          Open checks
+        </button>
+        <button class="glassPill danger" id="btnCloseCheck">Close check</button>
       </div>
       <!-- Scan warning banner (injected by renderCheck when low-confidence items exist) -->
       <div id="scanWarnBanner"></div>
@@ -334,26 +354,35 @@
   <!-- BOTTOM BAR -->
   <div class="bottom hide" id="bottomBar">
     <div class="inner">
-      <div class="suggestBox" id="suggestBox"></div>
+      <div class="addBar glass-strong">
+        <div class="suggestBox" id="suggestBox"></div>
 
-      <div class="addRow1">
-        <input class="inp" id="itemName" placeholder='Add item… (type any fragment)' autocomplete="off" />
-      </div>
-
-      <div class="addRow2">
-        <div class="qtyCtl" title="Quantity">
-          <button class="btn" id="btnQtyDec">–</button>
-          <strong id="qtyVal" style="min-width:16px;text-align:center;display:inline-block">1</strong>
-          <button class="btn" id="btnQtyInc">+</button>
+        <!-- Row 1: search icon + item name input -->
+        <div class="addRow1">
+          <svg class="addIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/></svg>
+          <input id="itemName" placeholder='Add item… (type any fragment)' autocomplete="off" />
         </div>
 
-        <input class="smallInp" id="itemPrice" inputmode="decimal" placeholder="Price/1" />
-        <input class="totalBox" id="itemTotal" placeholder="Total" readonly />
-        <button class="btn primary" id="btnAddItem">Add</button>
-      </div>
+        <!-- Row 2: qty stepper + price box + add button -->
+        <div class="addRow2">
+          <div class="qtyCtl" title="Quantity">
+            <button class="btn" id="btnQtyDec">–</button>
+            <strong id="qtyVal" style="min-width:16px;text-align:center;display:inline-block;font-variant-numeric:tabular-nums">1</strong>
+            <button class="btn" id="btnQtyInc">+</button>
+          </div>
 
-      <div class="muted hide" id="addMsg" style="margin-top:6px"></div>
-      <div class="chips" id="quickChips"></div>
+          <div class="priceBox glass">
+            <span class="perLabel">per</span>
+            <input id="itemPrice" inputmode="decimal" placeholder="0" />
+            <span class="lariLabel">₾</span>
+          </div>
+          <input class="totalBox" id="itemTotal" placeholder="Total" readonly />
+          <button class="btn primary" id="btnAddItem">Add</button>
+        </div>
+
+        <div class="muted hide" id="addMsg" style="margin-top:2px;font-size:12px"></div>
+        <div class="chips" id="quickChips"></div>
+      </div>
     </div>
   </div>
 
