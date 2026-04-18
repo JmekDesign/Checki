@@ -5,9 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Checki — Staff</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
   <link rel="stylesheet" href="./app.css">
 </head>
-<body>
+<body class="theme-dark">
   <div class="toast" id="toast"></div>
 
   <!-- Payment method modal (receipt) — content injected by ui.js -->
@@ -57,13 +60,6 @@
         <div style="display:flex;align-items:center;gap:4px">
           <button class="btnIcon hide" id="btnHelp" title="How to use" style="color:var(--muted)">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </button>
-          <button class="btnIcon btnIconDanger hide" id="btnLogout" title="Logout">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
           </button>
         </div>
       </div>
@@ -118,6 +114,8 @@
 
     <!-- OPEN CHECKS -->
     <div class="card cardless hide" id="screenOpen">
+      <!-- Stats plate (managers only, loaded dynamically) -->
+      <div id="openStatsWrap"></div>
       <input class="inp" id="openSearch" placeholder='Search…' style="margin-top:4px" />
       <div style="height:10px"></div>
       <div class="list" id="openList"></div>
@@ -194,6 +192,15 @@
         <div class="item" style="opacity:.3;cursor:default">
           <span>Subscription</span><span class="muted">→</span>
         </div>
+      </div>
+
+      <div class="hr" style="margin-top:16px"></div>
+      <!-- Sign out (same id as old header button for JS compatibility) -->
+      <div id="venueLogoutRow" style="display:flex;align-items:center;justify-content:flex-end;padding:4px 0">
+        <button class="btn danger compact" id="venueSignOut" style="gap:7px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign out
+        </button>
       </div>
     </div>
 
@@ -301,20 +308,24 @@
     </div>
 
     <!-- CHECK -->
-    <div class="card hide" id="screenCheck">
-      <div class="row" style="justify-content:space-between; align-items:flex-start">
-        <div style="min-width:0">
-          <div class="h1" id="checkTitle" style="margin-bottom:2px">Check</div>
-          <div class="muted" id="checkMeta" style="font-size:13px">—</div>
-          <div id="checkTotal" style="margin-top:6px;font-size:22px;font-weight:800;color:var(--accent)">—</div>
+    <div class="card cardless hide" id="screenCheck">
+      <div class="checkHeader">
+        <div class="checkHeaderLeft">
+          <div class="checkHeaderNum" id="checkNum">Check #—</div>
+          <div class="checkHeaderName" id="checkTitle">—</div>
+          <div class="checkHeaderMeta" id="checkMeta">—</div>
         </div>
-        <div style="display:flex; gap:8px; align-items:center">
-          <button class="btn compact" id="btnBackFromCheck">← Checks</button>
-          <button class="btn danger" id="btnCloseCheck">Close</button>
+        <div class="checkTotalPill">
+          <span class="amount tabular" id="checkAmount">—</span>
+          <span class="lari">₾</span>
         </div>
       </div>
-
-      <div style="height:10px"></div>
+      <div style="display:flex;gap:8px;padding:0 0 12px;justify-content:space-between">
+        <button class="btn compact" id="btnBackFromCheck">← Checks</button>
+        <button class="btn danger" id="btnCloseCheck">Close</button>
+      </div>
+      <!-- Scan warning banner (injected by renderCheck when low-confidence items exist) -->
+      <div id="scanWarnBanner"></div>
       <div class="list" id="itemsList"></div>
       <div class="muted" id="itemsHint" style="margin-top:10px">Empty. Add items below.</div>
     </div>

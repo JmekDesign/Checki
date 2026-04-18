@@ -23,18 +23,19 @@
   const setToken = (t)=>{
     token = t || "";
     setTokenStore(token);
-    $("btnLogout").classList.toggle("hide", !token);
     var helpBtn = $("btnHelp"); if (helpBtn) helpBtn.classList.toggle("hide", !token);
   };
   setToken(token);
 
-  $("btnLogout").onclick = ()=>{
+  // Logout shared logic — called from venue screen sign-out button
+  function doLogout(){
     setToken("");
     if(window.CHK.setUserProfile) window.CHK.setUserProfile(null);
     currentCheckId=null; currentCheck=null;
     show("screenLogin");
     toast("Logged out");
-  };
+  }
+  window.CHK.logout = doLogout;
 
   // Tab navigation
   const tabOpen = $("tabOpen");
@@ -141,6 +142,30 @@
     openChecks = Array.isArray(r) ? r : (r.checks || r.items || []);
     const s = $("openSearch");
     if (s) s.value = "";
+    // Try to load stats (manager only — fails silently for staff)
+    try {
+      const sv = await api("/api/venue", {method:"GET"});
+      const stats = sv.stats || {};
+      const wrap = $("openStatsWrap");
+      if (wrap) wrap.innerHTML = `
+        <div class="glass-strong statsPlate" style="margin-bottom:14px">
+          <div class="statCell">
+            <div class="statVal tabular">${escapeHtml(String(stats.open_now ?? openChecks.length))}</div>
+            <div class="statLabel">Open now</div>
+          </div>
+          <div class="statCell">
+            <div class="statVal tabular">${escapeHtml(String(stats.closed_today ?? 0))}</div>
+            <div class="statLabel">Closed today</div>
+          </div>
+          <div class="statCell">
+            <div class="statVal tabular accent">${escapeHtml(fmtMoney(stats.revenue_today ?? 0))} ₾</div>
+            <div class="statLabel">Revenue today</div>
+          </div>
+        </div>`;
+    } catch(_) {
+      const wrap = $("openStatsWrap");
+      if (wrap) wrap.innerHTML = "";
+    }
     renderOpen();
   }
 
@@ -161,30 +186,35 @@
     }
     $("openHint").textContent = "";
 
-    filtered.forEach(c=>{
+    filtered.forEach((c, i)=>{
       const num = c.number ?? c.check_number ?? "";
       const guest = c.guest_name_snapshot ?? c.guest ?? c.guest_name ?? "—";
       const total = Number(c.total ?? c.check_total ?? c.total_amount ?? 0);
-      const totalText = Number.isFinite(total) && total > 0 ? `${fmtMoney(total)} ₾` : "";
       const timeStr = c.opened_at
         ? new Date(c.opened_at).toLocaleTimeString(undefined, {hour:"2-digit", minute:"2-digit"})
         : "";
       const el = document.createElement("div");
-      el.className = "item";
-      el.style.cssText = "cursor:pointer; display:flex; align-items:center; gap:10px";
+      el.className = "checkCard";
+      el.style.animationDelay = `${i * 30}ms`;
       el.innerHTML = `
-        <div class="lineLeft" style="flex:1;min-width:0">
-          <div class="lineTitle"><b>#${escapeHtml(num)} · ${escapeHtml(guest)}</b></div>
-          <div class="lineMeta">
+        <div class="checkCard-left">
+          <div style="display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden">
+            <span class="checkCard-num tabular">#${escapeHtml(String(num))}</span>
+            <span style="color:var(--text-3);font-size:11px">·</span>
+            <span class="checkCard-name">${escapeHtml(guest)}</span>
+          </div>
+          <div class="checkCard-meta">
             <span>${escapeHtml(timeStr)}</span>
-            ${totalText ? `<span style="font-weight:700;color:var(--text)">${escapeHtml(totalText)}</span>` : ""}
           </div>
         </div>
-        <button class="btn compact danger" style="flex:none;white-space:nowrap">Close</button>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+          <div class="checkCard-total tabular">${total > 0 ? escapeHtml(fmtMoney(total)) : "—"}<span class="lari"> ₾</span></div>
+          <button class="btn compact danger" style="white-space:nowrap" data-close>Close</button>
+        </div>
       `;
-      const closeBtn = el.querySelector("button");
+      const closeBtn = el.querySelector("[data-close]");
       closeBtn.onclick = async (e)=>{ e.stopPropagation(); await closeCheckInline(c); };
-      el.onclick = ()=>openCheck(c.id || c.check_id);
+      el.onclick = (e)=>{ if(!e.target.closest("[data-close]")) openCheck(c.id || c.check_id); };
       list.appendChild(el);
     });
   }
@@ -263,9 +293,20 @@
     const num = currentCheck.number ?? currentCheck.check_number ?? "";
     const guest = currentCheck.guest_name_snapshot ?? currentCheck.guest ?? currentCheck.guest_name ?? "—";
     const total = (currentCheck.total ?? 0);
-    $("checkTitle").textContent = `Check #${num}`;
-    $("checkMeta").textContent = guest;
-    $("checkTotal").textContent = `${fmtMoney(total)} ₾`;
+    const openedAt = currentCheck.opened_at
+      ? new Date(currentCheck.opened_at).toLocaleTimeString(undefined, {hour:"2-digit", minute:"2-digit"})
+      : "";
+
+    // New header elements
+    const checkNumEl = $("checkNum");
+    if (checkNumEl) checkNumEl.textContent = `Check #${num}`;
+    $("checkTitle").textContent = guest;
+    $("checkMeta").textContent = openedAt;
+    const amountEl = $("checkAmount");
+    if (amountEl) amountEl.textContent = fmtMoney(total);
+    // Legacy: keep checkTotal in sync if it exists (old screens)
+    const checkTotalEl = $("checkTotal");
+    if (checkTotalEl) checkTotalEl.textContent = `${fmtMoney(total)} ₾`;
 
     const items = currentCheck.items || currentCheck.lines || [];
     const list = $("itemsList");
@@ -275,6 +316,21 @@
       $("itemsHint").textContent = "Empty. Add items below.";
     } else {
       $("itemsHint").textContent = "";
+    }
+
+    // Scan warning banner
+    const lowConfIds = window.CHK?.scan?.lowConfidenceIds;
+    const lowConfItems = items.filter(it => lowConfIds?.has(String(it.id)));
+    const warnBanner = $("scanWarnBanner");
+    if (warnBanner) {
+      if (lowConfItems.length) {
+        warnBanner.innerHTML = `<div class="scanWarnBanner" style="margin-bottom:10px">
+          <span class="scanWarnBadge">⚠</span>
+          <span>${lowConfItems.length} item${lowConfItems.length!==1?"s":""} need review — tap to fix</span>
+        </div>`;
+      } else {
+        warnBanner.innerHTML = "";
+      }
     }
 
     items.forEach(it=>{
@@ -287,10 +343,9 @@
       const category = it.category || "";
       const isLowConf = window.CHK?.scan?.lowConfidenceIds?.has(String(itemId));
       const el = document.createElement("div");
-      el.className = "item";
+      el.className = isLowConf ? "item needsCheck" : "item";
       el.setAttribute("data-item-id", String(itemId));
       if (isLowConf) {
-        el.style.cssText = "background:rgba(255,170,0,0.08);border-left:2px solid #f0a500;cursor:pointer";
         el.title = "Tap to fix this item";
         el.addEventListener("click", (e) => {
           if (e.target.closest(".qtyCtl")) return; // don't intercept +/- buttons

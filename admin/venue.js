@@ -33,18 +33,18 @@ window.CHK = window.CHK || {};
     if (!el || !r.venue) return;
     const s = r.stats || {};
     el.innerHTML = `
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        <div class="archStatCard" style="text-align:center">
-          <div class="archStatVal">${s.open_now ?? 0}</div>
-          <div class="archStatLabel">Open now</div>
+      <div class="glass-strong statsPlate" style="margin-bottom:14px">
+        <div class="statCell">
+          <div class="statVal tabular">${s.open_now ?? 0}</div>
+          <div class="statLabel">Open now</div>
         </div>
-        <div class="archStatCard" style="text-align:center">
-          <div class="archStatVal">${s.closed_today ?? 0}</div>
-          <div class="archStatLabel">Closed today</div>
+        <div class="statCell">
+          <div class="statVal tabular">${s.closed_today ?? 0}</div>
+          <div class="statLabel">Closed today</div>
         </div>
-        <div class="archStatCard" style="text-align:center">
-          <div class="archStatVal">${money(s.revenue_today)} ₾</div>
-          <div class="archStatLabel">Revenue today</div>
+        <div class="statCell">
+          <div class="statVal tabular accent">${money(s.revenue_today)} ₾</div>
+          <div class="statLabel">Revenue today</div>
         </div>
       </div>
     `;
@@ -240,6 +240,11 @@ window.CHK = window.CHK || {};
 
   /* ── bind static elements ── */
   function init() {
+    const signOutBtn = $("venueSignOut");
+    if (signOutBtn) signOutBtn.onclick = () => {
+      if (typeof CHK.logout === "function") CHK.logout();
+    };
+
     const btn = $("btnAddStaff");
     if (btn) btn.onclick = () => openAddModal();
 
