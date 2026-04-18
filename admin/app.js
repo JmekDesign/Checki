@@ -193,8 +193,9 @@
       const timeStr = c.opened_at
         ? new Date(c.opened_at).toLocaleTimeString(undefined, {hour:"2-digit", minute:"2-digit"})
         : "";
+      const server = c.opened_by_name ?? c.server ?? "";
       const el = document.createElement("div");
-      el.className = "checkCard";
+      el.className = "checkCard glass";
       el.style.animationDelay = `${i * 30}ms`;
       el.innerHTML = `
         <div class="checkCard-left">
@@ -204,12 +205,13 @@
             <span class="checkCard-name">${escapeHtml(guest)}</span>
           </div>
           <div class="checkCard-meta">
-            <span>${escapeHtml(timeStr)}</span>
+            ${server ? `<span>${escapeHtml(server)}</span><span class="dot">·</span>` : ""}
+            <span class="tabular">${escapeHtml(timeStr)}</span>
           </div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
           <div class="checkCard-total tabular">${total > 0 ? escapeHtml(fmtMoney(total)) : "—"}<span class="lari"> ₾</span></div>
-          <button class="btn compact danger" style="white-space:nowrap" data-close>Close</button>
+          <button class="btn compact danger" style="white-space:nowrap;font-size:12px;padding:5px 10px" data-close>Close</button>
         </div>
       `;
       const closeBtn = el.querySelector("[data-close]");

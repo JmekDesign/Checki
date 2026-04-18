@@ -245,6 +245,13 @@ window.CHK = window.CHK || {};
       if (typeof CHK.logout === "function") CHK.logout();
     };
 
+    const backBtn = $("btnVenueBack");
+    if (backBtn) backBtn.onclick = async () => {
+      const tok = CHK.getToken?.() || "";
+      CHK.show("screenOpen", tok);
+      try { await CHK.openChecks?.load?.(); } catch(_) {}
+    };
+
     const btn = $("btnAddStaff");
     if (btn) btn.onclick = () => openAddModal();
 

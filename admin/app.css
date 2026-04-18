@@ -358,17 +358,17 @@ button { cursor: pointer; }
 
 .checkCard {
   display: flex; align-items: center; gap: 10px;
-  padding: 13px 14px;
+  padding: 12px 14px;
   border-radius: 16px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   animation: slide-up-in 0.32s cubic-bezier(0.32,0.72,0,1) both;
   transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
-  background: var(--surface-hi);
-  border: 0.5px solid var(--hairline);
   color: var(--text-0);
   text-align: left;
   width: 100%;
+  /* When combined with .glass: override bg to surface-hi */
+  background: var(--surface-hi);
 }
 .checkCard:active { transform: scale(0.98); }
 .checkCard-left { flex: 1; min-width: 0; }
