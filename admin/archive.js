@@ -289,20 +289,17 @@ window.CHK = window.CHK || {};
       if (!resp.ok) throw new Error("Report error " + resp.status);
       const blob = await resp.blob();
       const fname = "checki-report.pdf";
-      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-                    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
       const file = new File([blob], fname, { type: "application/pdf" });
-      if (isIOS && navigator.share && navigator.canShare?.({ files: [file] })) {
+      // Use native share only on touch devices (mobile); desktop gets a direct download
+      const isMobile = navigator.maxTouchPoints > 0;
+      if (isMobile && navigator.share && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: "Checki Report" });
       } else {
-        const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = blobUrl;
+        a.href = URL.createObjectURL(blob);
         a.download = fname;
-        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 3000);
+        setTimeout(() => URL.revokeObjectURL(a.href), 3000);
       }
     } catch (e) {
       CHK.toast?.("Report: " + (e.message || String(e)));
