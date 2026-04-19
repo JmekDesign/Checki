@@ -9,9 +9,10 @@ from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Header, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Header, HTTPException, UploadFile
 
 from ..core.config import get_settings
+from ..core.normalizer import normalize_product_bg
 from ..core.security import require_user
 from ..core.utils import normalize_key
 from ..db.conn import db_conn, db_release
@@ -180,6 +181,7 @@ def _load_catalog(venue_id: str, cur: Any) -> list[dict[str, Any]]:  # noqa: ANN
 async def voice_add(
     check_id: UUID,
     audio: UploadFile,
+    background_tasks: BackgroundTasks,
     authorization: str | None = Header(default=None, alias="Authorization"),
 ) -> dict[str, Any]:
     user = require_user(authorization)
@@ -387,9 +389,14 @@ async def voice_add(
                     cur.execute(
                         "INSERT INTO products"
                         " (venue_id, name, search_key, last_price, category, needs_normalization)"
-                        " VALUES (%s,%s,%s,%s,%s,TRUE)",
+                        " VALUES (%s,%s,%s,%s,%s,TRUE) RETURNING id",
                         (venue_id, name, key, price_dec, "Other"),
                     )
+                    new_row = cur.fetchone()
+                    if new_row:
+                        background_tasks.add_task(
+                            normalize_product_bg, str(new_row[0]), name, venue_id
+                        )
 
             items_added.append(
                 {
