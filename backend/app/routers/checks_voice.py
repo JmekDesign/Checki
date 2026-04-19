@@ -23,24 +23,26 @@ _MAX_BYTES = 25 * 1024 * 1024  # 25 MB (Whisper limit)
 
 D2 = Decimal("0.01")
 
-_VOICE_SYSTEM_PROMPT = """You are a smart bartender assistant parsing a voice command to add items to a bar check.
-The voice may be in ANY language (Russian, Georgian, English, mixed, slang, abbreviations).
+_VOICE_SYSTEM_PROMPT = """You are a bartender assistant. Extract items from a voice command (any language).
 
-Catalog matching (CRITICAL — read carefully):
-- A brand/variety name is NOT the same as a generic category.
-  "Белуга" (Beluga vodka) ≠ "Водка" (generic vodka). Never collapse a specific item into a generic one.
-  "Jameson" ≠ "Whisky". "Hoegaarden S" ≠ "Hoegaarden L".
-- Match ONLY when you are certain it is exactly the same product. Use catalog name EXACTLY when matched.
-  Example: "два хинкали" → catalog "Khinkali Classic" (only khinkali) → name="Khinkali Classic", confidence="high"
-  Example: "виски" → catalog has only "Jameson" → name="Jameson", confidence="high"
-  Example: "Белуга 12 лари" → catalog has "Водка" (generic) → NOT a match → name="Beluga", confidence="low"
-- If not a clear match → output a short English transliteration/translation, set confidence="low".
+Step 1 — understand what was said:
+Translate/transliterate to English. Keep specific names exactly: "Ханки Панки" → "Hanky Panky", "Белуга" → "Beluga".
+Resolve obvious shorthand: "хое" → "Hoegaarden", "морган" → "Captain Morgan", "хинк" → "Khinkali".
 
-Price: include "price" ONLY when explicitly stated in speech (e.g. "за 12 лари", "12 gel"). Omit otherwise.
-Confidence: "high" when certain of catalog match, "low" when guessing or no catalog match.
+Step 2 — catalog lookup:
+Use the catalog name ONLY when the spoken item IS that catalog item:
+  ✓ Same product, different spelling/language: "Хоегарден" → "Hoegaarden", "Джеймсон" → "Jameson"
+  ✓ Clear shorthand for one specific item: "хое" → "Hoegaarden" (if only one hoegaarden in catalog)
+  ✗ NEVER substitute a different product: "Hanky Panky" ≠ "Negroni", "Beluga" ≠ "Vodka"
+  ✗ NEVER match a generic word to a specific brand: "коктейль" ≠ "Negroni"
+  ✗ NEVER merge different varieties: "Hoegaarden S" ≠ "Hoegaarden L"
+If not a clear same-product match → use the English name from Step 1, set confidence="low".
+
+Price: include only when explicitly stated ("за 12 лари", "12 gel"). Omit if not mentioned.
+Confidence: "high" = certain catalog match. "low" = translated name or no match.
 
 Return ONLY valid JSON:
-{"items": [{"name": "Khinkali Classic", "qty": 2, "confidence": "high"}, {"name": "Beluga", "qty": 1, "price": 12.0, "confidence": "low"}]}"""
+{"items": [{"name": "Hoegaarden", "qty": 2, "confidence": "high"}, {"name": "Hanky Panky", "qty": 1, "price": 20.0, "confidence": "low"}]}"""
 
 
 def _multipart(
