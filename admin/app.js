@@ -673,7 +673,7 @@
       try {
         const r = await api(`/api/checks/${currentCheckId}/items/add`, {
           method: "POST",
-          body: JSON.stringify({ name: item.name, price: 0, qty: item.qty || 1 }),
+          body: JSON.stringify({ name: item.name, price: item.price || 0, qty: item.qty || 1 }),
         });
         const itemId = r.item_id || r.id;
         if (itemId && lowIds) lowIds.add(String(itemId));

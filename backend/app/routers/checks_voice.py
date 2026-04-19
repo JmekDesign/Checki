@@ -25,17 +25,22 @@ D2 = Decimal("0.01")
 
 _VOICE_SYSTEM_PROMPT = """You are a smart bartender assistant parsing a voice command to add items to a bar check.
 The voice may be in ANY language (Russian, Georgian, English, mixed, slang, abbreviations).
-Think like an experienced bartender who knows the menu: "морган" = Captain Morgan, "хое" = Hoegaarden, "хинк" = Khinkali.
 
-Catalog matching rules (CRITICAL):
-- When you recognize a spoken item as a catalog product, output the CATALOG NAME EXACTLY — not the spoken word.
-  Example: user says "два хинкали" → catalog has "Khinkali Classic" → output name = "Khinkali Classic"
-  Example: user says "виски" → catalog has "Jameson" (only whisky) → output name = "Jameson"
-- Different varieties are DIFFERENT products — never merge: "Hoegaarden S" ≠ "Hoegaarden L".
-- If you are NOT confident it matches any catalog entry, output a short English name for the item.
+Catalog matching (CRITICAL — read carefully):
+- A brand/variety name is NOT the same as a generic category.
+  "Белуга" (Beluga vodka) ≠ "Водка" (generic vodka). Never collapse a specific item into a generic one.
+  "Jameson" ≠ "Whisky". "Hoegaarden S" ≠ "Hoegaarden L".
+- Match ONLY when you are certain it is exactly the same product. Use catalog name EXACTLY when matched.
+  Example: "два хинкали" → catalog "Khinkali Classic" (only khinkali) → name="Khinkali Classic", confidence="high"
+  Example: "виски" → catalog has only "Jameson" → name="Jameson", confidence="high"
+  Example: "Белуга 12 лари" → catalog has "Водка" (generic) → NOT a match → name="Beluga", confidence="low"
+- If not a clear match → output a short English transliteration/translation, set confidence="low".
 
-Include "price" only if explicitly stated in speech. Omit if not mentioned.
-Return ONLY valid JSON: {"items": [{"name": "Hoegaarden", "qty": 2, "price": 17.0}, {"name": "Whisky", "qty": 1}]}"""
+Price: include "price" ONLY when explicitly stated in speech (e.g. "за 12 лари", "12 gel"). Omit otherwise.
+Confidence: "high" when certain of catalog match, "low" when guessing or no catalog match.
+
+Return ONLY valid JSON:
+{"items": [{"name": "Khinkali Classic", "qty": 2, "confidence": "high"}, {"name": "Beluga", "qty": 1, "price": 12.0, "confidence": "low"}]}"""
 
 
 def _multipart(
@@ -257,14 +262,21 @@ async def voice_add(
                 continue
             qty = max(1, int(item.get("qty") or 1))
             item_price: float | None = item.get("price")
+            gpt_confidence = str(item.get("confidence") or "high")
 
             product_id, catalog_price = _find_product(name, venue_id, cur)
 
-            # Determine final price
-            if catalog_price is not None:
-                final_price = catalog_price
-            elif item_price is not None:
+            # Low-confidence items (GPT wasn't sure) → mark for review regardless of price
+            if gpt_confidence == "low" and product_id is None:
+                final_price_for_review: float = float(item_price) if item_price is not None else 0.0
+                needs_price.append({"name": name, "qty": qty, "price": final_price_for_review})
+                continue
+
+            # Price priority: explicit spoken price wins; catalog price as fallback
+            if item_price is not None:
                 final_price = float(item_price)
+            elif catalog_price is not None:
+                final_price = catalog_price
             else:
                 needs_price.append({"name": name, "qty": qty})
                 continue
