@@ -634,15 +634,14 @@
 
               // Show result
               if (data.items_added && data.items_added.length) {
-                const names = data.items_added.map((i) => `${i.qty}\u00d7 ${escapeHtml(i.name)}`).join(", ");
-                toast("Added: " + names.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">"));
+                const names = data.items_added.map((i) => `${i.qty}\u00d7 ${i.name}`).join(", ");
+                toast("Added: " + names);
                 await loadCheck();
-              } else {
+              } else if (!(data.needs_price && data.needs_price.length)) {
                 toast("Nothing recognized");
               }
-              if (data.items_skipped && data.items_skipped.length) {
-                const skipped = data.items_skipped.map((i) => escapeHtml(i.name)).join(", ");
-                setTimeout(() => toast("Price needed for: " + skipped.replace(/&amp;/g, "&")), 800);
+              if (data.needs_price && data.needs_price.length) {
+                await addVoiceNeedsPrice(data.needs_price);
               }
             } catch (e) {
               toast("Voice: " + (e.message || String(e)));
@@ -666,6 +665,23 @@
       }
     };
   })();
+
+  async function addVoiceNeedsPrice(items) {
+    if (!items || !items.length) return;
+    const lowIds = window.CHK?.scan?.lowConfidenceIds;
+    for (const item of items) {
+      try {
+        const r = await api(`/api/checks/${currentCheckId}/items/add`, {
+          method: "POST",
+          body: JSON.stringify({ name: item.name, price: 0, qty: item.qty || 1 }),
+        });
+        const itemId = r.item_id || r.id;
+        if (itemId && lowIds) lowIds.add(String(itemId));
+      } catch (_) { /* skip */ }
+    }
+    await loadCheck();
+    toast(`${items.length} item${items.length > 1 ? "s" : ""} need price ⚠`);
+  }
 
   async function addItem(){
     if(!currentCheckId) return;

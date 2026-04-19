@@ -22,11 +22,16 @@ _MAX_BYTES = 25 * 1024 * 1024  # 25 MB (Whisper limit)
 
 D2 = Decimal("0.01")
 
-_VOICE_SYSTEM_PROMPT = """You are a smart bartender assistant. Parse voice commands that describe items to add to a bar check.
-Extract ALL items with name, quantity, and price (if mentioned).
-Support ANY language and informal speech: Russian, Georgian, English, abbreviations, slang.
-If price not mentioned, omit the "price" field.
-Match names against the catalog when possible — use catalog name exactly if it's the same product.
+_VOICE_SYSTEM_PROMPT = """You are a smart bartender assistant parsing a voice command to add items to a bar check.
+Extract ALL items mentioned. Support ANY language and informal speech: Russian, Georgian, English, abbreviations, slang.
+Think like an experienced bartender: "морган" = Captain Morgan, "хое" = Hoegaarden, "хинк" = Khinkali.
+
+Catalog matching (when catalog provided):
+- Find the best semantic match by meaning — use the catalog name EXACTLY if you are confident it is the same product.
+- Different varieties are DIFFERENT products: "Хинкали с сыром" ≠ "Хинкали классические", "Hoegaarden S" ≠ "Hoegaarden L".
+- If not confident — use the spoken name as heard, do not force a catalog match.
+
+Include "price" only if explicitly stated in speech. Omit if not mentioned.
 Return ONLY valid JSON: {"items": [{"name": "Hoegaarden", "qty": 2, "price": 17.0}, {"name": "Whisky", "qty": 1}]}"""
 
 
@@ -237,7 +242,7 @@ async def voice_add(
 
     # Step 3: Add items to check
     items_added: list[dict[str, Any]] = []
-    items_skipped: list[dict[str, Any]] = []
+    needs_price: list[dict[str, Any]] = []
 
     conn = db_conn()
     try:
@@ -258,7 +263,7 @@ async def voice_add(
             elif item_price is not None:
                 final_price = float(item_price)
             else:
-                items_skipped.append({"name": name, "reason": "no price"})
+                needs_price.append({"name": name, "qty": qty})
                 continue
 
             price_dec = Decimal(str(final_price)).quantize(D2, rounding=ROUND_HALF_UP)
@@ -361,5 +366,5 @@ async def voice_add(
         "ok": True,
         "transcription": transcription,
         "items_added": items_added,
-        "items_skipped": items_skipped,
+        "needs_price": needs_price,
     }
