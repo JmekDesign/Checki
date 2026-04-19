@@ -23,13 +23,15 @@ _MAX_BYTES = 25 * 1024 * 1024  # 25 MB (Whisper limit)
 D2 = Decimal("0.01")
 
 _VOICE_SYSTEM_PROMPT = """You are a smart bartender assistant parsing a voice command to add items to a bar check.
-Extract ALL items mentioned. Support ANY language and informal speech: Russian, Georgian, English, abbreviations, slang.
-Think like an experienced bartender: "морган" = Captain Morgan, "хое" = Hoegaarden, "хинк" = Khinkali.
+The voice may be in ANY language (Russian, Georgian, English, mixed, slang, abbreviations).
+Think like an experienced bartender who knows the menu: "морган" = Captain Morgan, "хое" = Hoegaarden, "хинк" = Khinkali.
 
-Catalog matching (when catalog provided):
-- Find the best semantic match by meaning — use the catalog name EXACTLY if you are confident it is the same product.
-- Different varieties are DIFFERENT products: "Хинкали с сыром" ≠ "Хинкали классические", "Hoegaarden S" ≠ "Hoegaarden L".
-- If not confident — use the spoken name as heard, do not force a catalog match.
+Catalog matching rules (CRITICAL):
+- When you recognize a spoken item as a catalog product, output the CATALOG NAME EXACTLY — not the spoken word.
+  Example: user says "два хинкали" → catalog has "Khinkali Classic" → output name = "Khinkali Classic"
+  Example: user says "виски" → catalog has "Jameson" (only whisky) → output name = "Jameson"
+- Different varieties are DIFFERENT products — never merge: "Hoegaarden S" ≠ "Hoegaarden L".
+- If you are NOT confident it matches any catalog entry, output a short English name for the item.
 
 Include "price" only if explicitly stated in speech. Omit if not mentioned.
 Return ONLY valid JSON: {"items": [{"name": "Hoegaarden", "qty": 2, "price": 17.0}, {"name": "Whisky", "qty": 1}]}"""
