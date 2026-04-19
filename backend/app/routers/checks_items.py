@@ -4,11 +4,12 @@ from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Header, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Header, HTTPException, Query
 
+from ..core.normalizer import normalize_product_bg
 from ..core.parsers import parse_smart_line
 from ..core.security import require_user
-from ..core.utils import normalize_key, short_check_number
+from ..core.utils import normalize_key
 from ..db.conn import db_conn, db_release
 from ..schemas.checks import AddLineIn, ItemAddIn
 
@@ -25,6 +26,7 @@ def _dec2(x: float) -> Decimal:
 def check_item_add(
     check_id: UUID,
     payload: ItemAddIn,
+    background_tasks: BackgroundTasks,
     authorization: str | None = Header(default=None, alias="Authorization"),
 ) -> dict[str, Any]:
     user = require_user(authorization)
@@ -216,9 +218,14 @@ def check_item_add(
                 cur.execute(
                     "insert into products"
                     " (venue_id, name, search_key, last_price, category, needs_normalization)"
-                    " values (%s,%s,%s,%s,%s, TRUE);",
+                    " values (%s,%s,%s,%s,%s, TRUE) returning id;",
                     (venue_id, name_snapshot, key, price, "Other"),
                 )
+                new_row = cur.fetchone()
+                if new_row:
+                    background_tasks.add_task(
+                        normalize_product_bg, str(new_row[0]), name_snapshot, venue_id
+                    )
 
         conn.commit()
         return {"ok": True, "item_id": str(item_id), "line_total": float(line_total)}
@@ -268,7 +275,7 @@ def check_get(
         cur.execute(
             """
             select id, venue_id, status, opened_at, guest_name_snapshot, total,
-                   shift_number, shift_date
+                   shift_number, shift_date, number
             from checks
             where id=%s;
             """,
@@ -277,7 +284,7 @@ def check_get(
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="check not found")
-        cid, check_venue_id, status, opened_at, guest_name_snapshot, total, shift_num, shift_dt = (
+        cid, check_venue_id, status, opened_at, guest_name_snapshot, total, shift_num, shift_dt, seq_num = (
             row
         )
         if str(check_venue_id) != str(venue_id):
@@ -313,7 +320,7 @@ def check_get(
             "check_id": cid_str,
             "shift_number": shift_num,
             "shift_date": shift_dt.isoformat() if shift_dt else None,
-            "number": str(shift_num) if shift_num is not None else short_check_number(cid_str),
+            "number": str(shift_num) if shift_num is not None else str(seq_num),
             "status": status,
             "opened_at": opened_at.isoformat() if opened_at else None,
             "guest_name_snapshot": guest_name_snapshot,
