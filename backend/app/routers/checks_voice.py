@@ -13,6 +13,7 @@ from fastapi import APIRouter, Header, HTTPException, UploadFile
 
 from ..core.config import get_settings
 from ..core.security import require_user
+from ..core.utils import normalize_key
 from ..db.conn import db_conn, db_release
 
 router = APIRouter()
@@ -349,6 +350,32 @@ async def voice_add(
                 "UPDATE checks SET total = total + %s WHERE id = %s",
                 (line_total, check_id_s),
             )
+
+            # Mirror catalog upsert exactly like checks_items.py
+            if product_id:
+                cur.execute(
+                    "UPDATE products SET last_price=%s WHERE id=%s AND venue_id=%s",
+                    (price_dec, product_id, venue_id),
+                )
+            else:
+                key = normalize_key(name)
+                cur.execute(
+                    "SELECT id FROM products WHERE venue_id=%s AND search_key=%s",
+                    (venue_id, key),
+                )
+                ex = cur.fetchone()
+                if ex:
+                    cur.execute(
+                        "UPDATE products SET name=%s, last_price=%s WHERE id=%s",
+                        (name, price_dec, ex[0]),
+                    )
+                else:
+                    cur.execute(
+                        "INSERT INTO products"
+                        " (venue_id, name, search_key, last_price, category, needs_normalization)"
+                        " VALUES (%s,%s,%s,%s,%s,TRUE)",
+                        (venue_id, name, key, price_dec, "Other"),
+                    )
 
             items_added.append(
                 {
