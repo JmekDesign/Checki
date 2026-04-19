@@ -593,6 +593,80 @@
 
   $("btnAddItem").onclick = ()=>addItem();
 
+  /* ── Voice input ── */
+  (function() {
+    const btn = $("btnVoiceInput");
+    if (!btn) return;
+
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
+
+    btn.onclick = async () => {
+      if (btn.classList.contains("loading")) return;
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+          mediaRecorder.onstop = async () => {
+            // stop mic tracks
+            stream.getTracks().forEach((t) => t.stop());
+            btn.classList.remove("recording");
+            btn.classList.add("loading");
+
+            const mimeType = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/mp4";
+            const blob = new Blob(audioChunks, { type: mimeType });
+            const form = new FormData();
+            form.append("audio", blob, mimeType === "audio/webm" ? "voice.webm" : "voice.mp4");
+
+            try {
+              const base = window.CHK && window.CHK.API_BASE ? window.CHK.API_BASE : "https://api.checki.ge";
+              const tok = (window.CHK && typeof window.CHK.getToken === "function" ? window.CHK.getToken() : "") || token || "";
+              const res = await fetch(`${base}/api/checks/${currentCheckId}/voice-add`, {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${tok}` },
+                body: form,
+              });
+              const data = await res.json().catch(() => ({}));
+              if (!res.ok) throw new Error(data.detail || "Voice error");
+
+              // Show result
+              if (data.items_added && data.items_added.length) {
+                const names = data.items_added.map((i) => `${i.qty}\u00d7 ${escapeHtml(i.name)}`).join(", ");
+                toast("Added: " + names.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">"));
+                await loadCheck();
+              } else {
+                toast("Nothing recognized");
+              }
+              if (data.items_skipped && data.items_skipped.length) {
+                const skipped = data.items_skipped.map((i) => escapeHtml(i.name)).join(", ");
+                setTimeout(() => toast("Price needed for: " + skipped.replace(/&amp;/g, "&")), 800);
+              }
+            } catch (e) {
+              toast("Voice: " + (e.message || String(e)));
+            } finally {
+              btn.classList.remove("loading");
+            }
+          };
+
+          mediaRecorder.start();
+          isRecording = true;
+          btn.classList.add("recording");
+        } catch (e) {
+          toast("Mic: " + (e.message || "Permission denied"));
+        }
+      } else {
+        // stop recording
+        isRecording = false;
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+          mediaRecorder.stop();
+        }
+      }
+    };
+  })();
+
   async function addItem(){
     if(!currentCheckId) return;
 

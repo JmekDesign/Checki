@@ -20,6 +20,7 @@ from .routers.checks_items import router as checks_items_router
 from .routers.checks_items_edit import router as checks_items_edit_router
 from .routers.checks_open import router as checks_open_router
 from .routers.checks_scan import router as checks_scan_router
+from .routers.checks_voice import router as checks_voice_router
 from .routers.guests import router as guests_router
 from .routers.health import router as health_router
 from .routers.password_reset import router as password_reset_router
@@ -68,6 +69,7 @@ app.include_router(products_router)
 app.include_router(products_mgmt_router)
 app.include_router(checks_open_router)
 app.include_router(checks_scan_router)
+app.include_router(checks_voice_router)
 app.include_router(checks_archive_router)
 app.include_router(reports_router)
 app.include_router(checks_items_router)
