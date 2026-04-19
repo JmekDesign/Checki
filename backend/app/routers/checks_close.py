@@ -33,23 +33,26 @@ async def check_close(
         data = {}
 
     payment_method: str | None = data.get("payment_method")
+    if payment_method not in (None, "cash", "card"):
+        raise HTTPException(status_code=400, detail="invalid payment_method")
 
     conn = db_conn()
     try:
         cur = conn.cursor()
-        cur.execute("select status, venue_id from checks where id=%s;", (check_id,))
+        cur.execute(
+            "select status from checks where id=%s and venue_id=%s;",
+            (check_id, venue_id),
+        )
         r = cur.fetchone()
         if not r:
             raise HTTPException(status_code=404, detail="check not found")
-        status, check_venue_id = r
-        if str(check_venue_id) != str(venue_id):
-            raise HTTPException(status_code=403, detail="forbidden")
-        if status != "open":
+        if r[0] != "open":
             raise HTTPException(status_code=409, detail="check is not open")
 
         cur.execute(
-            "update checks set status='closed', closed_at=now(), payment_method=%s where id=%s;",
-            (payment_method, check_id),
+            "update checks set status='closed', closed_at=now(), payment_method=%s"
+            " where id=%s and venue_id=%s;",
+            (payment_method, check_id, venue_id),
         )
         conn.commit()
         return {"ok": True, "check_id": check_id, "status": "closed"}
