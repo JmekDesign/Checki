@@ -64,7 +64,7 @@ def checks_archive(
 
     list_sql = f"""
         SELECT c.id, c.guest_name_snapshot, c.closed_at, c.total, c.payment_method,
-               c.shift_number, c.shift_date
+               c.shift_number, c.shift_date, c.number
         FROM checks c
         WHERE {where_sql}
         ORDER BY c.closed_at DESC NULLS LAST
@@ -83,7 +83,7 @@ def checks_archive(
 
         cur.execute(list_sql, tuple(params + [limit, offset]))
         items = []
-        for cid, gname, closed_at, total, payment_method, shift_num, shift_dt in cur.fetchall():
+        for cid, gname, closed_at, total, payment_method, shift_num, shift_dt, seq_num in cur.fetchall():
             cid_str = str(cid)
             items.append(
                 {
@@ -91,7 +91,7 @@ def checks_archive(
                     "check_id": cid_str,
                     "shift_number": shift_num,
                     "shift_date": shift_dt.isoformat() if shift_dt else None,
-                    "number": str(shift_num) if shift_num is not None else cid_str[:6],
+                    "number": str(shift_num) if shift_num is not None else str(seq_num),
                     "guest_name_snapshot": gname,
                     "closed_at": closed_at.isoformat() if closed_at else None,
                     "total": float(total or 0),

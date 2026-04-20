@@ -52,7 +52,13 @@ window.CHK = window.CHK || {};
       }
 
       // Bottom bar (check screen only)
-      if (screen === "screenCheck") $("bottomBar")?.classList.remove("hide");
+      if (screen === "screenCheck") {
+        $("bottomBar")?.classList.remove("hide");
+      } else {
+        // Always clear readonly state when leaving check screen
+        document.body.classList.remove("chk-readonly");
+        if (window.CHK) window.CHK._checkReadonly = false;
+      }
     } catch (e) {
       console.error("CHK.show failed:", e);
     }

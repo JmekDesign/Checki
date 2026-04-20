@@ -878,7 +878,7 @@
     }
 
     const btnDelete = document.getElementById("btnDeleteCheck");
-    if(btnDelete) btnDelete.classList.toggle("hide", !!on || btnDelete.dataset.isManager !== "1");
+    if(btnDelete) btnDelete.classList.toggle("hide", btnDelete.dataset.isManager !== "1");
 
     // bottom bar is hidden by CSS in .chk-readonly
   }

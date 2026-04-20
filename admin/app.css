@@ -315,13 +315,7 @@
   pointer-events:none !important;
 }
 
-/* но: кнопка "← Back" (бывшая Close) должна работать */
-.chk-readonly #btnCloseCheck{
-  opacity:1 !important;
-  pointer-events:auto !important;
-}
-/* в архивном чеке — только кнопка "← Archive", кнопка "← Checks" скрыта */
-.chk-readonly #btnBackFromCheck{ display:none !important; }
+/* Close hidden in readonly via JS (.hide class); back button stays visible as "← Archive" */
 
 /* УБРАТЬ +/- В АРХИВНОМ ЧЕКЕ, НО ОСТАВИТЬ ЧИСЛО */
 .chk-readonly .qtyCtl button{ display:none !important; }

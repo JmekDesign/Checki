@@ -151,7 +151,7 @@ def checks_open(
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT id, opened_at, guest_name_snapshot, total, shift_number, shift_date
+            SELECT id, opened_at, guest_name_snapshot, total, shift_number, shift_date, number
             FROM checks
             WHERE venue_id=%s AND status='open'
             ORDER BY opened_at DESC
@@ -160,7 +160,7 @@ def checks_open(
             (venue_id,),
         )
         items = []
-        for cid, opened_at, gname, total, shift_num, shift_dt in cur.fetchall():
+        for cid, opened_at, gname, total, shift_num, shift_dt, seq_num in cur.fetchall():
             cid_str = str(cid)
             items.append(
                 {
@@ -168,7 +168,7 @@ def checks_open(
                     "check_id": cid_str,
                     "shift_number": shift_num,
                     "shift_date": shift_dt.isoformat() if shift_dt else None,
-                    "number": str(shift_num) if shift_num is not None else cid_str[:6],
+                    "number": str(shift_num) if shift_num is not None else str(seq_num),
                     "opened_at": opened_at.isoformat(),
                     "guest_name_snapshot": gname,
                     "total": float(total or 0),
