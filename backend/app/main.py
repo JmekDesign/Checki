@@ -16,6 +16,7 @@ from .routers.auth import router as auth_router
 from .routers.bootstrap import router as bootstrap_router
 from .routers.checks_archive import router as checks_archive_router
 from .routers.checks_close import router as checks_close_router
+from .routers.checks_delete import router as checks_delete_router
 from .routers.checks_items import router as checks_items_router
 from .routers.checks_items_edit import router as checks_items_edit_router
 from .routers.checks_open import router as checks_open_router
@@ -75,6 +76,7 @@ app.include_router(reports_router)
 app.include_router(checks_items_router)
 app.include_router(checks_items_edit_router)
 app.include_router(checks_close_router)
+app.include_router(checks_delete_router)
 app.include_router(staff_router)
 app.include_router(venue_router)
 app.include_router(procurement_router)

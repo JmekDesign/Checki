@@ -243,6 +243,34 @@
   };
   const _closeCheckHandler = $("btnCloseCheck").onclick;
 
+  /* ── Delete check (managers only) ── */
+  (function () {
+    const btn = $("btnDeleteCheck");
+    if (!btn) return;
+    const profile = window.CHK?.getUserProfile?.() || {};
+    if (profile.role === "manager") btn.classList.remove("hide");
+
+    btn.onclick = async () => {
+      if (!currentCheckId) return;
+      const guest = currentCheck?.guest_name_snapshot ?? "—";
+      const num   = currentCheck?.number ?? currentCheckId.slice(0, 8);
+      const ok = await CHK.confirm({
+        title: "Delete check?",
+        text: `Check #${num} · ${guest} will be permanently deleted.`,
+        okText: "Delete",
+        danger: true,
+      });
+      if (!ok) return;
+      try {
+        await api(`/api/checks/${currentCheckId}`, { method: "DELETE" });
+        toast("Check deleted");
+        currentCheckId = null; currentCheck = null;
+        await loadOpen().catch(() => {});
+        show("screenOpen");
+      } catch (e) { toast("Delete error: " + e.message); }
+    };
+  })();
+
   async function openCheck(id){
     currentCheckId = id;
     await loadCheck();

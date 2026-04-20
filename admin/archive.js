@@ -126,6 +126,24 @@ window.CHK = window.CHK || {};
     `;
   }
 
+  const _isManager = (CHK.getUserProfile?.() || {}).role === "manager";
+
+  async function deleteCheck(id, num, guest) {
+    const ok = await CHK.confirm({
+      title: "Delete check?",
+      text: `#${num} · ${guest} will be permanently deleted and removed from reports.`,
+      okText: "Delete",
+      danger: true,
+    });
+    if (!ok) return;
+    try {
+      await api(`/api/checks/${id}`, { method: "DELETE" });
+      CHK.toast?.("Deleted");
+      offset = 0;
+      await load();
+    } catch (e) { CHK.toast?.("Error: " + (e.message || String(e))); }
+  }
+
   /* ── grouped list by day ── */
   function renderList() {
     const list  = $("archList");
@@ -181,8 +199,15 @@ window.CHK = window.CHK || {};
             <b>#${esc(num)} · ${esc(guest)}</b>
             <div><small class="muted">${esc(time)}${esc(pay)}</small></div>
           </div>
-          <div class="lineTotal">${esc(money(c.total))} ₾</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="lineTotal">${esc(money(c.total))} ₾</div>
+            ${_isManager ? `<button class="btn compact danger archDeleteBtn" style="padding:4px 8px;font-size:12px">✕</button>` : ""}
+          </div>
         `;
+        el.querySelector(".archDeleteBtn")?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          deleteCheck(id, num, guest);
+        });
         el.onclick = () => {
           if (typeof CHK.openCheck === "function") {
             CHK.openCheck(id, { readonly: true, backTo: "archive" });
