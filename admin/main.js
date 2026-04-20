@@ -1,9 +1,10 @@
 /* Loader: gradually migrate from app.js into modules without breaking behavior. */
 (function(){
+  const V = "20260420c"; // bump on every deploy to bust browser cache
   function load(src){
     return new Promise((resolve, reject)=>{
       const s = document.createElement("script");
-      s.src = src;
+      s.src = src + "?v=" + V;
       s.defer = true;
       s.onload = ()=>resolve();
       s.onerror = ()=>reject(new Error("Failed to load " + src));

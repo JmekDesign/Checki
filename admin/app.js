@@ -867,6 +867,7 @@
 
     const btnBack = document.getElementById("btnBackFromCheck");
     if(btnBack){
+      btnBack.classList.remove("hide"); // always visible — just change text/handler
       if(on){
         if(!btnBack._origOnclick) btnBack._origOnclick = btnBack.onclick;
         btnBack.textContent = "← Archive";

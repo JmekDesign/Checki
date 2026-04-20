@@ -315,7 +315,8 @@
   pointer-events:none !important;
 }
 
-/* Close hidden in readonly via JS (.hide class); back button stays visible as "← Archive" */
+/* Close hidden in readonly via JS (.hide class); back button explicitly visible */
+.chk-readonly #btnBackFromCheck { display: block !important; }
 
 /* УБРАТЬ +/- В АРХИВНОМ ЧЕКЕ, НО ОСТАВИТЬ ЧИСЛО */
 .chk-readonly .qtyCtl button{ display:none !important; }
