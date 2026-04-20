@@ -272,11 +272,16 @@
       });
       if (!ok) return;
       try {
+        const wasArchive = !!window.CHK?._checkReadonly;
         await api(`/api/checks/${currentCheckId}`, { method: "DELETE" });
         toast("Check deleted");
         currentCheckId = null; currentCheck = null;
-        await loadOpen().catch(() => {});
-        show("screenOpen");
+        if (wasArchive && window.CHK?.gotoArchive) {
+          await window.CHK.gotoArchive(); // keeps current filters (reload, not load)
+        } else {
+          await loadOpen().catch(() => {});
+          show("screenOpen");
+        }
       } catch (e) { toast("Delete error: " + e.message); }
     };
   })();
