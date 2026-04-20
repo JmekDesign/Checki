@@ -199,15 +199,8 @@ window.CHK = window.CHK || {};
             <b>#${esc(num)} · ${esc(guest)}</b>
             <div><small class="muted">${esc(time)}${esc(pay)}</small></div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="lineTotal">${esc(money(c.total))} ₾</div>
-            ${_isManager ? `<button class="btn compact danger archDeleteBtn" style="padding:4px 8px;font-size:12px">✕</button>` : ""}
-          </div>
+          <div class="lineTotal">${esc(money(c.total))} ₾</div>
         `;
-        el.querySelector(".archDeleteBtn")?.addEventListener("click", (e) => {
-          e.stopPropagation();
-          deleteCheck(id, num, guest);
-        });
         el.onclick = () => {
           if (typeof CHK.openCheck === "function") {
             CHK.openCheck(id, { readonly: true, backTo: "archive" });

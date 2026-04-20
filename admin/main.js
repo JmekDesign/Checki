@@ -1,6 +1,6 @@
 /* Loader: gradually migrate from app.js into modules without breaking behavior. */
 (function(){
-  const V = "20260420e"; // bump on every deploy to bust browser cache
+  const V = "20260420f"; // bump on every deploy to bust browser cache
   function load(src){
     return new Promise((resolve, reject)=>{
       const s = document.createElement("script");
