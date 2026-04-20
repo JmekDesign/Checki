@@ -26,6 +26,18 @@ backend/app/
                      auth, bootstrap, guests, products, health
   schemas/         — Pydantic models (auth, bootstrap, checks, guests, products)
 admin/             — Static HTML/JS/CSS staff UI
+  index.html       — single-page app shell
+  main.js          — script loader (loads modules in order via await)
+  ui.js            — show(), toast(), confirm(), paymentConfirm() — max 250 lines
+  api.js           — CHK.api(), token management
+  app.js           — login, check list, add item, voice input ⚠ NEEDS SPLIT (>250)
+  archive.js       — archive screen, filters, stats
+  venue.js         — venue settings, staff management
+  catalog.js       — product catalog
+  supplies.js      — supplies / procurement
+  scan.js          — paper receipt scanning
+  help.js          — onboarding stories
+  app.css          — all styles
 sql/               — Migration scripts (001_init.sql, 002_sessions.sql, ...)
 tests/             — pytest (real PostgreSQL, savepoint/rollback per test)
 Makefile           — dev commands
@@ -51,7 +63,9 @@ Returns `UserContext` TypedDict. `AUTH_SALT` from env only — never hardcoded.
 **Schema changes require a migration** — add a numbered file under `sql/` before
 touching any table definition.
 
-**File size** — files over 250 lines must be split into submodules.
+**File size** — files over 250 lines must be split into submodules. Applies to
+both backend (`routers/`, `core/`) and frontend (`admin/*.js`). When a file
+exceeds the limit, extract the new module immediately — do not defer it.
 
 **Type hints** — all new code: `from __future__ import annotations` at top,
 full type annotations, passes `mypy --strict`.
