@@ -302,17 +302,23 @@
 
     <!-- CHECK -->
     <div class="card hide" id="screenCheck">
-      <div class="row" style="justify-content:space-between; align-items:flex-start">
+      <!-- Nav row: back LEFT, close RIGHT -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+        <button class="btn compact" id="btnBackFromCheck">← Checks</button>
+        <button class="btn danger" id="btnCloseCheck">Close</button>
+      </div>
+      <!-- Check header: title/meta LEFT, delete icon RIGHT (manager only) -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start">
         <div style="min-width:0">
           <div class="h1" id="checkTitle" style="margin-bottom:2px">Check</div>
           <div class="muted" id="checkMeta" style="font-size:13px">—</div>
           <div id="checkTotal" style="margin-top:6px;font-size:22px;font-weight:800;color:var(--accent)">—</div>
         </div>
-        <div style="display:flex; gap:8px; align-items:center">
-          <button class="btn compact" id="btnBackFromCheck">← Checks</button>
-          <button class="btn danger hide" id="btnDeleteCheck">Delete</button>
-          <button class="btn danger" id="btnCloseCheck">Close</button>
-        </div>
+        <button id="btnDeleteCheck" class="hide" title="Delete check" style="background:transparent;border:none;padding:6px;color:var(--muted);cursor:pointer;flex-shrink:0;margin-top:2px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </button>
       </div>
 
       <div style="height:10px"></div>

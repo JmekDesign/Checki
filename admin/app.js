@@ -248,7 +248,10 @@
     const btn = $("btnDeleteCheck");
     if (!btn) return;
     const profile = window.CHK?.getUserProfile?.() || {};
-    if (profile.role === "manager") btn.classList.remove("hide");
+    if (profile.role === "manager") {
+      btn.dataset.isManager = "1";
+      btn.classList.remove("hide");
+    }
 
     btn.onclick = async () => {
       if (!currentCheckId) return;
@@ -859,18 +862,23 @@
 
     const btnClose = document.getElementById("btnCloseCheck");
     if(btnClose){
+      btnClose.classList.toggle("hide", !!on);
+    }
+
+    const btnBack = document.getElementById("btnBackFromCheck");
+    if(btnBack){
       if(on){
-        // Replace Close with Back -> Archive
-        btnClose.disabled = false;
-        btnClose.classList.remove("danger");
-        btnClose.textContent = "← Back";
-        btnClose.onclick = async ()=>{ await _gotoArchive(); };
-      }else{
-        btnClose.textContent = "Close";
-        btnClose.classList.add("danger");
-        if(typeof _closeCheckHandler === "function") btnClose.onclick = _closeCheckHandler;
+        if(!btnBack._origOnclick) btnBack._origOnclick = btnBack.onclick;
+        btnBack.textContent = "← Archive";
+        btnBack.onclick = async () => { await _gotoArchive(); };
+      } else {
+        btnBack.textContent = "← Checks";
+        if(btnBack._origOnclick) btnBack.onclick = btnBack._origOnclick;
       }
     }
+
+    const btnDelete = document.getElementById("btnDeleteCheck");
+    if(btnDelete) btnDelete.classList.toggle("hide", !!on || btnDelete.dataset.isManager !== "1");
 
     // bottom bar is hidden by CSS in .chk-readonly
   }
