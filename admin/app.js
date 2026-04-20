@@ -52,12 +52,16 @@
     }catch(e){ toast("Archive: " + e.message); }
   };
 
-  // Back from check detail → open checks (without closing)
+  // Back from check detail — handler checks readonly state at click time
   const btnBackFromCheck = $("btnBackFromCheck");
   if(btnBackFromCheck) btnBackFromCheck.onclick = async ()=>{
-    currentCheckId=null; currentCheck=null;
-    await loadOpen().catch(()=>{});
-    show("screenOpen", token);
+    if(window.CHK?._checkReadonly && typeof window.CHK?.gotoArchive === "function"){
+      await window.CHK.gotoArchive();
+    } else {
+      currentCheckId=null; currentCheck=null;
+      await loadOpen().catch(()=>{});
+      show("screenOpen", token);
+    }
   };
 
   $("btnLogin").onclick = async ()=>{
@@ -81,6 +85,9 @@
       if(window.CHK && window.CHK.venue) await window.CHK.venue.load();
     }catch(e){ toast("Venue: " + e.message); }
   };
+
+  const btnBackFromVenue = $("btnBackFromVenue");
+  if(btnBackFromVenue) btnBackFromVenue.onclick = ()=>{ show("screenOpen"); };
 
   $("btnNewCheck").onclick = ()=>{ $("guestName").value=""; hideGuestSuggest(); show("screenNew"); $("guestName").focus(); };
   $("btnBackOpen").onclick = ()=>{ hideGuestSuggest(); show("screenOpen"); };
@@ -276,6 +283,8 @@
 
   async function openCheck(id){
     currentCheckId = id;
+    // Always reset readonly state before showing check (archive wrapper sets it after if needed)
+    if(window.CHK?.setReadonly) window.CHK.setReadonly(false);
     await loadCheck();
     show("screenCheck", token);
     resetAddForm();
@@ -861,21 +870,13 @@
     }catch(e){}
 
     const btnClose = document.getElementById("btnCloseCheck");
-    if(btnClose){
-      btnClose.classList.toggle("hide", !!on);
-    }
+    if(btnClose) btnClose.classList.toggle("hide", !!on);
 
+    // Back button: always visible, onclick stays unchanged (checks CHK._checkReadonly at click time)
     const btnBack = document.getElementById("btnBackFromCheck");
     if(btnBack){
-      btnBack.classList.remove("hide"); // always visible — just change text/handler
-      if(on){
-        if(!btnBack._origOnclick) btnBack._origOnclick = btnBack.onclick;
-        btnBack.textContent = "← Archive";
-        btnBack.onclick = async () => { await _gotoArchive(); };
-      } else {
-        btnBack.textContent = "← Checks";
-        if(btnBack._origOnclick) btnBack.onclick = btnBack._origOnclick;
-      }
+      btnBack.classList.remove("hide");
+      btnBack.textContent = on ? "← Archive" : "← Checks";
     }
 
     const btnDelete = document.getElementById("btnDeleteCheck");
@@ -922,6 +923,7 @@
   }
 
   CHK.setReadonly = setReadonly;
+  CHK.gotoArchive = _gotoArchive; // used by btnBackFromCheck onclick
 })();
 // === /ARCHIVE READONLY PATCH (AUTO) ===
 
