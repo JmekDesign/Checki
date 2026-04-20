@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Checki — Staff</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
-  <link rel="stylesheet" href="./app.css?v=20260420d">
+  <link rel="stylesheet" href="./app.css?v=20260420e">
 </head>
 <body>
   <div class="toast" id="toast"></div>
@@ -171,9 +171,12 @@
 
     <!-- VENUE (manager screen) -->
     <div class="card cardless hide" id="screenVenue">
-      <!-- Nav row -->
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-        <button class="btn compact" id="btnBackFromVenue">← Back</button>
+      <!-- Nav: pill back button (no tabBar on this screen) -->
+      <div style="margin-bottom:14px">
+        <button class="navBack" id="btnBackFromVenue">
+          <svg width="7" height="13" viewBox="0 0 7 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1L1 6.5 6 12"/></svg>
+          Open checks
+        </button>
       </div>
       <div id="venueHeader"></div>
       <div class="hr"></div>

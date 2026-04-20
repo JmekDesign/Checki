@@ -71,6 +71,15 @@
     .btn.primary{background:rgba(73,209,124,.16); border-color:rgba(73,209,124,.32)}
     .btn.danger{background:rgba(255,90,106,.14); border-color:rgba(255,90,106,.28)}
     .btn.compact{padding:8px 10px; border-radius:12px}
+    /* Pill back button (iOS-style) — used in venue settings */
+    .navBack{
+      display:inline-flex; align-items:center; gap:5px;
+      padding:8px 16px 8px 12px; border-radius:100px;
+      background:rgba(255,255,255,.09); border:none;
+      color:var(--text); font-size:15px; font-weight:500;
+      cursor:pointer; -webkit-tap-highlight-color:transparent;
+    }
+    .navBack:active{opacity:.7}
     .btn:disabled{
       opacity:.45;
       cursor:not-allowed;

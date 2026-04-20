@@ -34,7 +34,7 @@ window.CHK = window.CHK || {};
       $("btnLogout")?.classList.toggle("hide", !token);
 
       // Tab bar: visible on main screens
-      const TAB_SCREENS = ["screenOpen", "screenArchive", "screenVenue"];
+      const TAB_SCREENS = ["screenOpen", "screenArchive"];
       $("tabBar")?.classList.toggle("hide", !(token && TAB_SCREENS.includes(screen)));
       $("tabOpen")?.classList.toggle("active", screen === "screenOpen");
       $("tabArchive")?.classList.toggle("active", screen === "screenArchive");
