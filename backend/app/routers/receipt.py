@@ -60,7 +60,7 @@ def get_receipt(token: str) -> dict[str, Any]:
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT c.number, c.guest_name_snapshot, c.total, c.closed_at,
+            SELECT c.shift_number, c.guest_name_snapshot, c.total, c.closed_at,
                    c.status, v.name
             FROM checks c
             JOIN venues v ON v.id = c.venue_id
