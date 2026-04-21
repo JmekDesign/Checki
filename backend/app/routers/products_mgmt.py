@@ -104,12 +104,6 @@ def normalize_all(
     conn = db_conn()
     try:
         cur = conn.cursor()
-        # Re-flag all unlocked products so they get (re-)normalized
-        cur.execute(
-            "UPDATE products SET needs_normalization = TRUE"
-            " WHERE venue_id = %s AND locked = FALSE;",
-            (venue_id,),
-        )
         cur.execute(
             "SELECT COUNT(*) FROM products"
             " WHERE venue_id = %s AND needs_normalization = TRUE AND locked = FALSE;",

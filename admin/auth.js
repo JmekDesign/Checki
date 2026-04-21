@@ -38,6 +38,8 @@ window.CHK = window.CHK || {};
 
   const btnVenue = $("btnVenue");
   if (btnVenue) btnVenue.onclick = async () => {
+    const hEl = $("venueHeader"); if (hEl) hEl.innerHTML = "";
+    const sEl = $("venueStaff");  if (sEl) sEl.innerHTML = "";
     CHK.nav.go("screenVenue");
     try { await CHK.venue?.load(); } catch (e) { toast("Venue: " + e.message); }
   };
