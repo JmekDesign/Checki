@@ -1,6 +1,6 @@
 /* Loader: gradually migrate from app.js into modules without breaking behavior. */
 (function(){
-  const V = "20260420g"; // bump on every deploy to bust browser cache
+  const V = "20260421a"; // bump on every deploy to bust browser cache
   function load(src){
     return new Promise((resolve, reject)=>{
       const s = document.createElement("script");
@@ -12,10 +12,22 @@
     });
   }
 
+  function loadExt(src){
+    return new Promise((resolve, reject)=>{
+      const s = document.createElement("script");
+      s.src = src; s.defer = true;
+      s.onload = ()=>resolve();
+      s.onerror = ()=>reject(new Error("Failed to load " + src));
+      document.head.appendChild(s);
+    });
+  }
+
   (async ()=>{
     try{
+      await loadExt("https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js");
       await load("./api.js");
       await load("./ui.js");
+      await load("./payment.js");
       await load("./nav.js");
       await load("./archive.js");
       await load("./datepicker.js");
