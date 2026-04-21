@@ -37,6 +37,7 @@ window.CHK = window.CHK || {};
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) throw new Error(data.detail || "Voice error");
+            if (data.transcription) toast(`🎙 "${data.transcription}"`);
             if (data.items_added?.length) {
               toast("Added: " + data.items_added.map(i => `${i.qty}× ${i.name}`).join(", "));
               await CHK.check?.reload();

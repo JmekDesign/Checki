@@ -34,10 +34,11 @@ Step 2 — catalog lookup:
 Use the catalog name ONLY when the spoken item IS that catalog item:
   ✓ Same product, different spelling/language: "Хоегарден" → "Hoegaarden", "Джеймсон" → "Jameson"
   ✓ Clear shorthand for one specific item: "хое" → "Hoegaarden" (if only one hoegaarden in catalog)
-  ✗ NEVER substitute a different product: "Hanky Panky" ≠ "Negroni", "Beluga" ≠ "Vodka"
+  ✗ NEVER substitute a different product: "Hanky Panky" ≠ "Negroni", "Beluga" ≠ "Vodka", "Jerky" ≠ "Khinkali"
+  ✗ NEVER pick the "closest" catalog item when the spoken item is simply not in the catalog
   ✗ NEVER match a generic word to a specific brand: "коктейль" ≠ "Negroni"
   ✗ NEVER merge different varieties: "Hoegaarden S" ≠ "Hoegaarden L"
-If not a clear same-product match → use the English name from Step 1, set confidence="low".
+If the spoken item is not in the catalog → use the English name from Step 1 as-is, set confidence="low". Do NOT invent a catalog match.
 
 Price: include only when explicitly stated ("за 12 лари", "12 gel"). Omit if not mentioned.
 Confidence: "high" = certain catalog match. "low" = translated name or no match.
