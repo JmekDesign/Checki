@@ -111,11 +111,7 @@ def products_list(
             params.append(f"%{q_norm}%")
             params.append(q_norm)
 
-        order = (
-            "word_similarity(%s, name) DESC, name ASC"
-            if q_norm
-            else "category ASC, name ASC"
-        )
+        order = "word_similarity(%s, name) DESC, name ASC" if q_norm else "category ASC, name ASC"
         if q_norm:
             params.append(q_norm)
 

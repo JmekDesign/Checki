@@ -41,6 +41,7 @@ window.CHK = window.CHK || {};
             if (data.items_added?.length) {
               toast("Added: " + data.items_added.map(i => `${i.qty}× ${i.name}`).join(", "));
               await CHK.check?.reload();
+              data.items_added.forEach(i => { if (i.item_id) CHK.flashItemRow?.(i.item_id); });
             } else if (!data.needs_price?.length) {
               toast("Nothing recognized");
             }

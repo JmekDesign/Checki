@@ -83,7 +83,16 @@ def checks_archive(
 
         cur.execute(list_sql, tuple(params + [limit, offset]))
         items = []
-        for cid, gname, closed_at, total, payment_method, shift_num, shift_dt, seq_num in cur.fetchall():
+        for (
+            cid,
+            gname,
+            closed_at,
+            total,
+            payment_method,
+            shift_num,
+            shift_dt,
+            seq_num,
+        ) in cur.fetchall():
             cid_str = str(cid)
             items.append(
                 {

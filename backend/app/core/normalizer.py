@@ -254,7 +254,9 @@ def _save_normalized(product_id: str, venue_id: str, canonical: str, category: s
                 "UPDATE products SET category = %s, needs_normalization = FALSE WHERE id = %s;",
                 (category, keep_id),
             )
-            logger.info("merged duplicate %r (id=%s) → existing id=%s", canonical, product_id, keep_id)
+            logger.info(
+                "merged duplicate %r (id=%s) → existing id=%s", canonical, product_id, keep_id
+            )
         else:
             cur.execute(
                 """

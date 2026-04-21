@@ -31,8 +31,7 @@ def guest_search(
             )
         else:
             cur.execute(
-                "SELECT name FROM guests WHERE venue_id = %s"
-                " ORDER BY last_seen_at DESC LIMIT %s;",
+                "SELECT name FROM guests WHERE venue_id = %s ORDER BY last_seen_at DESC LIMIT %s;",
                 (venue_id, limit),
             )
         rows = cur.fetchall()

@@ -83,6 +83,7 @@ def register(payload: RegisterIn) -> dict[str, Any]:
         # Send welcome email in background (don't block response if SMTP fails)
         if payload.email:
             email_to = payload.email
+
             def _send() -> None:
                 try:
                     send_welcome_email(
@@ -95,6 +96,7 @@ def register(payload: RegisterIn) -> dict[str, Any]:
                     )
                 except Exception as exc:
                     logger.warning("welcome email failed: %s", exc)
+
             threading.Thread(target=_send, daemon=True).start()
 
         return {"ok": True, "venue_id": str(venue_id)}

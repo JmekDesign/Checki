@@ -47,9 +47,7 @@ Return ONLY valid JSON:
 {"items": [{"name": "Hoegaarden", "qty": 2, "confidence": "high"}, {"name": "Hanky Panky", "qty": 1, "price": 20.0, "confidence": "low"}]}"""
 
 
-def _multipart(
-    fields: list[tuple[str, bytes, str | None, str | None]], boundary: str
-) -> bytes:
+def _multipart(fields: list[tuple[str, bytes, str | None, str | None]], boundary: str) -> bytes:
     body = b""
     for name, value, filename, ctype in fields:
         body += f"--{boundary}\r\n".encode()
@@ -192,9 +190,7 @@ async def voice_add(
 
     settings = get_settings()
     if not settings.openai_api_key:
-        raise HTTPException(
-            status_code=503, detail="Voice not available: OPENAI_API_KEY not set"
-        )
+        raise HTTPException(status_code=503, detail="Voice not available: OPENAI_API_KEY not set")
 
     audio_bytes = await audio.read()
     if len(audio_bytes) > _MAX_BYTES:

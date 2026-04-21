@@ -191,24 +191,33 @@ window.CHK = window.CHK || {};
 
     back.innerHTML = `
       <div class="rcptModal" role="dialog" aria-modal="true">
+        <button class="rcptClose" id="payCancel" aria-label="Close">✕</button>
         <div class="rcptBrand">Checki</div>
         <div class="rcptCheckNum">#${_rcptEsc(num)}</div>
         <div class="rcptGuest">${_rcptEsc(guest)}</div>
         <div class="rcptDash"></div>
         <div class="rcptItems">${itemsHtml}</div>
         <div class="rcptDash"></div>
-        <div class="rcptTotalLabel">Total</div>
-        <div class="rcptTotalVal">${_rcptMoney(total)} ₾</div>
-        <div class="rcptTs">${_rcptEsc(ts)}</div>
-        <div class="rcptDash" style="margin-bottom:16px"></div>
+        <div class="rcptBottom">
+          <div class="rcptQRWrap"><img id="rcptQRImg" class="rcptQR" src="" alt="QR"><div class="rcptQRLabel">Scan to view</div></div>
+          <div class="rcptTotalWrap">
+            <div class="rcptTotalLabel">Total</div>
+            <div class="rcptTotalVal">${_rcptMoney(total)} ₾</div>
+            <div class="rcptTs">${_rcptEsc(ts)}</div>
+          </div>
+        </div>
         <div class="rcptPayBtns">
           <button class="rcptBtnPay" id="payCash">💵 Cash</button>
           <button class="rcptBtnPay" id="payCard">💳 Card</button>
         </div>
-        <button class="rcptBtnCancel" id="payCancel">Don't close</button>
       </div>
     `;
     back.classList.remove("hide");
+
+    if (o.checkId && CHK.api)
+      CHK.api(`/api/checks/${o.checkId}/receipt-token`, { method: "POST" })
+        .then(r => { const img = $("rcptQRImg"); if (img && r.url) img.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(r.url)}&margin=4`; })
+        .catch(() => {});
 
     return new Promise((resolve) => {
       let done = false;

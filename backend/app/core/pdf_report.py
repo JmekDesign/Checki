@@ -178,7 +178,9 @@ def generate_report(
             pdf.cell(W * 0.09, 5, "")
             pdf.cell(W * 0.55, 5, iname)
             pdf.cell(W * 0.16, 5, f"{_TIMES}{iqty:g}", align="R")
-            pdf.cell(W * 0.20, 5, f"{_m(iltotal)} {_LARI}", align="R", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(
+                W * 0.20, 5, f"{_m(iltotal)} {_LARI}", align="R", new_x="LMARGIN", new_y="NEXT"
+            )
         black()
 
     return bytes(pdf.output())

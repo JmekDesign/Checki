@@ -29,6 +29,7 @@ from .routers.procurement import router as procurement_router
 from .routers.products import router as products_router
 from .routers.products_mgmt import router as products_mgmt_router
 from .routers.profile import router as profile_router
+from .routers.receipt import router as receipt_router
 from .routers.register import router as register_router
 from .routers.reports import router as reports_router
 from .routers.staff import router as staff_router
@@ -77,6 +78,7 @@ app.include_router(checks_items_router)
 app.include_router(checks_items_edit_router)
 app.include_router(checks_close_router)
 app.include_router(checks_delete_router)
+app.include_router(receipt_router)
 app.include_router(staff_router)
 app.include_router(venue_router)
 app.include_router(procurement_router)

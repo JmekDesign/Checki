@@ -113,6 +113,7 @@ window.CHK = window.CHK || {};
   $("btnCloseCheck").onclick = async () => {
     if (!currentCheckId) return;
     const method = await CHK.paymentConfirm?.({
+      checkId: currentCheckId,
       number: currentCheck?.number ?? "",
       guest: currentCheck?.guest_name_snapshot ?? "—",
       total: Number(currentCheck?.total ?? 0),
@@ -222,6 +223,7 @@ window.CHK = window.CHK || {};
   CHK.openCheck = openCheck;
   CHK.setReadonly = setReadonly;
   CHK.gotoArchive = gotoArchive;
+  CHK.flashItemRow = flashItemRow;
   CHK.check = {
     get id() { return currentCheckId; },
     get data() { return currentCheck; },

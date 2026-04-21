@@ -70,6 +70,7 @@ def _order_rows(
 
 # ── Orders ────────────────────────────────────────────────────────────────────
 
+
 class OrderIn(BaseModel):
     title: str
 
@@ -172,6 +173,7 @@ def procurement_close(
 
 
 # ── Items ─────────────────────────────────────────────────────────────────────
+
 
 class ItemIn(BaseModel):
     text: str
@@ -278,6 +280,7 @@ def item_delete(
 
 
 # ── Archive ───────────────────────────────────────────────────────────────────
+
 
 @router.get("/api/procurement/archive")
 def procurement_archive(

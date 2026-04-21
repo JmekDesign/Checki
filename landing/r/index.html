@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Receipt · Checki</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px 16px 48px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .receipt {
+      background: #f7f5f0;
+      border-radius: 20px;
+      padding: 24px 20px 20px;
+      width: min(100%, 360px);
+      box-shadow: 0 24px 60px rgba(0,0,0,.6);
+    }
+    .brand {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: #bbb;
+      margin-bottom: 10px;
+    }
+    .venue {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: #111;
+    }
+    .check-num {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: #111;
+      margin-top: 4px;
+    }
+    .guest {
+      text-align: center;
+      font-size: 13px;
+      color: #777;
+      margin-top: 2px;
+    }
+    .dash {
+      border: none;
+      border-top: 1px dashed #ccc;
+      margin: 14px 0;
+    }
+    .items { display: flex; flex-direction: column; gap: 6px; }
+    .row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 14px;
+      color: #222;
+    }
+    .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .qty  { font-size: 12px; color: #999; flex: 0 0 auto; }
+    .amt  { font-weight: 600; white-space: nowrap; min-width: 48px; text-align: right; }
+    .total-label {
+      text-align: right;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #aaa;
+      margin-bottom: 2px;
+    }
+    .total-val {
+      text-align: right;
+      font-size: 36px;
+      font-weight: 800;
+      color: #111;
+      line-height: 1;
+    }
+    .ts {
+      text-align: right;
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 4px;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .status-open { background: #fff3cd; color: #856404; }
+    .status-closed { background: #d1e7dd; color: #0a5c36; }
+    .status-row { text-align: center; margin-bottom: 6px; }
+    .loading { text-align: center; color: #999; padding: 32px 0; font-size: 14px; }
+    .error { text-align: center; color: #c00; padding: 32px 0; font-size: 14px; }
+    .powered {
+      text-align: center;
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 20px;
+    }
+    .powered a { color: #bbb; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="receipt" id="receipt">
+    <div class="brand">Checki</div>
+    <div class="loading" id="state">Loading…</div>
+  </div>
+  <script>
+    const API = "https://api.checki.ge";
+
+    function esc(s) {
+      return (s || "").toString().replace(/[&<>"']/g, c =>
+        ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    }
+    function money(x) {
+      const n = Number(x || 0);
+      return isFinite(n) ? n.toFixed(2).replace(/\.00$/, "") : "0";
+    }
+
+    const token = new URLSearchParams(location.search).get("t");
+    if (!token) {
+      document.getElementById("state").className = "error";
+      document.getElementById("state").textContent = "Invalid link.";
+    } else {
+      fetch(`${API}/api/receipt/${encodeURIComponent(token)}`)
+        .then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(d => {
+          const ts = d.closed_at
+            ? new Date(d.closed_at).toLocaleString(undefined, {day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})
+            : "Open";
+          const itemsHtml = (d.items || []).map(it => `
+            <div class="row">
+              <span class="name">${esc(it.name)}</span>
+              <span class="qty">×${it.qty}</span>
+              <span class="amt">${money(it.line_total)} ₾</span>
+            </div>`).join("") || '<div class="loading">Empty</div>';
+          const badge = d.status === "open"
+            ? '<span class="status-badge status-open">Open</span>'
+            : '<span class="status-badge status-closed">Paid</span>';
+
+          document.getElementById("receipt").innerHTML = `
+            <div class="brand">Checki</div>
+            <div class="venue">${esc(d.venue)}</div>
+            <div class="check-num">#${esc(String(d.number || ""))}</div>
+            <div class="guest">${esc(d.guest || "")}</div>
+            <div class="status-row">${badge}</div>
+            <hr class="dash">
+            <div class="items">${itemsHtml}</div>
+            <hr class="dash">
+            <div class="total-label">Total</div>
+            <div class="total-val">${money(d.total)} ₾</div>
+            <div class="ts">${esc(ts)}</div>
+            <div class="powered"><a href="https://checki.ge">Powered by Checki</a></div>
+          `;
+        })
+        .catch(() => {
+          document.getElementById("state").className = "error";
+          document.getElementById("state").textContent = "Receipt not found.";
+        });
+    }
+  </script>
+</body>
+</html>

@@ -89,7 +89,11 @@ def archive_report(
             for row in cur.fetchall():
                 cid = str(row[0])
                 items_by_check.setdefault(cid, []).append(
-                    {"name": row[1] or "—", "qty": float(row[2] or 0), "line_total": float(row[3] or 0)}
+                    {
+                        "name": row[1] or "—",
+                        "qty": float(row[2] or 0),
+                        "line_total": float(row[3] or 0),
+                    }
                 )
     finally:
         with contextlib.suppress(Exception):

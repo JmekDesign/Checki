@@ -247,7 +247,10 @@ def add_line(
         if qty <= 0:
             raise HTTPException(status_code=400, detail="qty must be > 0")
         return check_item_add(
-            check_id, ItemAddIn(name=name, price=float(payload.price), qty=qty), background_tasks, authorization
+            check_id,
+            ItemAddIn(name=name, price=float(payload.price), qty=qty),
+            background_tasks,
+            authorization,
         )
 
     line = (payload.line or payload.text or "").strip()
@@ -286,9 +289,17 @@ def check_get(
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="check not found")
-        cid, check_venue_id, status, opened_at, guest_name_snapshot, total, shift_num, shift_dt, seq_num = (
-            row
-        )
+        (
+            cid,
+            check_venue_id,
+            status,
+            opened_at,
+            guest_name_snapshot,
+            total,
+            shift_num,
+            shift_dt,
+            seq_num,
+        ) = row
         if str(check_venue_id) != str(venue_id):
             raise HTTPException(status_code=403, detail="forbidden")
 

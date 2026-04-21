@@ -81,20 +81,27 @@ def _load_catalog(venue_id: str, cur: Any) -> list[dict[str, Any]]:  # noqa: ANN
 
 def _call_vision(image_bytes: bytes, mime: str, api_key: str, prompt: str) -> dict[str, Any]:
     b64 = base64.b64encode(image_bytes).decode()
-    payload = json.dumps({
-        "model": "gpt-4o",
-        "max_tokens": 800,
-        "messages": [{
-            "role": "user",
-            "content": [
-                {"type": "text", "text": prompt},
-                {"type": "image_url", "image_url": {
-                    "url": f"data:{mime};base64,{b64}",
-                    "detail": "high",
-                }},
+    payload = json.dumps(
+        {
+            "model": "gpt-4o",
+            "max_tokens": 800,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:{mime};base64,{b64}",
+                                "detail": "high",
+                            },
+                        },
+                    ],
+                }
             ],
-        }],
-    }).encode()
+        }
+    ).encode()
 
     req = urllib.request.Request(
         "https://api.openai.com/v1/chat/completions",
@@ -182,7 +189,7 @@ async def scan_check(
         raise HTTPException(status_code=502, detail="Could not parse image") from exc
 
     raw_items: list[Any] = parsed.get("items") or []
-    guest: str | None = (parsed.get("guest") or None)
+    guest: str | None = parsed.get("guest") or None
 
     conn = db_conn()
     try:
@@ -220,13 +227,15 @@ async def scan_check(
                     price = 0.0
                     confidence = "low"
 
-                result_items.append({
-                    "name": name,
-                    "qty": qty,
-                    "price": price,
-                    "product_id": product_id,
-                    "confidence": confidence,
-                })
+                result_items.append(
+                    {
+                        "name": name,
+                        "qty": qty,
+                        "price": price,
+                        "product_id": product_id,
+                        "confidence": confidence,
+                    }
+                )
             except Exception as exc:
                 logger.warning("scan: skip item %r: %s", item, exc)
     finally:

@@ -18,11 +18,18 @@ window.CHK = window.CHK || {};
 
   /* ── load ── */
   async function load() {
-    // Clear stale content before fetch so no layout jump on navigation
+    // Show skeleton cards immediately — no blank flash, no stale data
     const headerEl = $("venueHeader");
     const staffEl  = $("venueStaff");
-    if (headerEl) headerEl.innerHTML = "";
-    if (staffEl)  staffEl.innerHTML  = "";
+    if (headerEl) headerEl.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        ${["Open now","Closed today","Revenue"].map(l => `
+          <div class="archStatCard" style="text-align:center">
+            <div class="archStatVal" style="color:#ddd">—</div>
+            <div class="archStatLabel" style="color:#ddd">${l}</div>
+          </div>`).join("")}
+      </div>`;
+    if (staffEl) staffEl.innerHTML = "";
 
     const [venueRes, staffRes] = await Promise.all([
       api("/api/venue",  { method: "GET" }),
