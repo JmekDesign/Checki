@@ -525,12 +525,12 @@
   flex: 0 0 auto;
 }
 .rcptQR {
-  width: 100px;
-  height: 100px;
+  width: 160px;
+  height: 160px;
   border-radius: 8px;
-  background: #eee;
-  display: block;
+  overflow: hidden;
 }
+.rcptQR canvas { display: block; }
 .rcptQRLabel {
   font-size: 10px;
   color: #bbb;

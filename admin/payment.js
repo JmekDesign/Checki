@@ -76,11 +76,12 @@ window.CHK = window.CHK || {};
           const el = $("rcptQRCanvas");
           if (!el || !r.url || typeof QRCodeStyling === "undefined") return;
           new QRCodeStyling({
-            width: 110, height: 110, margin: 2, data: r.url,
-            dotsOptions:        { type: "dots",          color: "#111" },
+            type: "canvas",
+            width: 160, height: 160, margin: 4, data: r.url,
+            dotsOptions:          { type: "dots",          color: "#111" },
             cornersSquareOptions: { type: "extra-rounded", color: "#111" },
-            cornersDotOptions:  { type: "dot",           color: "#111" },
-            backgroundOptions:  { color: "transparent" },
+            cornersDotOptions:    { type: "dot",           color: "#111" },
+            backgroundOptions:    { color: "#f7f5f0" },
           }).append(el);
         })
         .catch(() => {});
