@@ -190,35 +190,45 @@ async def scan_check(
         result_items: list[dict[str, Any]] = []
 
         for item in raw_items:
-            name = str(item.get("name") or "").strip()
-            if not name:
-                continue
-            qty = max(1, int(item.get("qty") or 1))
-            unit_price = item.get("unit_price")
-            scan_conf = str(item.get("confidence") or "high")
+            try:
+                name = str(item.get("name") or "").strip()
+                if not name:
+                    continue
+                try:
+                    qty = max(1, int(float(item.get("qty") or 1)))
+                except (TypeError, ValueError):
+                    qty = 1
+                unit_price = item.get("unit_price")
+                scan_conf = str(item.get("confidence") or "high")
 
-            product_id, catalog_price = _find_product(name, venue_id, cur)
+                product_id, catalog_price = _find_product(name, venue_id, cur)
 
-            if _is_suspicious(name) or product_id is None:
-                scan_conf = "low"
+                if _is_suspicious(name) or product_id is None:
+                    scan_conf = "low"
 
-            if catalog_price is not None:
-                price: float = catalog_price
-                confidence = scan_conf
-            elif unit_price is not None:
-                price = float(unit_price)
-                confidence = scan_conf
-            else:
-                price = 0.0
-                confidence = "low"
+                if catalog_price is not None:
+                    price: float = catalog_price
+                    confidence = scan_conf
+                elif unit_price is not None:
+                    try:
+                        price = float(unit_price)
+                    except (TypeError, ValueError):
+                        price = 0.0
+                        scan_conf = "low"
+                    confidence = scan_conf
+                else:
+                    price = 0.0
+                    confidence = "low"
 
-            result_items.append({
-                "name": name,
-                "qty": qty,
-                "price": price,
-                "product_id": product_id,
-                "confidence": confidence,
-            })
+                result_items.append({
+                    "name": name,
+                    "qty": qty,
+                    "price": price,
+                    "product_id": product_id,
+                    "confidence": confidence,
+                })
+            except Exception as exc:
+                logger.warning("scan: skip item %r: %s", item, exc)
     finally:
         with contextlib.suppress(Exception):
             db_release(conn)

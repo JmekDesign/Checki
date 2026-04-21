@@ -28,14 +28,20 @@ backend/app/
 admin/             — Static HTML/JS/CSS staff UI
   index.html       — single-page app shell
   main.js          — script loader (loads modules in order via await)
-  ui.js            — show(), toast(), confirm(), paymentConfirm() — max 250 lines
+  ui.js            — show(), toast(), confirm(), paymentConfirm(), CHK._show/CHK.show
   api.js           — CHK.api(), token management
-  app.js           — login, check list, add item, voice input ⚠ NEEDS SPLIT (>250)
+  nav.js           — CHK.nav stack-based navigator (go/back/replace/reset/current)
+  auth.js          — login, logout, tab switching, session init
+  open.js          — open checks list, new check, guest autocomplete
+  check.js         — check detail: render, close, delete, readonly patch
+  check-form.js    — add item form: product suggest, qty, quick chips
+  voice.js         — voice recording, send to API, add items to check
+  password-reset.js — forgot/reset password screens
   archive.js       — archive screen, filters, stats
   venue.js         — venue settings, staff management
   catalog.js       — product catalog
   supplies.js      — supplies / procurement
-  scan.js          — paper receipt scanning
+  scan.js          — paper receipt scanning + scan-edit modal
   help.js          — onboarding stories
   app.css          — all styles
 sql/               — Migration scripts (001_init.sql, 002_sessions.sql, ...)

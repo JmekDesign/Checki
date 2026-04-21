@@ -238,6 +238,7 @@ def check_item_add(
 def add_line(
     check_id: UUID,
     payload: AddLineIn,
+    background_tasks: BackgroundTasks,
     authorization: str | None = Header(default=None, alias="Authorization"),
 ) -> dict[str, Any]:
     if payload.price is not None and (payload.name or "").strip():
@@ -246,7 +247,7 @@ def add_line(
         if qty <= 0:
             raise HTTPException(status_code=400, detail="qty must be > 0")
         return check_item_add(
-            check_id, ItemAddIn(name=name, price=float(payload.price), qty=qty), authorization
+            check_id, ItemAddIn(name=name, price=float(payload.price), qty=qty), background_tasks, authorization
         )
 
     line = (payload.line or payload.text or "").strip()
@@ -254,6 +255,7 @@ def add_line(
     return check_item_add(
         check_id,
         ItemAddIn(name=p["name"], price=float(p["price"]), qty=int(p["qty"])),
+        background_tasks,
         authorization,
     )
 

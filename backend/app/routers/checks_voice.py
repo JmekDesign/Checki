@@ -261,151 +261,167 @@ async def voice_add(
         cur = conn.cursor()
 
         for item in parsed_items:
-            name = str(item.get("name") or "").strip()
-            if not name:
-                continue
-            qty = max(1, int(item.get("qty") or 1))
-            item_price: float | None = item.get("price")
-            gpt_confidence = str(item.get("confidence") or "high")
+            try:
+                name = str(item.get("name") or "").strip()
+                if not name:
+                    continue
+                try:
+                    qty = max(1, int(float(item.get("qty") or 1)))
+                except (TypeError, ValueError):
+                    qty = 1
+                _raw_price = item.get("price")
+                try:
+                    item_price: float | None = float(_raw_price) if _raw_price is not None else None
+                except (TypeError, ValueError):
+                    item_price = None
+                gpt_confidence = str(item.get("confidence") or "high")
 
-            product_id, catalog_price = _find_product(name, venue_id, cur)
+                product_id, catalog_price = _find_product(name, venue_id, cur)
 
-            # Low-confidence items (GPT wasn't sure) → mark for review regardless of price
-            if gpt_confidence == "low" and product_id is None:
-                final_price_for_review: float = float(item_price) if item_price is not None else 0.0
-                needs_price.append({"name": name, "qty": qty, "price": final_price_for_review})
-                continue
+                # Low-confidence items (GPT wasn't sure) → mark for review regardless of price
+                if gpt_confidence == "low" and product_id is None:
+                    needs_price.append({"name": name, "qty": qty, "price": item_price or 0.0})
+                    continue
 
-            # Price priority: explicit spoken price wins; catalog price as fallback
-            if item_price is not None:
-                final_price = float(item_price)
-            elif catalog_price is not None:
-                final_price = catalog_price
-            else:
-                needs_price.append({"name": name, "qty": qty})
-                continue
-
-            price_dec = Decimal(str(final_price)).quantize(D2, rounding=ROUND_HALF_UP)
-            line_total = (price_dec * qty).quantize(D2, rounding=ROUND_HALF_UP)
-
-            item_id: Any = None
-
-            if product_id:
-                # Try upsert by product_id + price_snapshot
-                cur.execute(
-                    """
-                    UPDATE check_items
-                    SET qty = qty + %s,
-                        line_total = line_total + %s
-                    WHERE id = (
-                        SELECT id FROM check_items
-                        WHERE check_id = %s
-                          AND product_id = %s
-                          AND price_snapshot = %s
-                        ORDER BY created_at ASC
-                        LIMIT 1
-                    )
-                    RETURNING id
-                    """,
-                    (qty, line_total, check_id_s, product_id, price_dec),
-                )
-                rr = cur.fetchone()
-                if rr:
-                    item_id = rr[0]
+                # Price priority: catalog match always wins (GPT may hallucinate price for known items);
+                # explicit spoken price only used when there is no catalog match.
+                if product_id is not None and catalog_price is not None:
+                    final_price = catalog_price
+                elif item_price is not None:
+                    final_price = item_price
+                elif catalog_price is not None:
+                    final_price = catalog_price
                 else:
+                    needs_price.append({"name": name, "qty": qty})
+                    continue
+
+                price_dec = Decimal(str(final_price)).quantize(D2, rounding=ROUND_HALF_UP)
+                line_total = (price_dec * qty).quantize(D2, rounding=ROUND_HALF_UP)
+
+                item_id: Any = None
+
+                if product_id:
+                    # Try upsert by product_id + price_snapshot
                     cur.execute(
                         """
-                        INSERT INTO check_items
-                            (check_id, product_id, name_snapshot, price_snapshot, qty, line_total)
-                        VALUES (%s, %s, %s, %s, %s, %s)
-                        RETURNING id
-                        """,
-                        (check_id_s, product_id, name, price_dec, qty, line_total),
-                    )
-                    ins = cur.fetchone()
-                    assert ins is not None
-                    item_id = ins[0]
-            else:
-                # No product match — upsert by name + price
-                cur.execute(
-                    """
-                    UPDATE check_items
-                    SET qty = qty + %s,
-                        line_total = line_total + %s
-                    WHERE id = (
-                        SELECT id FROM check_items
-                        WHERE check_id = %s
-                          AND product_id IS NULL
-                          AND lower(trim(name_snapshot)) = lower(trim(%s))
-                          AND price_snapshot = %s
-                        ORDER BY created_at ASC
-                        LIMIT 1
-                    )
-                    RETURNING id
-                    """,
-                    (qty, line_total, check_id_s, name, price_dec),
-                )
-                rr2 = cur.fetchone()
-                if rr2:
-                    item_id = rr2[0]
-                else:
-                    cur.execute(
-                        """
-                        INSERT INTO check_items
-                            (check_id, product_id, name_snapshot, price_snapshot, qty, line_total)
-                        VALUES (%s, NULL, %s, %s, %s, %s)
-                        RETURNING id
-                        """,
-                        (check_id_s, name, price_dec, qty, line_total),
-                    )
-                    ins2 = cur.fetchone()
-                    assert ins2 is not None
-                    item_id = ins2[0]
-
-            cur.execute(
-                "UPDATE checks SET total = total + %s WHERE id = %s",
-                (line_total, check_id_s),
-            )
-
-            # Mirror catalog upsert exactly like checks_items.py
-            if product_id:
-                cur.execute(
-                    "UPDATE products SET last_price=%s WHERE id=%s AND venue_id=%s",
-                    (price_dec, product_id, venue_id),
-                )
-            else:
-                key = normalize_key(name)
-                cur.execute(
-                    "SELECT id FROM products WHERE venue_id=%s AND search_key=%s",
-                    (venue_id, key),
-                )
-                ex = cur.fetchone()
-                if ex:
-                    cur.execute(
-                        "UPDATE products SET name=%s, last_price=%s WHERE id=%s",
-                        (name, price_dec, ex[0]),
-                    )
-                else:
-                    cur.execute(
-                        "INSERT INTO products"
-                        " (venue_id, name, search_key, last_price, category, needs_normalization)"
-                        " VALUES (%s,%s,%s,%s,%s,TRUE) RETURNING id",
-                        (venue_id, name, key, price_dec, "Other"),
-                    )
-                    new_row = cur.fetchone()
-                    if new_row:
-                        background_tasks.add_task(
-                            normalize_product_bg, str(new_row[0]), name, venue_id
+                        UPDATE check_items
+                        SET qty = qty + %s,
+                            line_total = line_total + %s
+                        WHERE id = (
+                            SELECT id FROM check_items
+                            WHERE check_id = %s
+                              AND product_id = %s
+                              AND price_snapshot = %s
+                            ORDER BY created_at ASC
+                            LIMIT 1
                         )
+                        RETURNING id
+                        """,
+                        (qty, line_total, check_id_s, product_id, price_dec),
+                    )
+                    rr = cur.fetchone()
+                    if rr:
+                        item_id = rr[0]
+                    else:
+                        cur.execute(
+                            """
+                            INSERT INTO check_items
+                                (check_id, product_id, name_snapshot, price_snapshot, qty, line_total)
+                            VALUES (%s, %s, %s, %s, %s, %s)
+                            RETURNING id
+                            """,
+                            (check_id_s, product_id, name, price_dec, qty, line_total),
+                        )
+                        ins = cur.fetchone()
+                        if ins is None:
+                            logger.error("voice: INSERT returned no id for %s", name)
+                            continue
+                        item_id = ins[0]
+                else:
+                    # No product match — upsert by name + price
+                    cur.execute(
+                        """
+                        UPDATE check_items
+                        SET qty = qty + %s,
+                            line_total = line_total + %s
+                        WHERE id = (
+                            SELECT id FROM check_items
+                            WHERE check_id = %s
+                              AND product_id IS NULL
+                              AND lower(trim(name_snapshot)) = lower(trim(%s))
+                              AND price_snapshot = %s
+                            ORDER BY created_at ASC
+                            LIMIT 1
+                        )
+                        RETURNING id
+                        """,
+                        (qty, line_total, check_id_s, name, price_dec),
+                    )
+                    rr2 = cur.fetchone()
+                    if rr2:
+                        item_id = rr2[0]
+                    else:
+                        cur.execute(
+                            """
+                            INSERT INTO check_items
+                                (check_id, product_id, name_snapshot, price_snapshot, qty, line_total)
+                            VALUES (%s, NULL, %s, %s, %s, %s)
+                            RETURNING id
+                            """,
+                            (check_id_s, name, price_dec, qty, line_total),
+                        )
+                        ins2 = cur.fetchone()
+                        if ins2 is None:
+                            logger.error("voice: INSERT returned no id for %s", name)
+                            continue
+                        item_id = ins2[0]
 
-            items_added.append(
-                {
-                    "name": name,
-                    "qty": qty,
-                    "price": float(price_dec),
-                    "item_id": str(item_id),
-                }
-            )
+                cur.execute(
+                    "UPDATE checks SET total = total + %s WHERE id = %s",
+                    (line_total, check_id_s),
+                )
+
+                # Mirror catalog upsert exactly like checks_items.py
+                if product_id:
+                    cur.execute(
+                        "UPDATE products SET last_price=%s WHERE id=%s AND venue_id=%s",
+                        (price_dec, product_id, venue_id),
+                    )
+                else:
+                    key = normalize_key(name)
+                    cur.execute(
+                        "SELECT id FROM products WHERE venue_id=%s AND search_key=%s",
+                        (venue_id, key),
+                    )
+                    ex = cur.fetchone()
+                    if ex:
+                        cur.execute(
+                            "UPDATE products SET name=%s, last_price=%s WHERE id=%s",
+                            (name, price_dec, ex[0]),
+                        )
+                    else:
+                        cur.execute(
+                            "INSERT INTO products"
+                            " (venue_id, name, search_key, last_price, category, needs_normalization)"
+                            " VALUES (%s,%s,%s,%s,%s,TRUE) RETURNING id",
+                            (venue_id, name, key, price_dec, "Other"),
+                        )
+                        new_row = cur.fetchone()
+                        if new_row:
+                            background_tasks.add_task(
+                                normalize_product_bg, str(new_row[0]), name, venue_id
+                            )
+
+                items_added.append(
+                    {
+                        "name": name,
+                        "qty": qty,
+                        "price": float(price_dec),
+                        "item_id": str(item_id),
+                    }
+                )
+            except Exception as exc:
+                logger.warning("voice: skip item %r: %s", item, exc)
 
         conn.commit()
     finally:
