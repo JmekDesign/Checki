@@ -233,7 +233,7 @@ window.CHK = window.CHK || {};
     if (back) {
       back.onclick = () => {
         try { document.body.classList.remove("chk-readonly"); } catch (_) {}
-        if (typeof CHK.show === "function") CHK.show("screenOpen", CHK.getToken?.() || "");
+        CHK.nav.back();
       };
     }
 

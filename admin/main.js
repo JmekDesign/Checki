@@ -16,6 +16,7 @@
     try{
       await load("./api.js");
       await load("./ui.js");
+      await load("./nav.js");
       await load("./archive.js");
       await load("./datepicker.js");
       await load("./venue.js");

@@ -19,7 +19,6 @@
   const chkConfirm = (window.CHK && window.CHK.confirm) ? window.CHK.confirm : (async (o)=>window.confirm((typeof o==="string") ? o : String((o && (o.text || o.title)) || "Are you sure?")));
   const chkPayConfirm = (opts) => (window.CHK && window.CHK.paymentConfirm) ? window.CHK.paymentConfirm(opts) : Promise.resolve(null);
   const setAddMsg = (window.CHK && window.CHK.setAddMsg) ? window.CHK.setAddMsg : (()=>{});
-  const show = (screen)=>{ const fn = (window.CHK && window.CHK.show) ? window.CHK.show : null; if(fn) return fn(screen, token); };
   const setToken = (t)=>{
     token = t || "";
     setTokenStore(token);
@@ -32,7 +31,7 @@
     setToken("");
     if(window.CHK.setUserProfile) window.CHK.setUserProfile(null);
     currentCheckId=null; currentCheck=null;
-    show("screenLogin");
+    CHK.nav.reset("screenLogin");
     toast("Logged out");
   };
 
@@ -41,12 +40,12 @@
   if(tabOpen) tabOpen.onclick = async ()=>{
     currentCheckId=null; currentCheck=null;
     await loadOpen().catch(()=>{});
-    show("screenOpen", token);
+    CHK.nav.reset("screenOpen");
   };
 
   const tabArchive = $("tabArchive");
   if(tabArchive) tabArchive.onclick = async ()=>{
-    show("screenArchive", token);
+    CHK.nav.reset("screenArchive");
     try{
       if(window.CHK?.archive) await window.CHK.archive.load();
     }catch(e){ toast("Archive: " + e.message); }
@@ -60,7 +59,7 @@
     } else {
       currentCheckId=null; currentCheck=null;
       await loadOpen().catch(()=>{});
-      show("screenOpen", token);
+      CHK.nav.back();
     }
   };
 
@@ -73,24 +72,24 @@
       if(r.user && window.CHK.setUserProfile) window.CHK.setUserProfile(r.user);
       toast("OK");
       await loadOpen();
-      show("screenOpen", r.token);
+      CHK.nav.reset("screenOpen");
       if(window.CHK?.help) window.CHK.help.init();
     }catch(e){ toast("Login error: " + e.message); }
   };
 
   const btnVenue = $("btnVenue");
   if(btnVenue) btnVenue.onclick = async ()=>{
-    show("screenVenue", token);
+    CHK.nav.go("screenVenue");
     try{
       if(window.CHK && window.CHK.venue) await window.CHK.venue.load();
     }catch(e){ toast("Venue: " + e.message); }
   };
 
   const btnBackFromVenue = $("btnBackFromVenue");
-  if(btnBackFromVenue) btnBackFromVenue.onclick = ()=>{ show("screenOpen"); };
+  if(btnBackFromVenue) btnBackFromVenue.onclick = ()=>{ CHK.nav.back(); };
 
-  $("btnNewCheck").onclick = ()=>{ $("guestName").value=""; hideGuestSuggest(); show("screenNew"); $("guestName").focus(); };
-  $("btnBackOpen").onclick = ()=>{ hideGuestSuggest(); show("screenOpen"); };
+  $("btnNewCheck").onclick = ()=>{ $("guestName").value=""; hideGuestSuggest(); CHK.nav.go("screenNew"); $("guestName").focus(); };
+  $("btnBackOpen").onclick = ()=>{ hideGuestSuggest(); CHK.nav.back(); };
   $("openSearch").oninput = ()=>renderOpen();
 
   /* ── guest name autocomplete ── */
@@ -245,7 +244,7 @@
       toast("Check closed");
       currentCheckId=null; currentCheck=null;
       await loadOpen().catch(()=>{});
-      show("screenOpen");
+      CHK.nav.back();
     }catch(e){ toast("Close error: " + e.message); }
   };
   const _closeCheckHandler = $("btnCloseCheck").onclick;
@@ -280,7 +279,7 @@
           await window.CHK.gotoArchive(); // keeps current filters (reload, not load)
         } else {
           await loadOpen().catch(() => {});
-          show("screenOpen");
+          CHK.nav.back();
         }
       } catch (e) { toast("Delete error: " + e.message); }
     };
@@ -291,7 +290,7 @@
     // Always reset readonly state before showing check (archive wrapper sets it after if needed)
     if(window.CHK?.setReadonly) window.CHK.setReadonly(false);
     await loadCheck();
-    show("screenCheck", token);
+    CHK.nav.go("screenCheck");
     resetAddForm();
     loadQuickChips().catch(()=>{});
   }
@@ -836,13 +835,13 @@
           if(me.user && window.CHK.setUserProfile) window.CHK.setUserProfile(me.user);
         }catch(_){}
         await loadOpen();
-        show("screenOpen", token);
+        CHK.nav.reset("screenOpen");
       } else {
-        show("screenLogin");
+        CHK.nav.reset("screenLogin");
       }
     }catch(e){
       setToken("");
-      show("screenLogin");
+      CHK.nav.reset("screenLogin");
     }
   })();
 })();
@@ -851,14 +850,10 @@
 (function(){
   const CHK = (window.CHK = window.CHK || {});
 
-  function _getToken(){
-    try{ return (typeof CHK.getToken === "function") ? CHK.getToken() : ""; }catch(e){ return ""; }
-  }
-
   async function _gotoArchive(){
     try{ document.body.classList.remove("chk-readonly"); }catch(e){}
     CHK._checkReadonly = false;
-    if(typeof CHK.show === "function") CHK.show("screenArchive", _getToken());
+    CHK.nav.back();
     try{
       // Use reload (keeps current filters) instead of load (resets to "week")
       const fn = CHK.archive?.reload ?? CHK.archive?.load;
@@ -935,7 +930,6 @@
 // === PASSWORD RESET ===
 (function () {
   const $ = (id) => document.getElementById(id);
-  const show = (s) => { if (window.CHK?.show) window.CHK.show(s, ""); };
   const toast = (m) => window.CHK?.toast?.(m);
   const apiRaw = async (path, opts) => {
     const base = window.CHK?.API_BASE || "https://api.checki.ge";
@@ -949,11 +943,11 @@
   $("btnForgotPassword").onclick = () => {
     $("forgotEmail").value = "";
     $("forgotDone").classList.add("hide");
-    show("screenForgot");
+    CHK.nav.go("screenForgot");
     $("forgotEmail").focus();
   };
 
-  $("btnBackFromForgot").onclick = () => show("screenLogin");
+  $("btnBackFromForgot").onclick = () => CHK.nav.back();
 
   $("btnSendReset").onclick = async () => {
     const email = $("forgotEmail").value.trim();
@@ -984,7 +978,7 @@
       await apiRaw("/api/auth/reset-password", { method: "POST", body: JSON.stringify({ token, password }) });
       toast("Password changed! Please log in.");
       history.replaceState(null, "", window.location.pathname);
-      show("screenLogin");
+      CHK.nav.reset("screenLogin");
     } catch (e) {
       toast("Error: " + e.message);
     } finally {
@@ -1000,7 +994,7 @@
   const resetToken = new URLSearchParams(window.location.search).get("reset");
   if (resetToken) {
     $("resetPassword").value = "";
-    show("screenReset");
+    CHK.nav.reset("screenReset");
     $("resetPassword").focus();
   }
 })();

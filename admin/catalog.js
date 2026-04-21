@@ -192,8 +192,7 @@ window.CHK = window.CHK || {};
 
   /* ── back to venue ── */
   function goBack() {
-    const tok = CHK.getToken?.() || "";
-    if (typeof CHK.show === "function") CHK.show("screenVenue", tok);
+    CHK.nav.back();
     CHK.venue?.load?.().catch(() => {});
   }
 

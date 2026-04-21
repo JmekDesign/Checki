@@ -17,8 +17,9 @@ window.CHK = window.CHK || {};
   };
 
   // Single source of truth for screen + nav + bottom bar
-  const show = (screen, token) => {
+  const show = (screen) => {
     try {
+      const token = CHK.getToken?.() || "";
       CHK._screen = screen;
 
       // Hide all screens + bottom bar
@@ -231,7 +232,8 @@ window.CHK = window.CHK || {};
 
   CHK.$ = $;
   CHK.toast = toast;
-  CHK.show = show;
+  CHK._show = show;
+  CHK.show = show; // backwards compat alias
   CHK.setAddMsg = setAddMsg;
   CHK.confirm = confirm;
   CHK.paymentConfirm = paymentConfirm;

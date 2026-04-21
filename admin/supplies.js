@@ -2,7 +2,6 @@
   const CHK   = window.CHK;
   const $     = (id) => document.getElementById(id);
   const api   = () => CHK.api;
-  const show  = (screen) => CHK.show(screen, CHK.getToken?.() || "");
   const toast = (msg) => CHK.toast?.(msg);
 
   let _currentOrderId     = null;
@@ -11,11 +10,11 @@
   let _allOrders          = { active: [], archive: [] };
 
   // ── screenSupplies nav ──────────────────────────────────────────────────────
-  $("btnBackFromSupplies").onclick = () => show("screenVenue");
+  $("btnBackFromSupplies").onclick = () => CHK.nav.back();
 
   $("btnNewSupply").onclick = () => {
     $("supplyTitle").value = "";
-    show("screenNewSupply");
+    CHK.nav.go("screenNewSupply");
     $("supplyTitle").focus();
   };
 
@@ -25,7 +24,7 @@
 
   // ── screenNewSupply ─────────────────────────────────────────────────────────
   $("btnBackFromNewSupply").onclick = () => {
-    show("screenSupplies");
+    CHK.nav.back();
     loadSupplies();
   };
 
@@ -145,7 +144,7 @@
     $("supplyItemQty").value  = "";
     hideSuggest();
 
-    show("screenSupplyDetail");
+    CHK.nav.go("screenSupplyDetail");
     loadOrderDetail(id);
   }
 
@@ -224,7 +223,7 @@
 
   $("btnBackFromSupplyDetail").onclick = () => {
     hideSuggest();
-    show("screenSupplies");
+    CHK.nav.back();
     loadSupplies();
   };
 
@@ -245,7 +244,7 @@
     try {
       await api()(`/api/procurement/${_currentOrderId}/close`, { method: "POST" });
       toast("Order closed");
-      show("screenSupplies");
+      CHK.nav.back();
       loadSupplies();
     } catch (e) {
       toast("Error: " + e.message);

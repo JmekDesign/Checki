@@ -245,15 +245,13 @@ window.CHK = window.CHK || {};
 
     const btnCatalog = $("btnGoCatalog");
     if (btnCatalog) btnCatalog.onclick = async () => {
-      const tok = CHK.getToken?.() || "";
-      if (typeof CHK.show === "function") CHK.show("screenCatalog", tok);
+      CHK.nav.go("screenCatalog");
       try { await CHK.catalog?.load(); } catch (e) { CHK.toast?.("Catalog: " + e.message); }
     };
 
     const btnGoSupplies = $("btnGoSupplies");
     if (btnGoSupplies) btnGoSupplies.onclick = () => {
-      const tok = CHK.getToken?.() || "";
-      CHK.show("screenSupplies", tok);
+      CHK.nav.go("screenSupplies");
       CHK.supplies?.load();
     };
   }
