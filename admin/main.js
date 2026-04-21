@@ -22,7 +22,12 @@
       await load("./venue.js");
       await load("./catalog.js");
       await load("./supplies.js");
-      await load("./app.js"); // legacy (will be removed gradually)
+      await load("./open.js");
+      await load("./check.js");
+      await load("./check-form.js");
+      await load("./voice.js");
+      await load("./auth.js");
+      await load("./password-reset.js");
       await load("./scan.js");
       await load("./help.js");
     }catch(err){

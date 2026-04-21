@@ -87,4 +87,43 @@
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
+
+  /* ── scan-edit modal — fix low-confidence items inline ── */
+  (function () {
+    const back = $("scanEditBack");
+    if (!back) return;
+    const nameEl = $("scanEditName"), priceEl = $("scanEditPrice"), qtyEl = $("scanEditQty");
+    const cancelBtn = $("scanEditCancel"), saveBtn = $("scanEditSave");
+    let _editItemId = null;
+
+    cancelBtn.onclick = () => back.classList.add("hide");
+    back.addEventListener("click", (e) => { if (e.target === back) back.classList.add("hide"); });
+
+    saveBtn.onclick = async () => {
+      const name = nameEl.value.trim();
+      const price = parseFloat(priceEl.value);
+      const qty = parseInt(qtyEl.value, 10);
+      if (!name) { CHK.toast?.("Name is required"); return; }
+      if (isNaN(price) || price < 0) { CHK.toast?.("Enter a valid price"); return; }
+      if (!qty || qty < 1) { CHK.toast?.("Qty must be at least 1"); return; }
+      saveBtn.disabled = true;
+      try {
+        await CHK.api(`/api/checks/${CHK.check?.id}/items/${_editItemId}`, {
+          method: "PATCH", body: JSON.stringify({ name, price, qty }),
+        });
+        _lowIds.delete(String(_editItemId));
+        back.classList.add("hide");
+        await CHK.check?.reload();
+        CHK.toast?.("Item updated");
+      } catch (e) { CHK.toast?.("Save: " + e.message); }
+      finally { saveBtn.disabled = false; }
+    };
+
+    window._openScanEdit = (itemId, name, price, qty) => {
+      _editItemId = String(itemId);
+      nameEl.value = name; priceEl.value = price; qtyEl.value = qty;
+      back.classList.remove("hide");
+      nameEl.focus(); nameEl.select();
+    };
+  })();
 })();

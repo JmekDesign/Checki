@@ -18,6 +18,12 @@ window.CHK = window.CHK || {};
 
   /* ── load ── */
   async function load() {
+    // Clear stale content before fetch so no layout jump on navigation
+    const headerEl = $("venueHeader");
+    const staffEl  = $("venueStaff");
+    if (headerEl) headerEl.innerHTML = "";
+    if (staffEl)  staffEl.innerHTML  = "";
+
     const [venueRes, staffRes] = await Promise.all([
       api("/api/venue",  { method: "GET" }),
       api("/api/staff",  { method: "GET" }),
