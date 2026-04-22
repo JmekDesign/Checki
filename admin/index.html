@@ -206,8 +206,12 @@
       <div class="h1" style="margin-bottom:12px">Product catalog</div>
       <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
         <button class="btn compact" id="btnBackToCatalog">← Back</button>
-        <button class="btn compact primary" id="btnAddProduct">+ Add</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn compact" id="btnScanMenu">📷 Scan menu</button>
+          <button class="btn compact primary" id="btnAddProduct">+ Add</button>
+        </div>
       </div>
+      <input type="file" id="menuScanInput" accept="image/*" multiple style="display:none" />
       <input class="inp" id="catalogSearch" placeholder="Search products…" style="margin-bottom:10px" />
       <div id="catalogList"></div>
       <div class="muted" id="catalogHint" style="margin-top:10px;text-align:center"></div>
@@ -215,6 +219,8 @@
 
     <!-- Catalog modal -->
     <div class="modalBack hide" id="catalogModalBack"></div>
+    <!-- Menu scan preview modal -->
+    <div class="modalBack hide" id="menuScanBack"></div>
 
     <!-- SUPPLIES: list -->
     <div class="card cardless hide" id="screenSupplies">
