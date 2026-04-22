@@ -28,7 +28,8 @@ window.CHK = window.CHK || {};
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`;
   }
   function currentMonthName() {
-    return new Date().toLocaleDateString("en-US", { month: "long" });
+    const loc = CHK.i18n?.getLang() === "ka" ? "ka-GE" : "en-US";
+    return new Date().toLocaleDateString(loc, { month: "long" });
   }
   function labelDate(isoStr) {
     const d = new Date(isoStr);
@@ -112,15 +113,15 @@ window.CHK = window.CHK || {};
     el.innerHTML = `
       <div class="archStatCard" style="grid-column:span 2">
         <div class="archStatRow">
-          <div><div class="archStatVal">${s.check_count}</div><div class="archStatLabel">Checks</div></div>
+          <div><div class="archStatVal">${s.check_count}</div><div class="archStatLabel">${CHK.t("arch_checks")}</div></div>
           <div class="archStatDivider"></div>
-          <div><div class="archStatVal">${money(s.total_revenue)} ₾</div><div class="archStatLabel">Revenue</div></div>
+          <div><div class="archStatVal">${money(s.total_revenue)} ₾</div><div class="archStatLabel">${CHK.t("revenue")}</div></div>
           <div class="archStatDivider"></div>
-          <div><div class="archStatVal">${money(s.avg_check)} ₾</div><div class="archStatLabel">Avg</div></div>
+          <div><div class="archStatVal">${money(s.avg_check)} ₾</div><div class="archStatLabel">${CHK.t("arch_avg")}</div></div>
         </div>
       </div>
       <div class="archStatCard" style="grid-column:span 2">
-        <div class="archStatLabel" style="margin-bottom:4px">Top items</div>
+        <div class="archStatLabel" style="margin-bottom:4px">${CHK.t("arch_top")}</div>
         <div class="archStatTop">${esc(top)}</div>
       </div>
     `;
@@ -212,7 +213,7 @@ window.CHK = window.CHK || {};
 
     const from = offset + 1;
     const to   = Math.min(offset + limit, total || offset + items.length);
-    if (pager) pager.textContent = total ? `${from}–${to} of ${total}` : `${from}–${to}`;
+    if (pager) pager.textContent = total ? `${from}–${to} ${CHK.t("pager_of")} ${total}` : `${from}–${to}`;
     if (prev)  prev.disabled = offset <= 0;
     if (next)  next.disabled = total ? offset + limit >= total : items.length < limit;
   }

@@ -45,7 +45,6 @@ window.CHK = window.CHK || {};
     const el = $("venueHeader");
     if (!el || !r.venue) return;
     const s = r.stats || {};
-    const curLang = r.venue.lang || "en";
     el.innerHTML = `
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
         <div class="archStatCard" style="text-align:center">
@@ -61,23 +60,27 @@ window.CHK = window.CHK || {};
           <div class="archStatLabel">${CHK.t("revenue")}</div>
         </div>
       </div>
-      <div style="margin-top:14px;display:flex;align-items:center;gap:10px">
-        <span style="font-size:13px;color:var(--muted)">${CHK.t("lang_label")}</span>
-        <div style="display:flex;gap:6px">
-          <button class="btn${curLang === "en" ? " primary" : ""}" id="btnLangEn" style="padding:4px 14px;font-size:13px">EN</button>
-          <button class="btn${curLang === "ka" ? " primary" : ""}" id="btnLangKa" style="padding:4px 14px;font-size:13px">ქართული</button>
-        </div>
-      </div>
     `;
-    $("btnLangEn").onclick = () => _setVenueLang("en");
-    $("btnLangKa").onclick = () => _setVenueLang("ka");
+    _updateLangButtons(r.venue.lang || "en");
+  }
+
+  function _updateLangButtons(activeLang) {
+    const en = $("btnLangEn");
+    const ka = $("btnLangKa");
+    if (en) en.classList.toggle("primary", activeLang === "en");
+    if (ka) ka.classList.toggle("primary", activeLang === "ka");
   }
 
   async function _setVenueLang(lang) {
     try {
       await api("/api/venue/lang", { method: "PATCH", body: JSON.stringify({ lang }) });
       CHK.i18n?.setLang(lang, true);
-      await load();
+      _updateLangButtons(lang);
+      // Re-render stats labels in new language
+      const el = $("venueHeader");
+      if (el) el.querySelectorAll(".archStatLabel").forEach((lbl, i) => {
+        lbl.textContent = CHK.t(["open_now", "closed_today", "revenue"][i] || "");
+      });
     } catch (e) {
       CHK.toast?.("Error: " + (e.message || String(e)));
     }
@@ -287,6 +290,14 @@ window.CHK = window.CHK || {};
       CHK.nav.go("screenSupplies");
       CHK.supplies?.load();
     };
+
+    const btnLangEn = $("btnLangEn");
+    if (btnLangEn) btnLangEn.onclick = () => _setVenueLang("en");
+    const btnLangKa = $("btnLangKa");
+    if (btnLangKa) btnLangKa.onclick = () => _setVenueLang("ka");
+
+    // Reflect current lang on page load
+    _updateLangButtons(CHK.i18n?.getLang() || "en");
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

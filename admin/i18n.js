@@ -109,6 +109,15 @@ window.CHK = window.CHK || {};
       ph_staff_pw:    "New password (leave blank to keep)",
       pw_required:    "Password required",
 
+      /* ── archive stats & pager ── */
+      arch_checks:    "Checks",
+      arch_avg:       "Avg",
+      arch_top:       "Top items",
+      pager_of:       "of",
+      back_checks:    "← Checks",
+      back_archive:   "← Archive",
+      check_word:     "Check",
+
       /* ── venue language setting ── */
       lang_label:     "Interface language",
       lang_en:        "English",
@@ -180,7 +189,7 @@ window.CHK = window.CHK || {};
       all:            "ყველა",
 
       /* ── top bar ── */
-      tab_open:       "გახსნილი ჩეკები",
+      tab_open:       "ჩეკები",
       tab_archive:    "არქივი",
       btn_new_check:  "+ ახალი",
 
@@ -256,9 +265,9 @@ window.CHK = window.CHK || {};
       catalog_link:   "პროდუქტის კატალოგი",
       supplies_link:  "მარაგები",
       subscription:   "გამოწერა",
-      open_now:       "ახლა გახსნილი",
-      closed_today:   "დღეს დახურული",
-      revenue:        "შემოსავალი",
+      open_now:       "ახლა ღია",
+      closed_today:   "დახ. დღეს",
+      revenue:        "შემოსავ.",
       add_staff:      "პერსონალის დამატება",
       edit_staff:     "პერსონალის რედაქტ.",
       delete_staff_q: "წაშალოთ პერსონალი?",
@@ -268,6 +277,15 @@ window.CHK = window.CHK || {};
       ph_staff_email: "ელ.ფოსტა (პაროლის აღდგენა)",
       ph_staff_pw:    "ახალი პაროლი (ცარიელი = ძველი)",
       pw_required:    "პაროლი სავალდებულოა",
+
+      /* ── archive stats & pager ── */
+      arch_checks:    "ჩეკები",
+      arch_avg:       "საშ.",
+      arch_top:       "ტოპ",
+      pager_of:       "/",
+      back_checks:    "← ჩეკები",
+      back_archive:   "← არქივი",
+      check_word:     "ჩეკი",
 
       /* ── venue language setting ── */
       lang_label:     "ინტერფეისის ენა",

@@ -29,7 +29,7 @@ window.CHK = window.CHK || {};
   function renderCheck() {
     const num = currentCheck.number ?? currentCheck.check_number ?? "";
     const guest = currentCheck.guest_name_snapshot ?? currentCheck.guest ?? currentCheck.guest_name ?? "—";
-    $("checkTitle").textContent = `Check #${num}`;
+    $("checkTitle").textContent = `${CHK.t("check_word")} #${num}`;
     $("checkMeta").textContent = guest;
     $("checkTotal").textContent = `${fmtMoney(currentCheck.total ?? 0)} ₾`;
 
@@ -174,7 +174,7 @@ window.CHK = window.CHK || {};
     document.body?.classList.toggle("chk-readonly", !!on);
     $("btnCloseCheck")?.classList.toggle("hide", !!on);
     const btnBack = $("btnBackFromCheck");
-    if (btnBack) { btnBack.classList.remove("hide"); btnBack.textContent = on ? "← Archive" : "← Checks"; }
+    if (btnBack) { btnBack.classList.remove("hide"); btnBack.textContent = on ? CHK.t("back_archive") : CHK.t("back_checks"); }
     const btnDelete = $("btnDeleteCheck");
     if (btnDelete) {
       const profile = CHK.getUserProfile?.() || {};
