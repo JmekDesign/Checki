@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import base64
+import contextlib
 import json
 import logging
+import re
 import urllib.request
 from typing import Any
 
@@ -57,7 +59,7 @@ def _vision_extract(image_bytes: bytes, content_type: str) -> list[dict[str, Any
             }
         ],
         "response_format": {"type": "json_object"},
-        "max_tokens": 2000,
+        "max_tokens": 4096,
         "temperature": 0.1,
     }).encode()
 
@@ -74,9 +76,21 @@ def _vision_extract(image_bytes: bytes, content_type: str) -> list[dict[str, Any
         result: dict[str, Any] = json.loads(resp.read())
 
     content = result["choices"][0]["message"]["content"]
+
+    # If response was truncated (finish_reason=length), extract completed items via regex
+    finish_reason = result["choices"][0].get("finish_reason", "stop")
+    if finish_reason == "length":
+        matches = re.findall(r'\{[^{}]*"name"\s*:\s*"[^"]*"[^{}]*\}', content)
+        items: list[dict[str, Any]] = []
+        for m in matches:
+            with contextlib.suppress(Exception):
+                items.append(json.loads(m))
+        logger.warning("response truncated — recovered %d items via regex", len(items))
+        return items
+
     data: dict[str, Any] = json.loads(content)
-    items = data.get("items") if isinstance(data.get("items"), list) else []
-    return items  # type: ignore[return-value]
+    raw = data.get("items")
+    return raw if isinstance(raw, list) else []
 
 
 def _fetch_catalog_names(venue_id: str) -> set[str]:
