@@ -19,15 +19,15 @@
   <!-- Scan item edit modal -->
   <div class="modalBack hide" id="scanEditBack">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="scanEditTitle">
-      <div class="modalTitle" id="scanEditTitle">Fix item</div>
+      <div class="modalTitle" id="scanEditTitle" data-i18n="fix_item_title">Fix item</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-        <input id="scanEditName" class="inp" type="text" placeholder="Name" autocomplete="off" />
-        <input id="scanEditPrice" class="inp" type="number" min="0" step="0.01" placeholder="Price ₾" />
-        <input id="scanEditQty" class="inp" type="number" min="1" step="1" placeholder="Qty" />
+        <input id="scanEditName" class="inp" type="text" data-i18n-ph="ph_scan_name" placeholder="Name" autocomplete="off" />
+        <input id="scanEditPrice" class="inp" type="number" min="0" step="0.01" data-i18n-ph="ph_scan_price" placeholder="Price ₾" />
+        <input id="scanEditQty" class="inp" type="number" min="1" step="1" data-i18n-ph="ph_scan_qty" placeholder="Qty" />
       </div>
       <div class="modalBtns" style="margin-top:14px">
-        <button class="btn" id="scanEditCancel">Cancel</button>
-        <button class="btn primary" id="scanEditSave">Save</button>
+        <button class="btn" id="scanEditCancel" data-i18n="cancel">Cancel</button>
+        <button class="btn primary" id="scanEditSave" data-i18n="save">Save</button>
       </div>
     </div>
   </div>
@@ -38,8 +38,8 @@
       <div class="modalTitle" id="confirmTitle">Confirm</div>
       <div class="modalText" id="confirmText">—</div>
       <div class="modalBtns">
-        <button class="btn" id="confirmCancel">Cancel</button>
-        <button class="btn primary" id="confirmOk">OK</button>
+        <button class="btn" id="confirmCancel" data-i18n="cancel">Cancel</button>
+        <button class="btn primary" id="confirmOk" data-i18n="confirm">OK</button>
       </div>
     </div>
   </div>
@@ -68,57 +68,57 @@
         </div>
       </div>
       <div class="tabBar hide" id="tabBar">
-        <button class="tabBtn" id="tabOpen">Open checks</button>
-        <button class="tabBtn" id="tabArchive">Archive</button>
+        <button class="tabBtn" id="tabOpen" data-i18n="tab_open">Open checks</button>
+        <button class="tabBtn" id="tabArchive" data-i18n="tab_archive">Archive</button>
         <div class="tabFlex"></div>
-        <button class="btn compact primary hide tabBarAction" id="btnNewCheck">+ New</button>
+        <button class="btn compact primary hide tabBarAction" id="btnNewCheck" data-i18n="btn_new_check">+ New</button>
       </div>
     </div>
 
     <!-- LOGIN -->
     <div class="card" id="screenLogin">
-      <div class="h1">Login</div>
-      <div class="muted">Staff interface (MVP).</div>
+      <div class="h1" data-i18n="login_title">Login</div>
+      <div class="muted" data-i18n="login_sub">Staff interface.</div>
       <div class="hr"></div>
       <div class="row">
-        <input class="inp" id="login" placeholder="login" value="" />
-        <input class="inp" id="password" placeholder="password" value="" type="password" />
+        <input class="inp" id="login" data-i18n-ph="ph_login" placeholder="login" value="" />
+        <input class="inp" id="password" data-i18n-ph="ph_password" placeholder="password" value="" type="password" />
       </div>
       <div class="row" style="margin-top:10px;justify-content:space-between;align-items:center">
-        <button class="btn primary" id="btnLogin">Login</button>
-        <button id="btnForgotPassword" style="background:none;border:none;padding:0;font-size:13px;color:var(--muted);cursor:pointer;text-decoration:underline">Forgot password?</button>
+        <button class="btn primary" id="btnLogin" data-i18n="btn_login">Login</button>
+        <button id="btnForgotPassword" data-i18n="forgot_pw" style="background:none;border:none;padding:0;font-size:13px;color:var(--muted);cursor:pointer;text-decoration:underline">Forgot password?</button>
       </div>
     </div>
 
     <!-- FORGOT PASSWORD -->
     <div class="card hide" id="screenForgot">
-      <div class="h1" style="margin-bottom:4px">Reset password</div>
-      <div class="muted" style="margin-bottom:16px">Enter your email — we'll send a reset link.</div>
+      <div class="h1" style="margin-bottom:4px" data-i18n="forgot_title">Reset password</div>
+      <div class="muted" style="margin-bottom:16px" data-i18n="forgot_sub">Enter your email — we'll send a reset link.</div>
       <div class="hr"></div>
-      <input class="inp" id="forgotEmail" placeholder="Email" type="email" />
+      <input class="inp" id="forgotEmail" data-i18n-ph="ph_email" placeholder="Email" type="email" />
       <div class="row" style="margin-top:10px;gap:8px">
-        <button class="btn" id="btnBackFromForgot">← Back</button>
-        <button class="btn primary" id="btnSendReset">Send link</button>
+        <button class="btn" id="btnBackFromForgot" data-i18n="back">← Back</button>
+        <button class="btn primary" id="btnSendReset" data-i18n="btn_send_link">Send link</button>
       </div>
-      <div class="muted hide" id="forgotDone" style="margin-top:12px;text-align:center">
+      <div class="muted hide" id="forgotDone" data-i18n="forgot_done" style="margin-top:12px;text-align:center">
         ✓ If this email is registered, a reset link has been sent.
       </div>
     </div>
 
     <!-- RESET PASSWORD -->
     <div class="card hide" id="screenReset">
-      <div class="h1" style="margin-bottom:4px">New password</div>
-      <div class="muted" style="margin-bottom:16px">Enter your new password.</div>
+      <div class="h1" style="margin-bottom:4px" data-i18n="reset_title">New password</div>
+      <div class="muted" style="margin-bottom:16px" data-i18n="reset_sub">Enter your new password.</div>
       <div class="hr"></div>
-      <input class="inp" id="resetPassword" placeholder="New password" type="password" />
+      <input class="inp" id="resetPassword" data-i18n-ph="ph_new_pw" placeholder="New password" type="password" />
       <div class="row" style="margin-top:10px">
-        <button class="btn primary" id="btnDoReset">Set password</button>
+        <button class="btn primary" id="btnDoReset" data-i18n="btn_set_pw">Set password</button>
       </div>
     </div>
 
     <!-- OPEN CHECKS -->
     <div class="card cardless hide" id="screenOpen">
-      <input class="inp" id="openSearch" placeholder='Search…' style="margin-top:4px" />
+      <input class="inp" id="openSearch" data-i18n-ph="ph_search_open" placeholder="Search…" style="margin-top:4px" />
       <div style="height:10px"></div>
       <div class="list" id="openList"></div>
       <div class="muted" id="openHint" style="margin-top:10px"></div>
@@ -127,24 +127,24 @@
     <!-- ARCHIVE -->
     <div class="card cardless hide" id="screenArchive">
       <!-- Search -->
-      <input class="inp" id="archSearch" placeholder="Search: guest, item, amount…" style="margin-bottom:10px" />
+      <input class="inp" id="archSearch" data-i18n-ph="ph_arch_search" placeholder="Search: guest, item, amount…" style="margin-bottom:10px" />
 
       <!-- Quick date filters: horizontal scroll -->
       <div class="archQuickBar">
-        <button class="btn archQuick" data-q="today">Today</button>
-        <button class="btn archQuick" data-q="week">Week</button>
-        <button class="btn archQuick" data-q="month">30 days</button>
+        <button class="btn archQuick" data-q="today" data-i18n="today">Today</button>
+        <button class="btn archQuick" data-q="week" data-i18n="week">Week</button>
+        <button class="btn archQuick" data-q="month" data-i18n="days_30">30 days</button>
         <button class="btn archQuick" data-q="curmonth" id="btnCurMonth">—</button>
-        <button class="btn archQuick" data-q="all">All</button>
+        <button class="btn archQuick" data-q="all" data-i18n="all">All</button>
       </div>
 
       <!-- Date range (custom picker) + PDF -->
       <input type="date" id="archFrom" style="display:none" />
       <input type="date" id="archTo"   style="display:none" />
       <div class="row" style="gap:8px; align-items:center; margin-top:10px; margin-bottom:4px">
-        <button class="btn dpBtn" id="dpBtnFrom" style="flex:1">From…</button>
+        <button class="btn dpBtn" id="dpBtnFrom" data-i18n="date_from" style="flex:1">From…</button>
         <span class="muted">—</span>
-        <button class="btn dpBtn" id="dpBtnTo" style="flex:1">To…</button>
+        <button class="btn dpBtn" id="dpBtnTo" data-i18n="date_to" style="flex:1">To…</button>
         <button class="btnIcon" id="btnArchReset" title="Reset dates" style="color:var(--muted);font-size:16px">✕</button>
         <button class="btn dpBtn primary" id="btnArchShare" style="flex:none;display:flex;align-items:center;gap:4px;padding:7px 10px;margin-left:8px">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -163,9 +163,9 @@
 
       <!-- Pager -->
       <div class="row" style="justify-content:space-between; margin-top:12px">
-        <button class="btn" id="btnArchPrev">← Prev</button>
+        <button class="btn" id="btnArchPrev" data-i18n="prev_page">← Prev</button>
         <div class="muted" id="archPager">—</div>
-        <button class="btn" id="btnArchNext">Next →</button>
+        <button class="btn" id="btnArchNext" data-i18n="next_page">Next →</button>
       </div>
     </div>
 
@@ -173,15 +173,15 @@
     <div class="card cardless hide" id="screenVenue">
       <!-- Nav row: back button (no tabBar on this screen) -->
       <div style="margin-bottom:10px">
-        <button class="btn compact" id="btnBackFromVenue">← Back</button>
+        <button class="btn compact" id="btnBackFromVenue" data-i18n="back">← Back</button>
       </div>
       <div id="venueHeader"></div>
       <div class="hr"></div>
 
       <!-- Staff -->
       <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-size:15px;font-weight:700">Staff</div>
-        <button class="btn compact primary" id="btnAddStaff">+ Add</button>
+        <div style="font-size:15px;font-weight:700" data-i18n="staff_title">Staff</div>
+        <button class="btn compact primary" id="btnAddStaff" data-i18n="btn_add_staff">+ Add</button>
       </div>
       <div class="list" id="venueStaff"></div>
 
@@ -190,10 +190,10 @@
       <!-- Features -->
       <div style="display:flex;flex-direction:column;gap:8px">
         <div class="item" id="btnGoCatalog" style="cursor:pointer">
-          <span style="font-weight:500">Product catalog</span><span class="muted">→</span>
+          <span style="font-weight:500" data-i18n="catalog_link">Product catalog</span><span class="muted">→</span>
         </div>
         <div class="item" id="btnGoSupplies" style="cursor:pointer">
-          <span style="font-weight:500">Supplies</span><span class="muted">→</span>
+          <span style="font-weight:500" data-i18n="supplies_link">Supplies</span><span class="muted">→</span>
         </div>
         <div class="item" style="opacity:.3;cursor:default">
           <span>Subscription</span><span class="muted">→</span>
@@ -203,16 +203,16 @@
 
     <!-- CATALOG (manager) -->
     <div class="card cardless hide" id="screenCatalog">
-      <div class="h1" style="margin-bottom:12px">Product catalog</div>
+      <div class="h1" style="margin-bottom:12px" data-i18n="catalog_title">Product catalog</div>
       <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
-        <button class="btn compact" id="btnBackToCatalog">← Back</button>
+        <button class="btn compact" id="btnBackToCatalog" data-i18n="back">← Back</button>
         <div style="display:flex;gap:8px">
-          <button class="btn compact" id="btnScanMenu">📷 Scan menu</button>
-          <button class="btn compact primary" id="btnAddProduct">+ Add</button>
+          <button class="btn compact" id="btnScanMenu" data-i18n="btn_scan_menu">📷 Scan menu</button>
+          <button class="btn compact primary" id="btnAddProduct" data-i18n="add">+ Add</button>
         </div>
       </div>
       <input type="file" id="menuScanInput" accept="image/*" multiple style="display:none" />
-      <input class="inp" id="catalogSearch" placeholder="Search products…" style="margin-bottom:10px" />
+      <input class="inp" id="catalogSearch" data-i18n-ph="ph_cat_search" placeholder="Search products…" style="margin-bottom:10px" />
       <div id="catalogList"></div>
       <div class="muted" id="catalogHint" style="margin-top:10px;text-align:center"></div>
     </div>
@@ -224,12 +224,12 @@
 
     <!-- SUPPLIES: list -->
     <div class="card cardless hide" id="screenSupplies">
-      <div class="h1" style="margin-bottom:12px">Supplies</div>
+      <div class="h1" style="margin-bottom:12px" data-i18n="supplies_title">Supplies</div>
       <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
-        <button class="btn compact" id="btnBackFromSupplies">← Back</button>
-        <button class="btn compact primary" id="btnNewSupply">+ New</button>
+        <button class="btn compact" id="btnBackFromSupplies" data-i18n="back">← Back</button>
+        <button class="btn compact primary" id="btnNewSupply" data-i18n="btn_new_supply">+ New</button>
       </div>
-      <input class="inp" id="suppliesSearch" placeholder="Search orders…" style="margin-bottom:10px" />
+      <input class="inp" id="suppliesSearch" data-i18n-ph="ph_arch_search" placeholder="Search orders…" style="margin-bottom:10px" />
       <div class="list" id="suppliesList"></div>
       <div class="muted" id="suppliesHint" style="margin-top:10px;text-align:center"></div>
     </div>
@@ -238,15 +238,15 @@
     <div class="card hide" id="screenNewSupply">
       <div class="row" style="justify-content:space-between">
         <div>
-          <div class="h1" style="margin-bottom:4px">New supply</div>
+          <div class="h1" style="margin-bottom:4px" data-i18n="supplies_title">New supply</div>
           <div class="muted">Name the order</div>
         </div>
-        <button class="btn" id="btnBackFromNewSupply">← Back</button>
+        <button class="btn" id="btnBackFromNewSupply" data-i18n="back">← Back</button>
       </div>
       <div class="hr"></div>
       <input class="inp" id="supplyTitle" placeholder='E.g. "Bar restock, spirits"' />
       <div class="row" style="margin-top:10px">
-        <button class="btn primary" id="btnCreateSupply">Create</button>
+        <button class="btn primary" id="btnCreateSupply" data-i18n="create">Create</button>
       </div>
     </div>
 
@@ -258,8 +258,8 @@
           <div class="muted" id="supplyDetailMeta" style="font-size:13px">—</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
-          <button class="btn compact" id="btnBackFromSupplyDetail">← Supplies</button>
-          <button class="btn danger" id="btnCloseSupply">Close</button>
+          <button class="btn compact" id="btnBackFromSupplyDetail" data-i18n="back">← Supplies</button>
+          <button class="btn danger" id="btnCloseSupply" data-i18n="close">Close</button>
         </div>
       </div>
       <div style="height:10px"></div>
@@ -271,8 +271,8 @@
         <div style="position:relative;margin-top:10px">
           <div class="suggestBox" id="supplySuggestBox" style="display:none;position:absolute;bottom:100%;left:0;right:0;z-index:50;margin-bottom:4px"></div>
           <div class="row" style="gap:8px">
-            <input class="inp" id="supplyItemText" placeholder="Item name…" style="flex:1" autocomplete="off" />
-            <input class="inp" id="supplyItemQty"  placeholder="Qty" style="width:60px" />
+            <input class="inp" id="supplyItemText" data-i18n-ph="ph_item_name" placeholder="Item name…" style="flex:1" autocomplete="off" />
+            <input class="inp" id="supplyItemQty" data-i18n-ph="ph_qty" placeholder="Qty" style="width:60px" />
             <button class="btn primary compact" id="btnAddSupplyItem">Add</button>
           </div>
         </div>
@@ -283,10 +283,10 @@
     <div class="card hide" id="screenNew">
       <div class="row" style="justify-content:space-between">
         <div>
-          <div class="h1" style="margin-bottom:4px">New check</div>
-          <div class="muted">Guest / table</div>
+          <div class="h1" style="margin-bottom:4px" data-i18n="new_check_title">New check</div>
+          <div class="muted" data-i18n="ph_guest_table">Guest / table</div>
         </div>
-        <button class="btn" id="btnBackOpen">← Back</button>
+        <button class="btn" id="btnBackOpen" data-i18n="back">← Back</button>
       </div>
       <div class="hr"></div>
       <div style="position:relative">
@@ -294,7 +294,7 @@
         <div id="guestSuggestBox" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--surface,#161b24);border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;z-index:50"></div>
       </div>
       <div class="row" style="margin-top:10px">
-        <button class="btn primary" id="btnCreateCheck">Open check</button>
+        <button class="btn primary" id="btnCreateCheck" data-i18n="open_check">Open check</button>
       </div>
 
       <div style="margin-top:20px;display:flex;align-items:center;gap:10px">

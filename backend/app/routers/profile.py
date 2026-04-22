@@ -28,13 +28,22 @@ def profile_get(
     try:
         cur = conn.cursor()
         cur.execute(
-            "SELECT name, login, email, role FROM users WHERE id = %s;",
+            """
+            SELECT u.name, u.login, u.email, u.role, v.lang
+            FROM users u
+            JOIN venues v ON v.id = u.venue_id
+            WHERE u.id = %s;
+            """,
             (user["user_id"],),
         )
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="user not found")
-        return {"ok": True, "name": row[0], "login": row[1], "email": row[2] or "", "role": row[3]}
+        return {
+            "ok": True,
+            "name": row[0], "login": row[1], "email": row[2] or "",
+            "role": row[3], "lang": row[4] or "en",
+        }
     finally:
         with contextlib.suppress(Exception):
             db_release(conn)

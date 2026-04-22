@@ -22,7 +22,7 @@ def login(payload: LoginIn) -> dict[str, Any]:
         cur.execute(
             """
             SELECT u.id, u.venue_id, u.role, u.name, u.password_hash, u.is_active,
-                   COALESCE(v.name, '') AS venue_name
+                   COALESCE(v.name, '') AS venue_name, COALESCE(v.lang, 'en') AS lang
             FROM users u
             LEFT JOIN venues v ON v.id = u.venue_id
             WHERE u.login = %s;
@@ -32,7 +32,7 @@ def login(payload: LoginIn) -> dict[str, Any]:
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=401, detail="invalid credentials")
-        user_id, venue_id, role, name, password_hash_db, is_active, venue_name = row
+        user_id, venue_id, role, name, password_hash_db, is_active, venue_name, lang = row
         if not is_active:
             raise HTTPException(status_code=403, detail="user inactive")
         if hash_password(payload.password) != password_hash_db:
@@ -57,6 +57,7 @@ def login(payload: LoginIn) -> dict[str, Any]:
                 "role": role,
                 "name": name,
                 "venue_name": venue_name,
+                "lang": lang,
                 "issued_at": int(time.time()),
                 "ttl_hours": SESSION_TTL_HOURS,
             },
@@ -94,18 +95,20 @@ def me(
 ) -> dict[str, Any]:
     user = require_user(authorization)
     venue_name = ""
+    lang = "en"
     venue_id = user["venue_id"]
     if venue_id:
         conn = db_conn()
         try:
             cur = conn.cursor()
             cur.execute(
-                "SELECT COALESCE(name, '') FROM venues WHERE id = %s;",
+                "SELECT COALESCE(name, ''), COALESCE(lang, 'en') FROM venues WHERE id = %s;",
                 (venue_id,),
             )
             row = cur.fetchone()
             if row:
                 venue_name = str(row[0])
+                lang = str(row[1])
         finally:
             db_release(conn)
     return {
@@ -116,5 +119,6 @@ def me(
             "role": user["role"],
             "name": user["name"],
             "venue_name": venue_name,
+            "lang": lang,
         },
     }

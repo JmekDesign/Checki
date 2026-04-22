@@ -55,16 +55,16 @@ window.CHK = window.CHK || {};
         <div class="rcptItems">${itemsHtml}</div>
         <div class="rcptDash"></div>
         <div class="rcptBottom">
-          <div class="rcptQRWrap"><div id="rcptQRCanvas" class="rcptQR"></div><div class="rcptQRLabel">Scan to view</div></div>
+          <div class="rcptQRWrap"><div id="rcptQRCanvas" class="rcptQR"></div><div class="rcptQRLabel">${CHK.t("scan_to_view")}</div></div>
           <div class="rcptTotalWrap">
-            <div class="rcptTotalLabel">Total</div>
+            <div class="rcptTotalLabel">${CHK.t("total")}</div>
             <div class="rcptTotalVal">${_rcptMoney(total)} ₾</div>
             <div class="rcptTs">${_rcptEsc(ts)}</div>
           </div>
         </div>
         <div class="rcptPayBtns">
-          <button class="rcptBtnPay" id="payCash">💵 Cash</button>
-          <button class="rcptBtnPay" id="payCard">💳 Card</button>
+          <button class="rcptBtnPay" id="payCash">${CHK.t("pay_cash")}</button>
+          <button class="rcptBtnPay" id="payCard">${CHK.t("pay_card")}</button>
         </div>
       </div>
     `;

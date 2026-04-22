@@ -1,6 +1,6 @@
 /* Loader: gradually migrate from app.js into modules without breaking behavior. */
 (function(){
-  const V = "20260422a"; // bump on every deploy to bust browser cache
+  const V = "20260422b"; // bump on every deploy to bust browser cache
   function load(src){
     return new Promise((resolve, reject)=>{
       const s = document.createElement("script");
@@ -25,6 +25,7 @@
   (async ()=>{
     try{
       await loadExt("https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js");
+      await load("./i18n.js");
       await load("./api.js");
       await load("./ui.js");
       await load("./payment.js");

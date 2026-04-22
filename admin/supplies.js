@@ -73,7 +73,7 @@
 
     if (!filteredActive.length && !filteredArchive.length) {
       list.innerHTML = "";
-      hint.textContent = q ? "Nothing found." : "No supply orders yet.";
+      hint.textContent = q ? CHK.t("nothing_found") : CHK.t("no_orders");
       return;
     }
     hint.textContent = "";
@@ -235,7 +235,7 @@
       return;
     }
     const ok = await CHK.confirm({
-      title: "Close order?",
+      title: CHK.t("close_order_q"),
       text: `"${_currentOrderTitle}" will move to archive.`,
       okText: "Close",
       danger: true,
@@ -243,7 +243,7 @@
     if (!ok) return;
     try {
       await api()(`/api/procurement/${_currentOrderId}/close`, { method: "POST" });
-      toast("Order closed");
+      toast(CHK.t("order_closed"));
       CHK.nav.back();
       loadSupplies();
     } catch (e) {

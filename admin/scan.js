@@ -31,7 +31,7 @@
       }
       const parsed = await resp.json();
       const items = Array.isArray(parsed.items) ? parsed.items : [];
-      if (!items.length) { toast("Nothing found in photo"); return; }
+      if (!items.length) { toast(CHK.t("nothing_in_photo")); return; }
 
       // Open check with parsed guest name
       const cr = await CHK.api("/api/checks", {
@@ -65,7 +65,7 @@
       if (typeof CHK.openCheck === "function") await CHK.openCheck(checkId);
 
       const n = _lowIds.size;
-      toast(n ? `Check opened · ${n} item${n > 1 ? "s" : ""} need review ⚠️` : "Check opened from scan");
+      toast(n ? `Check opened · ${n} item${n > 1 ? "s" : ""} need review ⚠️` : CHK.t("scan_opened"));
     } catch (e) {
       toast("Scan: " + e.message);
     } finally {
@@ -114,7 +114,7 @@
         _lowIds.delete(String(_editItemId));
         back.classList.add("hide");
         await CHK.check?.reload();
-        CHK.toast?.("Item updated");
+        CHK.toast?.(CHK.t("item_updated"));
       } catch (e) { CHK.toast?.("Save: " + e.message); }
       finally { saveBtn.disabled = false; }
     };

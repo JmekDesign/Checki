@@ -40,7 +40,7 @@ window.CHK = window.CHK || {};
       : products;
 
     if (!filtered.length) {
-      if (hint) hint.textContent = q ? "Nothing found." : "No products yet.";
+      if (hint) hint.textContent = q ? CHK.t("nothing_found") : CHK.t("no_products");
       return;
     }
     if (hint) hint.textContent = "";
@@ -97,11 +97,11 @@ window.CHK = window.CHK || {};
 
   /* ── modals ── */
   function openAddModal() {
-    showModal({ title: "Add product", okText: "Add", p: null });
+    showModal({ title: CHK.t("add_product"), okText: CHK.t("add"), p: null });
   }
 
   function openEditModal(p) {
-    showModal({ title: "Edit product", okText: "Save", p });
+    showModal({ title: CHK.t("edit_product"), okText: CHK.t("save"), p });
   }
 
   function showModal({ title, okText, p }) {
@@ -112,21 +112,21 @@ window.CHK = window.CHK || {};
       <div class="modal" style="width:min(92vw,420px)">
         <div class="modalTitle">${esc(title)}</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
-          <input class="inp" id="cmName" placeholder="Name" value="${esc(p ? p.name : "")}" />
-          <input class="inp" id="cmCategory" placeholder="Category (optional: Beer, Cocktails…)" value="${esc(p ? (p.category === "Other" ? "" : p.category || "") : "")}" />
-          <input class="inp" id="cmPrice" inputmode="decimal" placeholder="Price (₾)"
+          <input class="inp" id="cmName" placeholder="${CHK.t('ph_prod_name')}" value="${esc(p ? p.name : "")}" />
+          <input class="inp" id="cmCategory" placeholder="${CHK.t('ph_prod_cat')}" value="${esc(p ? (p.category === "Other" ? "" : p.category || "") : "")}" />
+          <input class="inp" id="cmPrice" inputmode="decimal" placeholder="${CHK.t('ph_prod_price')}"
             value="${p && p.last_price != null ? money(p.last_price) : ""}" />
           ${isEdit ? `
             <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;padding:4px 0">
               <input type="checkbox" id="cmActive" ${p.active ? "checked" : ""}
                 style="width:18px;height:18px;accent-color:var(--accent)" />
-              Active (appears in search)
+              ${CHK.t("active_label")}
             </label>
           ` : ""}
         </div>
         <div class="modalBtns">
-          <button class="btn" id="cmCancel">Cancel</button>
-          ${isEdit ? `<button class="btn danger" id="cmDelete">Delete</button>` : ""}
+          <button class="btn" id="cmCancel">${CHK.t("cancel")}</button>
+          ${isEdit ? `<button class="btn danger" id="cmDelete">${CHK.t("delete_")}</button>` : ""}
           <button class="btn primary" id="cmOk">${esc(okText)}</button>
         </div>
       </div>
@@ -168,19 +168,19 @@ window.CHK = window.CHK || {};
       const cat  = ($("cmCategory").value || "").trim() || "Other";
       const priceStr = ($("cmPrice").value || "").replace(",", ".").trim();
       const price = priceStr !== "" && !isNaN(Number(priceStr)) ? Number(priceStr) : null;
-      if (!name) return CHK.toast?.("Name required");
+      if (!name) return CHK.toast?.(CHK.t("name_required"));
       try {
         if (!isEdit) {
           await api("/api/products/upsert", {
             method: "POST",
             body: JSON.stringify({ name, category: cat, price }),
           });
-          CHK.toast?.("Added");
+          CHK.toast?.(CHK.t("added"));
         } else {
           const body = { name, category: cat, active: $("cmActive")?.checked ?? true };
           if (price !== null) body.price = price;
           await api(`/api/products/${p.id}`, { method: "PATCH", body: JSON.stringify(body) });
-          CHK.toast?.("Saved");
+          CHK.toast?.(CHK.t("saved"));
         }
         back.classList.add("hide");
         await load();

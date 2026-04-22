@@ -61,9 +61,10 @@ def register(payload: RegisterIn) -> dict[str, Any]:
             n = int(row[0]) if row else 0
             slug = f"{slug_base}-{n + 1}"
 
+        lang = payload.lang if payload.lang in ("en", "ka") else "en"
         cur.execute(
-            "INSERT INTO venues (slug, name, email, phone) VALUES (%s, %s, %s, %s) RETURNING id;",
-            (slug, venue_name, payload.email or None, payload.phone or None),
+            "INSERT INTO venues (slug, name, email, phone, lang) VALUES (%s, %s, %s, %s, %s) RETURNING id;",
+            (slug, venue_name, payload.email or None, payload.phone or None, lang),
         )
         venue_row = cur.fetchone()
         assert venue_row is not None

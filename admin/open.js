@@ -68,7 +68,7 @@ window.CHK = window.CHK || {};
       return !q || num.includes(q) || g.includes(q);
     });
     if (!filtered.length) {
-      $("openHint").textContent = "No open checks. Create a new check.";
+      $("openHint").textContent = CHK.t("no_open_checks");
       return;
     }
     $("openHint").textContent = "";
@@ -115,7 +115,7 @@ window.CHK = window.CHK || {};
     if (method === null) return;
     try {
       await api(`/api/checks/${id}/close`, { method: "POST", body: JSON.stringify({ payment_method: method }) });
-      toast("Check closed");
+      toast(CHK.t("check_closed"));
       await loadOpen().catch(() => {});
     } catch (e) { toast("Close error: " + e.message); }
   }
@@ -128,9 +128,9 @@ window.CHK = window.CHK || {};
   $("btnCreateCheck").onclick = async () => {
     try {
       const guest = $("guestName").value.trim();
-      if (!guest) return toast("Enter guest / table");
+      if (!guest) return toast(CHK.t("ph_guest_table"));
       const r = await api("/api/checks", { method: "POST", body: JSON.stringify({ guest }) });
-      toast("Check opened");
+      toast(CHK.t("check_opened"));
       await CHK.openCheck?.(r.id || r.check_id);
     } catch (e) { toast("Create error: " + e.message); }
   };

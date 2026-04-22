@@ -138,8 +138,8 @@ window.CHK = window.CHK || {};
     if (!id) return;
     const name = $("itemName").value.trim();
     const priceStr = $("itemPrice").value.trim();
-    if (!name) return toast("Enter item");
-    if ($("btnAddItem").disabled) return toast("Price required for new item");
+    if (!name) return toast(CHK.t("enter_item"));
+    if ($("btnAddItem").disabled) return toast(CHK.t("price_required"));
 
     try {
       if (!selectedProductId) {
@@ -159,7 +159,7 @@ window.CHK = window.CHK || {};
         const maybe = parseNum(priceStr);
         if (maybe !== null) body.price = maybe;
         const changedId = await addItemAndReturn(body, id);
-        toast("Added");
+        toast(CHK.t("added"));
         reset();
         await CHK.check?.reload();
         flashItemRow(changedId);
@@ -167,7 +167,7 @@ window.CHK = window.CHK || {};
       }
 
       const price = parseNum(priceStr);
-      if (price === null) return toast("Price required for new item");
+      if (price === null) return toast(CHK.t("price_required"));
       const changedId = await addItemAndReturn({ name, price, qty }, id);
       toast("Added & saved");
       reset();

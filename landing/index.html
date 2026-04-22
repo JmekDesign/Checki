@@ -1180,7 +1180,7 @@ document.getElementById("btnRegister").onclick = async () => {
     const resp = await fetch(API + "/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ venue_name: venueName, manager_name: managerName, login, password, email, phone: phone || null }),
+      body: JSON.stringify({ venue_name: venueName, manager_name: managerName, login, password, email, phone: phone || null, lang }),
     });
     const data = await resp.json();
     if (!resp.ok) {

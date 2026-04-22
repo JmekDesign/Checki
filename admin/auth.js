@@ -21,7 +21,7 @@ window.CHK = window.CHK || {};
     setToken("");
     CHK.setUserProfile(null);
     CHK.nav.reset("screenLogin");
-    toast("Logged out");
+    toast(CHK.t("logout"));
   };
 
   const tabOpen = $("tabOpen");
@@ -54,6 +54,7 @@ window.CHK = window.CHK || {};
       const r = await api("/api/auth/login", { method: "POST", body: JSON.stringify({ login, password }) });
       setToken(r.token);
       CHK.setUserProfile(r.user || null);
+      if (r.user?.lang) CHK.i18n?.setLang(r.user.lang);
       toast("OK");
       await CHK.open?.load();
       CHK.nav.reset("screenOpen");
@@ -68,6 +69,7 @@ window.CHK = window.CHK || {};
         try {
           const me = await api("/api/auth/me", { method: "GET" });
           CHK.setUserProfile(me.user || null);
+          if (me.user?.lang) CHK.i18n?.setLang(me.user.lang);
         } catch (_) {}
         await CHK.open?.load();
         CHK.nav.reset("screenOpen");

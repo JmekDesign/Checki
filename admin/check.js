@@ -36,7 +36,7 @@ window.CHK = window.CHK || {};
     const items = currentCheck.items || currentCheck.lines || [];
     const list = $("itemsList");
     list.innerHTML = "";
-    $("itemsHint").textContent = items.length ? "" : "Empty. Add items below.";
+    $("itemsHint").textContent = items.length ? "" : CHK.t("empty_check");
 
     items.forEach(it => {
       const itemId = it.id;
@@ -51,7 +51,7 @@ window.CHK = window.CHK || {};
       el.setAttribute("data-item-id", String(itemId));
       if (isLowConf) {
         el.style.cssText = "background:rgba(255,170,0,0.08);border-left:2px solid #f0a500;cursor:pointer";
-        el.title = "Tap to fix this item";
+        el.title = CHK.t("fix_item");
         el.addEventListener("click", (e) => {
           if (e.target.closest(".qtyCtl")) return;
           window._openScanEdit?.(itemId, name, price, q);
@@ -67,7 +67,7 @@ window.CHK = window.CHK || {};
         </div>
         <div class="lineRight">
           <div class="lineTotal">${esc(fmtMoney(lt))} ₾</div>
-          <div class="qtyCtl" title="Adjust quantity">
+          <div class="qtyCtl" title="${CHK.t('adj_qty')}">
             <button class="btn" data-act="dec">–</button>
             <strong style="min-width:16px;text-align:center;display:inline-block">${esc(String(q))}</strong>
             <button class="btn" data-act="inc">+</button>
@@ -77,7 +77,7 @@ window.CHK = window.CHK || {};
       el.querySelector('[data-act="dec"]').onclick = async () => {
         try {
           if (q === 1) {
-            if (!await CHK.confirm({ title: "Remove item", text: `Remove "${name}" from check?`, okText: "Remove", cancelText: "Cancel", danger: true })) return;
+            if (!await CHK.confirm({ title: CHK.t("remove_item"), text: `Remove "${name}" from check?`, okText: CHK.t("remove"), cancelText: CHK.t("cancel"), danger: true })) return;
           }
           await api(`/api/checks/${currentCheckId}/items/${itemId}/qty?delta=-1`, { method: "POST" });
           await loadCheck();
@@ -122,7 +122,7 @@ window.CHK = window.CHK || {};
     if (method === null) return;
     try {
       await api(`/api/checks/${currentCheckId}/close`, { method: "POST", body: JSON.stringify({ payment_method: method }) });
-      toast("Check closed");
+      toast(CHK.t("check_closed"));
       currentCheckId = null; currentCheck = null;
       await CHK.open?.load().catch(() => {});
       CHK.nav.back();
@@ -137,16 +137,16 @@ window.CHK = window.CHK || {};
       if (!["manager", "superadmin"].includes(profile.role)) return;
       if (!currentCheckId) return;
       const ok = await CHK.confirm({
-        title: "Delete check?",
+        title: CHK.t("delete_check"),
         text: `Check #${currentCheck?.number ?? ""} · ${currentCheck?.guest_name_snapshot ?? "—"} will be permanently deleted.`,
-        okText: "Delete",
+        okText: CHK.t("delete_"),
         danger: true,
       });
       if (!ok) return;
       try {
         const wasArchive = !!CHK._checkReadonly;
         await api(`/api/checks/${currentCheckId}`, { method: "DELETE" });
-        toast("Check deleted");
+        toast(CHK.t("check_deleted"));
         currentCheckId = null; currentCheck = null;
         if (wasArchive) {
           await CHK.gotoArchive?.();
@@ -188,10 +188,10 @@ window.CHK = window.CHK || {};
         if (!document.body?.classList.contains("chk-readonly")) return;
         const t = e.target;
         if (t?.closest?.("#itemsList") && t.closest("button")) {
-          e.preventDefault(); e.stopPropagation(); toast("Read-only"); return;
+          e.preventDefault(); e.stopPropagation(); toast(CHK.t("read_only")); return;
         }
         if (t?.closest?.("#bottomBar")) {
-          e.preventDefault(); e.stopPropagation(); toast("Read-only");
+          e.preventDefault(); e.stopPropagation(); toast(CHK.t("read_only"));
         }
       } catch (_) {}
     }, true);

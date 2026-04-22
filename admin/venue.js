@@ -23,7 +23,7 @@ window.CHK = window.CHK || {};
     const staffEl  = $("venueStaff");
     if (headerEl) headerEl.innerHTML = `
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        ${["Open now","Closed today","Revenue"].map(l => `
+        ${[CHK.t("open_now"),CHK.t("closed_today"),CHK.t("revenue")].map(l => `
           <div class="archStatCard" style="text-align:center">
             <div class="archStatVal" style="color:#ddd">—</div>
             <div class="archStatLabel" style="color:#ddd">${l}</div>
@@ -45,22 +45,42 @@ window.CHK = window.CHK || {};
     const el = $("venueHeader");
     if (!el || !r.venue) return;
     const s = r.stats || {};
+    const curLang = r.venue.lang || "en";
     el.innerHTML = `
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
         <div class="archStatCard" style="text-align:center">
           <div class="archStatVal">${s.open_now ?? 0}</div>
-          <div class="archStatLabel">Open now</div>
+          <div class="archStatLabel">${CHK.t("open_now")}</div>
         </div>
         <div class="archStatCard" style="text-align:center">
           <div class="archStatVal">${s.closed_today ?? 0}</div>
-          <div class="archStatLabel">Closed today</div>
+          <div class="archStatLabel">${CHK.t("closed_today")}</div>
         </div>
         <div class="archStatCard" style="text-align:center">
           <div class="archStatVal">${money(s.revenue_today)} ₾</div>
-          <div class="archStatLabel">Revenue today</div>
+          <div class="archStatLabel">${CHK.t("revenue")}</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:13px;color:var(--muted)">${CHK.t("lang_label")}</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn${curLang === "en" ? " primary" : ""}" id="btnLangEn" style="padding:4px 14px;font-size:13px">EN</button>
+          <button class="btn${curLang === "ka" ? " primary" : ""}" id="btnLangKa" style="padding:4px 14px;font-size:13px">ქართული</button>
         </div>
       </div>
     `;
+    $("btnLangEn").onclick = () => _setVenueLang("en");
+    $("btnLangKa").onclick = () => _setVenueLang("ka");
+  }
+
+  async function _setVenueLang(lang) {
+    try {
+      await api("/api/venue/lang", { method: "PATCH", body: JSON.stringify({ lang }) });
+      CHK.i18n?.setLang(lang, true);
+      await load();
+    } catch (e) {
+      CHK.toast?.("Error: " + (e.message || String(e)));
+    }
   }
 
   /* ── staff list ── */
@@ -98,11 +118,11 @@ window.CHK = window.CHK || {};
 
   /* ── staff modal (add / edit) ── */
   function openAddModal() {
-    showStaffModal({ title: "Add staff", okText: "Create", s: null });
+    showStaffModal({ title: CHK.t("add_staff"), okText: CHK.t("create"), s: null });
   }
 
   function openEditModal(s) {
-    showStaffModal({ title: "Edit staff", okText: "Save", s });
+    showStaffModal({ title: CHK.t("edit_staff"), okText: CHK.t("save"), s });
   }
 
   function showStaffModal({ title, okText, s }) {
@@ -113,10 +133,10 @@ window.CHK = window.CHK || {};
       <div class="modal" style="width:min(92vw,420px)">
         <div class="modalTitle">${esc(title)}</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
-          <input class="inp" id="smName"  placeholder="Name"  value="${esc(s ? s.name : "")}" />
-          <input class="inp" id="smLogin" placeholder="Login" value="${esc(s ? s.login : "")}" ${isEdit ? "readonly style='opacity:.6'" : ""} />
-          <input class="inp" id="smEmail" type="email" placeholder="Email (for password reset)" value="${esc(s ? (s.email || "") : "")}" />
-          <input class="inp" id="smPw" type="password" placeholder="${isEdit ? "New password (leave blank to keep)" : "Password"}" />
+          <input class="inp" id="smName"  placeholder="${CHK.t('ph_staff_name')}"  value="${esc(s ? s.name : "")}" />
+          <input class="inp" id="smLogin" placeholder="${CHK.t('ph_staff_login')}" value="${esc(s ? s.login : "")}" ${isEdit ? "readonly style='opacity:.6'" : ""} />
+          <input class="inp" id="smEmail" type="email" placeholder="${CHK.t('ph_staff_email')}" value="${esc(s ? (s.email || "") : "")}" />
+          <input class="inp" id="smPw" type="password" placeholder="${isEdit ? CHK.t('ph_staff_pw') : CHK.t('pw_required')}" />
           <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;padding:4px 0">
             <input type="checkbox" id="smIsManager" ${isEdit && s.role === "manager" ? "checked" : ""} style="width:18px;height:18px;accent-color:var(--accent)" />
             Manager (can access venue settings)
@@ -130,9 +150,9 @@ window.CHK = window.CHK || {};
           <div id="smError" style="display:none;color:var(--danger,#ff5a6a);font-size:13px;padding:8px 10px;background:rgba(255,90,106,.08);border-radius:8px"></div>
         </div>
         <div class="modalBtns" style="justify-content:space-between">
-          ${isEdit && s.role !== "manager" ? '<button class="btn danger" id="smDelete">Delete</button>' : '<div></div>'}
+          ${isEdit && s.role !== "manager" ? `<button class="btn danger" id="smDelete">${CHK.t("delete_")}</button>` : '<div></div>'}
           <div style="display:flex;gap:8px">
-            <button class="btn" id="smCancel">Cancel</button>
+            <button class="btn" id="smCancel">${CHK.t("cancel")}</button>
             <button class="btn primary" id="smOk">${esc(okText)}</button>
           </div>
         </div>
@@ -147,15 +167,15 @@ window.CHK = window.CHK || {};
     if (delBtn) {
       delBtn.onclick = async () => {
         const ok = await CHK.confirm({
-          title: "Delete staff?",
+          title: CHK.t("delete_staff_q"),
           text: `"${s.name}" will be permanently deleted.`,
-          okText: "Delete",
+          okText: CHK.t("delete_"),
           danger: true,
         });
         if (!ok) return;
         try {
           await api(`/api/staff/${s.id}`, { method: "DELETE" });
-          CHK.toast?.("Deleted");
+          CHK.toast?.(CHK.t("deleted"));
           back.classList.add("hide");
           await load();
         } catch (e) {
@@ -181,8 +201,8 @@ window.CHK = window.CHK || {};
       const role = isManager ? "manager" : "staff";
       const errEl = $("smError");
       if (errEl) errEl.style.display = "none";
-      if (!name || !login)  return showErr("Name and login required");
-      if (!isEdit && !pw)   return showErr("Password required");
+      if (!name || !login)  return showErr(CHK.t("name_login_req"));
+      if (!isEdit && !pw)   return showErr(CHK.t("pw_required"));
       try {
         if (!isEdit) {
           await api("/api/staff", {
@@ -216,14 +236,14 @@ window.CHK = window.CHK || {};
       <div class="modal" style="width:min(92vw,420px)">
         <div class="modalTitle">My profile</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
-          <input class="inp" id="pmName"  placeholder="Name"  value="${esc(profileData.name || "")}" />
-          <input class="inp" id="pmLogin" placeholder="Login" value="${esc(profileData.login || "")}" />
-          <input class="inp" id="pmEmail" type="email" placeholder="Email (for password reset)" value="${esc(profileData.email || "")}" />
-          <input class="inp" id="pmPw" type="password" placeholder="New password (leave blank to keep)" />
+          <input class="inp" id="pmName"  placeholder="${CHK.t('ph_staff_name')}"  value="${esc(profileData.name || "")}" />
+          <input class="inp" id="pmLogin" placeholder="${CHK.t('ph_staff_login')}" value="${esc(profileData.login || "")}" />
+          <input class="inp" id="pmEmail" type="email" placeholder="${CHK.t('ph_staff_email')}" value="${esc(profileData.email || "")}" />
+          <input class="inp" id="pmPw" type="password" placeholder="${CHK.t('ph_staff_pw')}" />
         </div>
         <div class="modalBtns">
-          <button class="btn" id="pmCancel">Cancel</button>
-          <button class="btn primary" id="pmOk">Save</button>
+          <button class="btn" id="pmCancel">${CHK.t("cancel")}</button>
+          <button class="btn primary" id="pmOk">${CHK.t("save")}</button>
         </div>
       </div>
     `;
@@ -237,7 +257,7 @@ window.CHK = window.CHK || {};
       const login = ($("pmLogin").value || "").trim();
       const email = ($("pmEmail").value || "").trim().toLowerCase() || null;
       const pw    = ($("pmPw").value    || "").trim();
-      if (!name || !login) return CHK.toast?.("Name and login required");
+      if (!name || !login) return CHK.toast?.(CHK.t("name_login_req"));
       const body = { name, login, email };
       if (pw) body.password = pw;
       try {

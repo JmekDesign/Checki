@@ -36,14 +36,14 @@ window.CHK = window.CHK || {};
               body: form,
             });
             const data = await res.json().catch(() => ({}));
-            if (!res.ok) throw new Error(data.detail || "Voice error");
+            if (!res.ok) throw new Error(data.detail || CHK.t("voice_error"));
             if (data.transcription) toast(`🎙 "${data.transcription}"`);
             if (data.items_added?.length) {
               toast("Added: " + data.items_added.map(i => `${i.qty}× ${i.name}`).join(", "));
               await CHK.check?.reload();
               data.items_added.forEach(i => { if (i.item_id) CHK.flashItemRow?.(i.item_id); });
             } else if (!data.needs_price?.length) {
-              toast("Nothing recognized");
+              toast(CHK.t("nothing_recog"));
             }
             if (data.needs_price?.length) await addVoiceNeedsPrice(data.needs_price);
           } catch (e) { toast("Voice: " + (e.message || String(e))); }
@@ -52,7 +52,7 @@ window.CHK = window.CHK || {};
         mediaRecorder.start();
         isRecording = true;
         btn.classList.add("recording");
-      } catch (e) { toast("Mic: " + (e.message || "Permission denied")); }
+      } catch (e) { toast("Mic: " + (e.message || CHK.t("perm_denied"))); }
     } else {
       isRecording = false;
       if (mediaRecorder?.state !== "inactive") mediaRecorder.stop();

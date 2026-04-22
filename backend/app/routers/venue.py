@@ -4,6 +4,7 @@ import contextlib
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException
+from pydantic import BaseModel
 
 from ..core.security import UserContext, require_user
 from ..db.conn import db_conn, db_release
@@ -30,7 +31,7 @@ def venue_get(
     conn = db_conn()
     try:
         cur = conn.cursor()
-        cur.execute("SELECT id, slug, name FROM venues WHERE id = %s;", (venue_id,))
+        cur.execute("SELECT id, slug, name, lang FROM venues WHERE id = %s;", (venue_id,))
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="venue not found")
@@ -56,13 +57,40 @@ def venue_get(
 
         return {
             "ok": True,
-            "venue": {"id": str(row[0]), "slug": row[1], "name": row[2]},
+            "venue": {"id": str(row[0]), "slug": row[1], "name": row[2], "lang": row[3] or "en"},
             "stats": {
                 "closed_today": int(closed_row[0]),
                 "revenue_today": float(closed_row[1]),
                 "open_now": int(open_row[0]),
             },
         }
+    finally:
+        with contextlib.suppress(Exception):
+            db_release(conn)
+
+
+class VenueLangIn(BaseModel):
+    lang: str
+
+
+@router.patch("/api/venue/lang")
+def venue_set_lang(
+    payload: VenueLangIn,
+    authorization: str | None = Header(default=None, alias="Authorization"),
+) -> dict[str, Any]:
+    """Update venue interface language (en / ka). Manager only."""
+    user = _require_manager(authorization)
+    venue_id = user["venue_id"]
+    if not venue_id:
+        raise HTTPException(status_code=400, detail="user has no venue")
+
+    lang = payload.lang if payload.lang in ("en", "ka") else "en"
+    conn = db_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute("UPDATE venues SET lang = %s WHERE id = %s;", (lang, venue_id))
+        conn.commit()
+        return {"ok": True, "lang": lang}
     finally:
         with contextlib.suppress(Exception):
             db_release(conn)

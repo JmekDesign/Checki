@@ -37,8 +37,8 @@ window.CHK = window.CHK || {};
       (Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) -
         Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())) / 86400000
     );
-    if (diff === 0) return "Today";
-    if (diff === 1) return "Yesterday";
+    if (diff === 0) return CHK.t("today");
+    if (diff === 1) return CHK.t("yesterday");
     return d.toLocaleDateString(undefined, {
       day: "numeric", month: "long",
       year: diff > 300 ? "numeric" : undefined,
@@ -130,15 +130,15 @@ window.CHK = window.CHK || {};
 
   async function deleteCheck(id, num, guest) {
     const ok = await CHK.confirm({
-      title: "Delete check?",
+      title: CHK.t("delete_check_q"),
       text: `#${num} · ${guest} will be permanently deleted and removed from reports.`,
-      okText: "Delete",
+      okText: CHK.t("delete_"),
       danger: true,
     });
     if (!ok) return;
     try {
       await api(`/api/checks/${id}`, { method: "DELETE" });
-      CHK.toast?.("Deleted");
+      CHK.toast?.(CHK.t("deleted"));
       offset = 0;
       await load();
     } catch (e) { CHK.toast?.("Error: " + (e.message || String(e))); }
@@ -156,7 +156,7 @@ window.CHK = window.CHK || {};
     list.innerHTML = "";
 
     if (!items.length) {
-      if (hint)  hint.textContent  = "No closed checks for this filter.";
+      if (hint)  hint.textContent  = CHK.t("no_arch_checks");
       if (pager) pager.textContent = "—";
       if (prev)  prev.disabled = true;
       if (next)  next.disabled = true;
@@ -180,7 +180,7 @@ window.CHK = window.CHK || {};
     groups.forEach(({ day, checks }) => {
       const dayEl = document.createElement("div");
       dayEl.className = "archDayLabel";
-      dayEl.textContent = day === "unknown" ? "Unknown date" : labelDate(day);
+      dayEl.textContent = day === "unknown" ? CHK.t("unknown_date") : labelDate(day);
       list.appendChild(dayEl);
 
       checks.forEach((c) => {

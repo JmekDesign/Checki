@@ -10,3 +10,4 @@ class RegisterIn(BaseModel):
     password: str
     email: str | None = None
     phone: str | None = None
+    lang: str | None = None
