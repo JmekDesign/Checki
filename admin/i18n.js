@@ -397,16 +397,20 @@ window.CHK = window.CHK || {};
   };
 
   let _lang = "en";
+  const _cbs = [];
 
   function t(key) {
     return T[_lang]?.[key] ?? T.en[key] ?? key;
   }
+
+  function onLangChange(cb) { _cbs.push(cb); }
 
   function setLang(lang, persist) {
     _lang = T[lang] ? lang : "en";
     if (persist !== false) localStorage.setItem("checki_lang", _lang);
     _applyDOM();
     document.documentElement.lang = _lang;
+    _cbs.forEach((cb) => { try { cb(_lang); } catch (_) {} });
   }
 
   function _applyDOM() {
@@ -430,7 +434,7 @@ window.CHK = window.CHK || {};
 
   function getLang() { return _lang; }
 
-  window.CHK.i18n = { init, setLang, getLang, t };
+  window.CHK.i18n = { init, setLang, getLang, t, onLangChange };
   window.CHK.t = t;
 
   // Apply immediately (before DOMContentLoaded) if DOM already ready

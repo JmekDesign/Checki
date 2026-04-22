@@ -298,6 +298,12 @@ window.CHK = window.CHK || {};
 
     // Reflect current lang on page load
     _updateLangButtons(CHK.i18n?.getLang() || "en");
+
+    // Re-render dynamic content when language changes
+    CHK.i18n?.onLangChange(() => {
+      renderStaff();
+      _updateLangButtons(CHK.i18n.getLang());
+    });
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
