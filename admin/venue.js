@@ -100,7 +100,7 @@ window.CHK = window.CHK || {};
         <div class="lineLeft">
           <div class="lineTitle">
             <b>${esc(s.name)}</b>
-            <span class="vRoleBadge ${s.role === "manager" ? "vRoleManager" : "vRoleStaff"}">${s.role}</span>
+            <span class="vRoleBadge ${s.role === "manager" ? "vRoleManager" : "vRoleStaff"}">${CHK.t("role_" + s.role)}</span>
           </div>
           <div class="lineMeta"><span>${esc(s.login)}</span></div>
         </div>
@@ -142,12 +142,12 @@ window.CHK = window.CHK || {};
           <input class="inp" id="smPw" type="password" placeholder="${isEdit ? CHK.t('ph_staff_pw') : CHK.t('pw_required')}" />
           <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;padding:4px 0">
             <input type="checkbox" id="smIsManager" ${isEdit && s.role === "manager" ? "checked" : ""} style="width:18px;height:18px;accent-color:var(--accent)" />
-            Manager (can access venue settings)
+            ${CHK.t("lbl_manager_access")}
           </label>
           ${isEdit ? `
             <label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;padding:4px 0">
               <input type="checkbox" id="smActive" ${s.is_active ? "checked" : ""} style="width:18px;height:18px;accent-color:var(--accent)" />
-              Active
+              ${CHK.t("lbl_active")}
             </label>
           ` : ""}
           <div id="smError" style="display:none;color:var(--danger,#ff5a6a);font-size:13px;padding:8px 10px;background:rgba(255,90,106,.08);border-radius:8px"></div>
@@ -212,12 +212,12 @@ window.CHK = window.CHK || {};
             method: "POST",
             body: JSON.stringify({ name, login, password: pw, role, email }),
           });
-          CHK.toast?.("Staff added");
+          CHK.toast?.(CHK.t("staff_added"));
         } else {
           const body = { name, role, is_active: activeEl ? activeEl.checked : true, email };
           if (pw) body.password = pw;
           await api(`/api/staff/${s.id}`, { method: "PATCH", body: JSON.stringify(body) });
-          CHK.toast?.("Saved");
+          CHK.toast?.(CHK.t("saved"));
         }
         back.classList.add("hide");
         await load();
@@ -237,7 +237,7 @@ window.CHK = window.CHK || {};
 
     back.innerHTML = `
       <div class="modal" style="width:min(92vw,420px)">
-        <div class="modalTitle">My profile</div>
+        <div class="modalTitle">${CHK.t("my_profile")}</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
           <input class="inp" id="pmName"  placeholder="${CHK.t('ph_staff_name')}"  value="${esc(profileData.name || "")}" />
           <input class="inp" id="pmLogin" placeholder="${CHK.t('ph_staff_login')}" value="${esc(profileData.login || "")}" />
@@ -265,7 +265,7 @@ window.CHK = window.CHK || {};
       if (pw) body.password = pw;
       try {
         await api("/api/profile", { method: "PATCH", body: JSON.stringify(body) });
-        CHK.toast?.("Saved");
+        CHK.toast?.(CHK.t("saved"));
         back.classList.add("hide");
         await load();
       } catch (e) {

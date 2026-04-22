@@ -108,6 +108,12 @@ window.CHK = window.CHK || {};
       ph_staff_email: "Email (for password reset)",
       ph_staff_pw:    "New password (leave blank to keep)",
       pw_required:    "Password required",
+      role_manager:   "Manager",
+      role_staff:     "Staff",
+      lbl_manager_access: "Manager (can access venue settings)",
+      lbl_active:     "Active",
+      my_profile:     "My profile",
+      staff_added:    "Staff added",
 
       /* ── archive stats & pager ── */
       arch_checks:    "Checks",
@@ -138,6 +144,7 @@ window.CHK = window.CHK || {};
       active_label:   "Active (appears in search)",
       quick_pick:     "Quick pick",
       saved:          "Saved",
+      cat_other:      "Other",
 
       /* ── supplies ── */
       supplies_title: "Supplies",
@@ -145,6 +152,26 @@ window.CHK = window.CHK || {};
       no_orders:      "No supply orders yet.",
       close_order_q:  "Close this order?",
       order_closed:   "Order closed",
+      sup_active:     "Active",
+      sup_archive:    "Archive",
+      sup_done:       "done",
+      sup_empty:      "empty",
+
+      /* ── menu scan ── */
+      scan_menu_title:     "Menu scan",
+      scan_menu_scanning:  "Scanning menu…",
+      scan_menu_wait:      "This may take a few seconds per page",
+      scan_menu_items:     "items found",
+      scan_menu_page:      "page",
+      scan_menu_pages:     "pages",
+      scan_menu_add:       "Add selected",
+      scan_menu_adding:    "Adding…",
+      scan_menu_select_all:   "Select all",
+      scan_menu_deselect_all: "Deselect all",
+      scan_menu_in_catalog:   "already in catalog",
+      scan_menu_low_conf:     "Low confidence",
+      scan_menu_nothing:   "No items found in photo",
+      scan_menu_failed:    "Scan failed",
 
       /* ── scan ── */
       scan_title:     "Scan",
@@ -277,6 +304,12 @@ window.CHK = window.CHK || {};
       ph_staff_email: "ელ.ფოსტა (პაროლის აღდგენა)",
       ph_staff_pw:    "ახალი პაროლი (ცარიელი = ძველი)",
       pw_required:    "პაროლი სავალდებულოა",
+      role_manager:   "მენეჯერი",
+      role_staff:     "პერსონ.",
+      lbl_manager_access: "მენეჯერი (წვდომა პარამეტრებზე)",
+      lbl_active:     "აქტიური",
+      my_profile:     "პროფილი",
+      staff_added:    "პერსონალი დამატებულია",
 
       /* ── archive stats & pager ── */
       arch_checks:    "ჩეკები",
@@ -307,6 +340,7 @@ window.CHK = window.CHK || {};
       active_label:   "აქტიური (ჩანს ძებნაში)",
       quick_pick:     "სწრაფი არჩევა",
       saved:          "შენახულია",
+      cat_other:      "სხვა",
 
       /* ── supplies ── */
       supplies_title: "მარაგები",
@@ -314,6 +348,26 @@ window.CHK = window.CHK || {};
       no_orders:      "შეკვეთები არ არის.",
       close_order_q:  "დახუროთ შეკვეთა?",
       order_closed:   "შეკვეთა დახურულია",
+      sup_active:     "მიმდინარე",
+      sup_archive:    "არქივი",
+      sup_done:       "შესრ.",
+      sup_empty:      "ცარიელი",
+
+      /* ── menu scan ── */
+      scan_menu_title:     "მენიუს სკანირება",
+      scan_menu_scanning:  "სკანირება…",
+      scan_menu_wait:      "შეიძლება რამდენიმე წამი დასჭირდეს",
+      scan_menu_items:     "პოზიცია",
+      scan_menu_page:      "გვ.",
+      scan_menu_pages:     "გვ.",
+      scan_menu_add:       "დამატება",
+      scan_menu_adding:    "ემატება…",
+      scan_menu_select_all:   "ყველა",
+      scan_menu_deselect_all: "გაუქმება",
+      scan_menu_in_catalog:   "კატალოგშია",
+      scan_menu_low_conf:     "დაბალი სიზუსტე",
+      scan_menu_nothing:   "ფოტოში ვერ მოიძებნა",
+      scan_menu_failed:    "სკანირება ვერ მოხერხდა",
 
       /* ── scan ── */
       scan_title:     "სკანირება",

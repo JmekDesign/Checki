@@ -47,7 +47,7 @@ window.CHK = window.CHK || {};
 
     const groups = {};
     filtered.forEach((p) => {
-      const cat = p.category || "Other";
+      const cat = p.category || CHK.t("cat_other");
       if (!groups[cat]) groups[cat] = [];
       groups[cat].push(p);
     });
@@ -68,7 +68,7 @@ window.CHK = window.CHK || {};
           </div>
           <div style="display:flex;align-items:center;gap:12px">
             <span class="lineTotal" style="font-size:15px">${p.last_price != null ? money(p.last_price) + " ₾" : "—"}</span>
-            <button class="btnStar" data-pid="${esc(p.id)}" title="Quick pick" style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px 4px;line-height:1;color:${p.is_favorite ? "var(--accent)" : "var(--muted, #555)"}">${p.is_favorite ? "★" : "☆"}</button>
+            <button class="btnStar" data-pid="${esc(p.id)}" title="${CHK.t('quick_pick')}" style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px 4px;line-height:1;color:${p.is_favorite ? "var(--accent)" : "var(--muted, #555)"}">${p.is_favorite ? "★" : "☆"}</button>
             <div class="vActiveDot ${p.active ? "vDotOn" : "vDotOff"}"></div>
             <span class="muted" style="font-size:18px">›</span>
           </div>

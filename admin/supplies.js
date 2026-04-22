@@ -81,21 +81,21 @@
     let html = "";
 
     if (filteredActive.length) {
-      html += sectionHeader("Active");
+      html += sectionHeader(CHK.t("sup_active"));
       filteredActive.forEach((o) => {
         const checked  = o.items.filter((i) => i.is_checked).length;
         const total    = o.items.length;
-        const progress = total ? `${checked}/${total}` : "empty";
+        const progress = total ? `${checked}/${total}` : CHK.t("sup_empty");
         html += orderRowHtml(o, false, progress);
       });
     }
 
     if (filteredArchive.length) {
-      html += sectionHeader("Archive");
+      html += sectionHeader(CHK.t("sup_archive"));
       filteredArchive.forEach((o) => {
         const done  = o.items.filter((i) => i.is_checked).length;
         const total = o.items.length;
-        html += orderRowHtml(o, true, total ? `${done}/${total} done` : "");
+        html += orderRowHtml(o, true, total ? `${done}/${total} ${CHK.t("sup_done")}` : "");
       });
     }
 
@@ -237,7 +237,7 @@
     const ok = await CHK.confirm({
       title: CHK.t("close_order_q"),
       text: `"${_currentOrderTitle}" will move to archive.`,
-      okText: "Close",
+      okText: CHK.t("close"),
       danger: true,
     });
     if (!ok) return;
