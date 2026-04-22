@@ -91,7 +91,7 @@ window.CHK = window.CHK || {};
             ${totalText ? `<span style="font-weight:700;color:var(--text)">${esc(totalText)}</span>` : ""}
           </div>
         </div>
-        <button class="btn compact danger" style="flex:none;white-space:nowrap">Close</button>
+        <button class="btn compact danger" style="flex:none;white-space:nowrap">${CHK.t("close")}</button>
       `;
       el.querySelector("button").onclick = async (e) => { e.stopPropagation(); await closeCheckInline(c); };
       el.onclick = () => CHK.openCheck?.(c.id || c.check_id);
