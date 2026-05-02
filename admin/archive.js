@@ -330,6 +330,7 @@ window.CHK = window.CHK || {};
   CHK.archive = CHK.archive || {};
   // Full load: resets filters to "today" (called when navigating TO archive fresh)
   CHK.archive.load = async () => {
+    CHK.datepicker?.setContext?.("archFrom", "archTo", "dpBtnFrom", "dpBtnTo");
     setQuick("today");
     offset = 0;
     await load();

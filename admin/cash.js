@@ -176,21 +176,69 @@ window.CHK = window.CHK || {};
     }
   }
 
+  /* ── Quick date filters ─────────────────────────────────────────── */
+  function _setQuick(q) {
+    const t   = todayStr();
+    const now = new Date();
+    let from = t, to = t;
+    if (q === "week") {
+      const d = new Date(); d.setDate(d.getDate() - 6);
+      from = d.toISOString().slice(0, 10);
+    } else if (q === "month") {
+      const d = new Date(); d.setDate(d.getDate() - 29);
+      from = d.toISOString().slice(0, 10);
+    } else if (q === "curmonth") {
+      from = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+    } else if (q === "all") {
+      from = "2020-01-01";
+    }
+    const fromEl = $("cashFrom"), toEl = $("cashTo");
+    if (fromEl) { fromEl.value = from; fromEl.dispatchEvent(new Event("change", { bubbles: true })); }
+    if (toEl)   { toEl.value   = to;   toEl.dispatchEvent(new Event("change", { bubbles: true })); }
+    CHK.datepicker?.updateButtons?.();
+    document.querySelectorAll(".cashQuick").forEach((b) => b.classList.remove("primary"));
+    document.querySelector(`.cashQuick[data-q="${q}"]`)?.classList.add("primary");
+  }
+
   /* ── Init ───────────────────────────────────────────────────────── */
   function init() {
-    const t = todayStr();
-    const fromEl = $("cashFrom");
-    const toEl   = $("cashTo");
-    if (fromEl) fromEl.value = t;
-    if (toEl)   toEl.value   = t;
-
     $("btnBackFromCash")?.addEventListener("click", () => CHK.nav.back());
-    $("btnCashFilter")?.addEventListener("click", load);
     $("btnCashReport")?.addEventListener("click", downloadReport);
+    $("btnCashReset")?.addEventListener("click", () => {
+      const t = todayStr();
+      const fromEl = $("cashFrom"), toEl = $("cashTo");
+      if (fromEl) { fromEl.value = t; fromEl.dispatchEvent(new Event("change", { bubbles: true })); }
+      if (toEl)   { toEl.value   = t; toEl.dispatchEvent(new Event("change", { bubbles: true })); }
+      CHK.datepicker?.updateButtons?.();
+    });
+    document.querySelectorAll(".cashQuick").forEach((btn) => {
+      btn.addEventListener("click", () => _setQuick(btn.dataset.q));
+    });
+    $("cashFrom")?.addEventListener("change", load);
+    $("cashTo")?.addEventListener("change", load);
+
+    // Set current month label
+    const cm = $("btnCashCurMonth");
+    if (cm) cm.textContent = new Date().toLocaleDateString(
+      CHK.i18n?.getLang() === "ka" ? "ka-GE" : "en-US", { month: "long" }
+    );
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
-  CHK.cash = { loadBalance, load };
+  CHK.cash = {
+    loadBalance,
+    load: () => {
+      // Switch datepicker context to cash inputs
+      CHK.datepicker?.setContext?.("cashFrom", "cashTo", "cashDpBtnFrom", "cashDpBtnTo");
+      // Default to today if inputs are empty
+      const t = todayStr();
+      const fromEl = $("cashFrom"), toEl = $("cashTo");
+      if (fromEl && !fromEl.value) fromEl.value = t;
+      if (toEl   && !toEl.value)   toEl.value   = t;
+      CHK.datepicker?.updateButtons?.();
+      _setQuick("today");
+    },
+  };
 })();

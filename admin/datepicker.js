@@ -14,6 +14,21 @@ window.CHK = window.CHK || {};
   let mode  = null; // "from" | "to"
   let vYear = 0, vMonth = 0;
 
+  // Active context — can be switched per screen
+  let _fromId    = "archFrom";
+  let _toId      = "archTo";
+  let _fromBtnId = "dpBtnFrom";
+  let _toBtnId   = "dpBtnTo";
+
+  function setContext(fromId, toId, fromBtnId, toBtnId) {
+    _fromId    = fromId;
+    _toId      = toId;
+    _fromBtnId = fromBtnId;
+    _toBtnId   = toBtnId;
+    _bindButtons();
+    updateButtons();
+  }
+
   /* ── helpers ── */
   function todayISO() { return new Date().toISOString().slice(0, 10); }
 
@@ -27,33 +42,33 @@ window.CHK = window.CHK || {};
     return new Date(y, m - 1, d).toLocaleDateString(undefined, { day: "numeric", month: "short" });
   }
 
-  function getFrom() { return ($("archFrom") || {}).value || ""; }
-  function getTo()   { return ($("archTo")   || {}).value || ""; }
+  function getFrom() { return ($(_fromId) || {}).value || ""; }
+  function getTo()   { return ($(_toId)   || {}).value || ""; }
 
   function setFrom(v) {
-    const el = $("archFrom");
+    const el = $(_fromId);
     if (!el) return;
     el.value = v;
     el.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   function setTo(v) {
-    const el = $("archTo");
+    const el = $(_toId);
     if (!el) return;
     el.value = v;
     el.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   function updateButtons() {
-    const bf = $("dpBtnFrom"), bt = $("dpBtnTo");
-    if (bf) bf.textContent = fmtBtn(getFrom()) || "From…";
-    if (bt) bt.textContent = fmtBtn(getTo())   || "To…";
+    const bf = $(_fromBtnId), bt = $(_toBtnId);
+    if (bf) bf.textContent = fmtBtn(getFrom()) || bf.dataset.i18nDefault || "From…";
+    if (bt) bt.textContent = fmtBtn(getTo())   || bt.dataset.i18nDefault || "To…";
   }
 
   /* ── popup ── */
   function openPopup(m) {
     mode = m;
-    const ref = $(m === "from" ? "dpBtnFrom" : "dpBtnTo");
+    const ref = $(m === "from" ? _fromBtnId : _toBtnId);
     if (!ref) return;
 
     const iso = m === "from" ? getFrom() : getTo();
@@ -84,7 +99,7 @@ window.CHK = window.CHK || {};
   function outsideClick(e) {
     if (
       popup && !popup.contains(e.target) &&
-      e.target !== $("dpBtnFrom") && e.target !== $("dpBtnTo")
+      e.target !== $(_fromBtnId) && e.target !== $(_toBtnId)
     ) closePopup();
   }
 
@@ -172,17 +187,21 @@ window.CHK = window.CHK || {};
     });
   }
 
+  /* ── bind buttons for current context ── */
+  function _bindButtons() {
+    const bf = $(_fromBtnId), bt = $(_toBtnId);
+    if (bf) bf.onclick = (e) => { e.stopPropagation(); mode ? closePopup() : openPopup("from"); };
+    if (bt) bt.onclick = (e) => { e.stopPropagation(); mode ? closePopup() : openPopup("to"); };
+  }
+
   /* ── init ── */
   function init() {
-    const bf = $("dpBtnFrom"), bt = $("dpBtnTo");
-    if (!bf || !bt) return;
-    bf.onclick = (e) => { e.stopPropagation(); mode ? closePopup() : openPopup("from"); };
-    bt.onclick = (e) => { e.stopPropagation(); mode ? closePopup() : openPopup("to"); };
+    _bindButtons();
     updateButtons();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
-  CHK.datepicker = { updateButtons };
+  CHK.datepicker = { updateButtons, setContext };
 })();
