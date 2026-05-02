@@ -155,24 +155,30 @@ window.CHK = window.CHK || {};
 
   /* ── PDF download ───────────────────────────────────────────────── */
   async function downloadReport() {
+    const btn  = $("btnCashReport");
     const from = $("cashFrom")?.value || todayStr();
     const to   = $("cashTo")?.value   || todayStr();
+    if (btn) { btn.disabled = true; }
     try {
       const resp = await CHK.apiFetch(`/api/cash/report?from=${from}&to=${to}`);
-      const blob = await resp.blob();
+      if (!resp.ok) throw new Error("Report error " + resp.status);
+      const blob  = await resp.blob();
       const fname = `cash-${from}-${to}.pdf`;
-      const file = new File([blob], fname, { type: "application/pdf" });
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: fname });
+      const file  = new File([blob], fname, { type: "application/pdf" });
+      const isMobile = navigator.maxTouchPoints > 0;
+      if (isMobile && navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: "Cash Report" });
       } else {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
         a.download = fname;
         a.click();
-        URL.revokeObjectURL(a.href);
+        setTimeout(() => URL.revokeObjectURL(a.href), 3000);
       }
     } catch (e) {
-      if (e.name !== "AbortError") CHK.toast?.("Error: " + (e.message || String(e)));
+      if (e.name !== "AbortError") CHK.toast?.("Report: " + (e.message || String(e)));
+    } finally {
+      if (btn) { btn.disabled = false; }
     }
   }
 
