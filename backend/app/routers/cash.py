@@ -3,8 +3,10 @@ from __future__ import annotations
 from datetime import date
 from typing import Any
 
-from fastapi import APIRouter, Header, HTTPException, Request
+from fastapi import APIRouter, Header, HTTPException, Query, Request
+from fastapi.responses import Response
 
+from ..core.pdf_cash_report import generate_cash_report
 from ..core.security import require_user
 from ..db.conn import db_conn, db_release
 
@@ -116,3 +118,113 @@ async def cash_add_movement(
         return {"ok": True}
     finally:
         db_release(conn)
+
+
+def _fetch_movements(
+    venue_id: str, date_from: str, date_to: str
+) -> list[dict[str, Any]]:
+    """Return raw movement rows for a date range."""
+    conn = db_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            """
+            SELECT cm.id, cm.type, cm.amount, cm.note, cm.check_id,
+                   cm.created_at, cm.shift_date, c.shift_number
+            FROM cash_movements cm
+            LEFT JOIN checks c ON c.id = cm.check_id
+            WHERE cm.venue_id = %s AND cm.shift_date BETWEEN %s AND %s
+            ORDER BY cm.shift_date DESC, cm.created_at
+            """,
+            (venue_id, date_from, date_to),
+        )
+        return [
+            {
+                "id": r[0], "type": r[1], "amount": float(r[2]),
+                "note": r[3], "check_id": str(r[4]) if r[4] else None,
+                "created_at": r[5].isoformat(), "shift_date": r[6].isoformat(),
+                "check_number": r[7],
+            }
+            for r in cur.fetchall()
+        ]
+    finally:
+        db_release(conn)
+
+
+@router.get("/api/cash/movements")
+def cash_movements(
+    authorization: str | None = Header(default=None, alias="Authorization"),
+    date_from: str | None = Query(default=None, alias="from"),
+    date_to: str | None = Query(default=None, alias="to"),
+) -> dict[str, Any]:
+    user = require_user(authorization)
+    venue_id = user["venue_id"]
+    if not venue_id:
+        raise HTTPException(status_code=400, detail="user has no venue")
+
+    today = date.today().isoformat()
+    dfrom = date_from or today
+    dto   = date_to   or today
+    rows  = _fetch_movements(venue_id, dfrom, dto)
+
+    # Group by shift_date
+    shifts_map: dict[str, dict[str, Any]] = {}
+    for m in rows:
+        sd = m["shift_date"]
+        if sd not in shifts_map:
+            shifts_map[sd] = {"shift_date": sd, "is_today": sd == today,
+                              "is_opened": False, "movements": []}
+        shifts_map[sd]["movements"].append(m)
+        if m["type"] == "open":
+            shifts_map[sd]["is_opened"] = True
+
+    summary = {"opening": 0.0, "cash_in": 0.0, "cash_out": 0.0, "balance": 0.0}
+    for m in rows:
+        if m["type"] == "open":   summary["opening"]  += m["amount"]
+        elif m["type"] == "in":   summary["cash_in"]  += m["amount"]
+        elif m["type"] == "out":  summary["cash_out"] += m["amount"]
+    summary["balance"] = summary["opening"] + summary["cash_in"] - summary["cash_out"]
+
+    return {
+        "date_from": dfrom, "date_to": dto,
+        "summary": summary,
+        "shifts": list(shifts_map.values()),
+    }
+
+
+@router.get("/api/cash/report")
+def cash_report(
+    authorization: str | None = Header(default=None, alias="Authorization"),
+    date_from: str | None = Query(default=None, alias="from"),
+    date_to: str | None = Query(default=None, alias="to"),
+) -> Response:
+    user = require_user(authorization)
+    venue_id = user["venue_id"]
+    if not venue_id:
+        raise HTTPException(status_code=400, detail="user has no venue")
+
+    today = date.today().isoformat()
+    dfrom = date_from or today
+    dto   = date_to   or today
+    rows  = _fetch_movements(venue_id, dfrom, dto)
+
+    conn = db_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM venues WHERE id = %s", (venue_id,))
+        vrow = cur.fetchone()
+        venue_name = str(vrow[0]) if vrow else "Venue"
+    finally:
+        db_release(conn)
+
+    pdf_bytes = generate_cash_report(
+        venue_name=venue_name,
+        date_from=dfrom,
+        date_to=dto,
+        movements=rows,
+    )
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="cash-{dfrom}-{dto}.pdf"'},
+    )

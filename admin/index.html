@@ -188,13 +188,11 @@
 
       <div class="hr"></div>
 
-      <!-- Cash register -->
-      <div id="venueCash"></div>
-
-      <div class="hr"></div>
-
       <!-- Features -->
       <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="item" id="btnGoCash" style="cursor:pointer">
+          <span style="font-weight:500" data-i18n="cash_link">Cash register</span><span class="muted">→</span>
+        </div>
         <div class="item" id="btnGoCatalog" style="cursor:pointer">
           <span style="font-weight:500" data-i18n="catalog_link">Product catalog</span><span class="muted">→</span>
         </div>
@@ -212,6 +210,21 @@
           <span data-i18n="subscription">Subscription</span><span class="muted">→</span>
         </div>
       </div>
+    </div>
+
+    <!-- CASH REGISTER -->
+    <div class="card cardless hide" id="screenCash">
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
+        <button class="btn compact" id="btnBackFromCash" data-i18n="back">← Back</button>
+        <button class="btn compact" id="btnCashReport">PDF</button>
+      </div>
+      <div class="h1" style="margin-bottom:12px" data-i18n="cash_link">Cash register</div>
+      <div class="row" style="gap:8px;margin-bottom:12px">
+        <input type="date" id="cashFrom" class="inp" style="flex:1" />
+        <input type="date" id="cashTo"   class="inp" style="flex:1" />
+        <button class="btn compact" id="btnCashFilter" data-i18n="apply">Apply</button>
+      </div>
+      <div id="cashContent"></div>
     </div>
 
     <!-- CATALOG (manager) -->

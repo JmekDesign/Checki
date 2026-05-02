@@ -22,8 +22,8 @@ window.CHK = window.CHK || {};
     const headerEl = $("venueHeader");
     const staffEl  = $("venueStaff");
     if (headerEl) headerEl.innerHTML = `
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        ${[CHK.t("open_now"),CHK.t("closed_today"),CHK.t("revenue")].map(l => `
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+        ${[CHK.t("open_now"),CHK.t("closed_today"),CHK.t("revenue"),CHK.t("cash_balance")].map(l => `
           <div class="archStatCard" style="text-align:center">
             <div class="archStatVal" style="color:#ddd">—</div>
             <div class="archStatLabel" style="color:#ddd">${l}</div>
@@ -46,7 +46,7 @@ window.CHK = window.CHK || {};
     if (!el || !r.venue) return;
     const s = r.stats || {};
     el.innerHTML = `
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
         <div class="archStatCard" style="text-align:center">
           <div class="archStatVal">${s.open_now ?? 0}</div>
           <div class="archStatLabel">${CHK.t("open_now")}</div>
@@ -58,6 +58,10 @@ window.CHK = window.CHK || {};
         <div class="archStatCard" style="text-align:center">
           <div class="archStatVal">${money(s.revenue_today)} ₾</div>
           <div class="archStatLabel">${CHK.t("revenue")}</div>
+        </div>
+        <div class="archStatCard" style="text-align:center" id="cashBalanceStat">
+          <div class="archStatVal">—</div>
+          <div class="archStatLabel">${CHK.t("cash_balance")}</div>
         </div>
       </div>
     `;
@@ -291,6 +295,12 @@ window.CHK = window.CHK || {};
       CHK.supplies?.load();
     };
 
+    const btnGoCash = $("btnGoCash");
+    if (btnGoCash) btnGoCash.onclick = () => {
+      CHK.nav.go("screenCash");
+      CHK.cash?.load();
+    };
+
     const btnLangEn = $("btnLangEn");
     if (btnLangEn) btnLangEn.onclick = () => _setVenueLang("en");
     const btnLangKa = $("btnLangKa");
@@ -312,7 +322,7 @@ window.CHK = window.CHK || {};
   CHK.venue = {
     load: async () => {
       await load().catch((e) => CHK.toast?.("Venue: " + (e.message || String(e))));
-      CHK.cash?.load().catch((e) => CHK.toast?.("Cash: " + (e.message || String(e))));
+      CHK.cash?.loadBalance().catch(() => {});
     },
   };
 })();

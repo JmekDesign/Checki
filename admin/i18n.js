@@ -116,6 +116,8 @@ window.CHK = window.CHK || {};
       staff_added:    "Staff added",
 
       /* ── cash register ── */
+      cash_link:        "Cash register",
+      apply:            "Apply",
       cash_title:       "Cash",
       cash_open_shift:  "Open shift",
       cash_add_in:      "+ Income",
@@ -329,6 +331,8 @@ window.CHK = window.CHK || {};
       staff_added:    "პერსონალი დამატებულია",
 
       /* ── cash register ── */
+      cash_link:        "სალარო",
+      apply:            "გამოყ.",
       cash_title:       "სალარო",
       cash_open_shift:  "სმენის გახსნა",
       cash_add_in:      "+ შემოს.",
