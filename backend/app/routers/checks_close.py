@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException, Request
@@ -40,20 +41,33 @@ async def check_close(
     try:
         cur = conn.cursor()
         cur.execute(
-            "select status from checks where id=%s and venue_id=%s;",
+            "SELECT status, total, shift_date, shift_number FROM checks WHERE id=%s AND venue_id=%s;",
             (check_id, venue_id),
         )
         r = cur.fetchone()
         if not r:
             raise HTTPException(status_code=404, detail="check not found")
-        if r[0] != "open":
+        status, total, shift_date, shift_number = r
+        if status != "open":
             raise HTTPException(status_code=409, detail="check is not open")
 
         cur.execute(
-            "update checks set status='closed', closed_at=now(), payment_method=%s"
-            " where id=%s and venue_id=%s;",
+            "UPDATE checks SET status='closed', closed_at=now(), payment_method=%s"
+            " WHERE id=%s AND venue_id=%s;",
             (payment_method, check_id, venue_id),
         )
+
+        # Auto-record cash income when paid in cash
+        if payment_method == "cash" and total and float(total) > 0:
+            note = f"Check #{shift_number}" if shift_number else None
+            sd = shift_date if shift_date else date.today()
+            cur.execute(
+                """INSERT INTO cash_movements
+                   (venue_id, shift_date, type, amount, note, check_id, created_by)
+                   VALUES (%s, %s, 'in', %s, %s, %s, %s)""",
+                (venue_id, sd, float(total), note, check_id, user["user_id"]),
+            )
+
         conn.commit()
         return {"ok": True, "check_id": check_id, "status": "closed"}
     finally:

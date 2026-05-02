@@ -312,6 +312,7 @@ window.CHK = window.CHK || {};
   CHK.venue = {
     load: async () => {
       await load().catch((e) => CHK.toast?.("Venue: " + (e.message || String(e))));
+      CHK.cash?.load().catch((e) => CHK.toast?.("Cash: " + (e.message || String(e))));
     },
   };
 })();

@@ -115,6 +115,23 @@ window.CHK = window.CHK || {};
       my_profile:     "My profile",
       staff_added:    "Staff added",
 
+      /* ── cash register ── */
+      cash_title:       "Cash",
+      cash_open_shift:  "Open shift",
+      cash_add_in:      "+ Income",
+      cash_add_out:     "− Withdrawal",
+      cash_in_btn:      "Income",
+      cash_out_btn:     "Withdrawal",
+      cash_opening:     "Opening",
+      cash_in_stat:     "Income",
+      cash_out_stat:    "Withdrawal",
+      cash_balance:     "Balance",
+      cash_not_opened:  "Cash register not opened",
+      cash_from_check:  "Check",
+      cash_amount:      "Amount, ₾",
+      cash_note:        "Note (reason)",
+      cash_amount_req:  "Enter amount",
+
       /* ── archive stats & pager ── */
       arch_checks:    "Checks",
       arch_avg:       "Avg",
@@ -310,6 +327,23 @@ window.CHK = window.CHK || {};
       lbl_active:     "აქტიური",
       my_profile:     "პროფილი",
       staff_added:    "პერსონალი დამატებულია",
+
+      /* ── cash register ── */
+      cash_title:       "სალარო",
+      cash_open_shift:  "სმენის გახსნა",
+      cash_add_in:      "+ შემოს.",
+      cash_add_out:     "− გამოტ.",
+      cash_in_btn:      "შემოს.",
+      cash_out_btn:     "გამოტ.",
+      cash_opening:     "გახსნა",
+      cash_in_stat:     "შემოს.",
+      cash_out_stat:    "გამოტ.",
+      cash_balance:     "ნაშთი",
+      cash_not_opened:  "სალარო არ გახსნილა",
+      cash_from_check:  "ჩეკი",
+      cash_amount:      "თანხა, ₾",
+      cash_note:        "შენიშვნა",
+      cash_amount_req:  "შეიყვანეთ თანხა",
 
       /* ── archive stats & pager ── */
       arch_checks:    "ჩეკები",

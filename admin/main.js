@@ -33,6 +33,7 @@
       await load("./archive.js");
       await load("./datepicker.js");
       await load("./venue.js");
+      await load("./cash.js");
       await load("./catalog.js");
       await load("./catalog-scan.js");
       await load("./supplies.js");

@@ -1,7 +1,18 @@
-.PHONY: up down restart logs test lint typecheck lint-fix deploy db-shell db-init db-test-init
+.PHONY: up down restart logs test lint typecheck lint-fix deploy db-shell db-init db-test-init inbox sync-inbox
 
 SERVER=root@77.73.238.214
 SERVER_DIR=/srv/checki
+
+PROJECTGO_DIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))../ProjectGo
+INBOX=$(PROJECTGO_DIR)/data/inbox/checki/new
+
+# Inbox
+sync-inbox:
+	cd $(PROJECTGO_DIR) && make sync-inbox
+
+inbox:
+	@echo "=== Checki inbox (ProjectGo/data/inbox/checki/new/) ===" && \
+	ls -1 $(INBOX) 2>/dev/null | grep -v '.gitkeep' || echo "(empty)"
 
 # Docker
 up:

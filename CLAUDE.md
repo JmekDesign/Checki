@@ -85,6 +85,19 @@ full type annotations, passes `mypy --strict`.
 - Write business logic in `db/conn.py`
 - Modify DB schema without a `sql/` migration file
 
+## Session Startup (ProjectGo Gateway)
+
+Tasks arrive via Telegram → ProjectGo bot → stored centrally in ProjectGo.
+
+Before starting work, run in this project:
+
+```bash
+make sync-inbox   # pull from server
+make inbox        # list new items
+```
+
+Read each file listed. Inbox path: `../ProjectGo/data/inbox/checki/new/`
+
 ## Dev Commands
 
 ```
