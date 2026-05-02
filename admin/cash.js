@@ -172,7 +172,7 @@ window.CHK = window.CHK || {};
         URL.revokeObjectURL(a.href);
       }
     } catch (e) {
-      CHK.toast?.("Error: " + (e.message || String(e)));
+      if (e.name !== "AbortError") CHK.toast?.("Error: " + (e.message || String(e)));
     }
   }
 
