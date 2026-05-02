@@ -55,6 +55,25 @@ window.CHK = window.CHK || {};
     _pushGuard();
   });
 
+  // In-app swipe right→left = go back (only when there is somewhere to go back to)
+  let _tx = 0;
+  let _ty = 0;
+  window.addEventListener("touchstart", (e) => {
+    _tx = e.touches[0].clientX;
+    _ty = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener("touchend", (e) => {
+    if (nav._stack.length <= 1) return;
+    // Skip when any modal/overlay is open
+    if (document.querySelector(".back:not(.hide)")) return;
+    const dx = e.changedTouches[0].clientX - _tx;
+    const dy = e.changedTouches[0].clientY - _ty;
+    // Must be mostly horizontal and cover ≥45% of screen width
+    if (dx < -(window.innerWidth * 0.45) && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      nav.back();
+    }
+  }, { passive: true });
+
   // Install guard on load
   _pushGuard();
 
