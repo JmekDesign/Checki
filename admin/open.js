@@ -131,7 +131,7 @@ window.CHK = window.CHK || {};
       if (!guest) return toast(CHK.t("ph_guest_table"));
       const r = await api("/api/checks", { method: "POST", body: JSON.stringify({ guest }) });
       toast(CHK.t("check_opened"));
-      await CHK.openCheck?.(r.id || r.check_id);
+      await CHK.openCheck?.(r.id || r.check_id, { replace: true });
     } catch (e) { toast("Create error: " + e.message); }
   };
 

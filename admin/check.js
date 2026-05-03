@@ -11,11 +11,15 @@ window.CHK = window.CHK || {};
   let currentCheck = null;
 
   /* ── open / load / render ── */
-  async function openCheck(id) {
+  async function openCheck(id, opts) {
     currentCheckId = id;
     CHK.setReadonly?.(false);
     await loadCheck();
-    CHK.nav.go("screenCheck");
+    if ((opts || {}).replace) {
+      CHK.nav.replace("screenCheck");
+    } else {
+      CHK.nav.go("screenCheck");
+    }
     CHK.checkForm?.reset?.();
     CHK.checkForm?.loadQuickChips?.().catch(() => {});
   }
@@ -230,10 +234,10 @@ window.CHK = window.CHK || {};
     reload: loadCheck,
   };
 
-  // Wrap openCheck to support opts.readonly (used by archive)
+  // Wrap openCheck to support opts.readonly (used by archive) and opts.replace
   const _orig = CHK.openCheck;
   CHK.openCheck = async (id, opts) => {
-    await _orig(id);
+    await _orig(id, opts);
     setReadonly(!!(opts || {}).readonly);
   };
 })();

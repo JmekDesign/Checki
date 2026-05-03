@@ -4,11 +4,6 @@ window.CHK = window.CHK || {};
 (function () {
   const CHK = window.CHK;
 
-  // Push a guard state so browser swipe-back triggers popstate instead of leaving the SPA
-  function _pushGuard() {
-    history.pushState({ checki: true }, "");
-  }
-
   const nav = {
     _stack: [],
 
@@ -45,16 +40,6 @@ window.CHK = window.CHK || {};
     },
   };
 
-  // Intercept browser back gesture (swipe-left on mobile, browser back button)
-  window.addEventListener("popstate", () => {
-    if (nav._stack.length > 1) {
-      nav._stack.pop();
-      CHK._show(nav._stack[nav._stack.length - 1]);
-    }
-    // Restore guard so the next swipe is also caught
-    _pushGuard();
-  });
-
   // In-app swipe right→left = go back (only when there is somewhere to go back to)
   let _tx = 0;
   let _ty = 0;
@@ -73,9 +58,6 @@ window.CHK = window.CHK || {};
       nav.back();
     }
   }, { passive: true });
-
-  // Install guard on load
-  _pushGuard();
 
   CHK.nav = nav;
 })();
