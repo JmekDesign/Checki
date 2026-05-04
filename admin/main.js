@@ -1,6 +1,6 @@
 /* Loader: gradually migrate from app.js into modules without breaking behavior. */
 (function(){
-  const V = "20260504b"; // bump on every deploy to bust browser cache
+  const V = "20260504c"; // bump on every deploy to bust browser cache
   function load(src){
     return new Promise((resolve, reject)=>{
       const s = document.createElement("script");
@@ -34,6 +34,7 @@
       await load("./datepicker.js");
       await load("./venue.js");
       await load("./venue-staff.js");
+      await load("./subscription.js");
       await load("./cash.js");
       await load("./catalog.js");
       await load("./catalog-scan.js");

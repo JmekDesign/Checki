@@ -57,61 +57,36 @@ window.CHK = window.CHK || {};
         </div>
       </div>
     `;
+    CHK._venueData = r.venue;
     _updateLangButtons(r.venue.lang || "en");
-    _renderSubscription(r.venue);
+    _renderSubscriptionRow(r.venue);
     _renderReferral(r.venue);
   }
 
-  /* ── subscription block ── */
-  function _renderSubscription(v) {
-    const el = $("venueSubBlock");
+  /* ── subscription row (compact) ── */
+  function _renderSubscriptionRow(v) {
+    const el = $("venueSubRowValue");
     if (!el) return;
     const { sub_status, subscription_expires_at, trial_ends_at, is_free } = v;
-
-    let statusHtml = "";
-    let expiryHtml = "";
-    let payHtml    = "";
-
     if (is_free || sub_status === "free") {
-      statusHtml = `<span style="color:#4cd964;font-weight:700">✓ Бесплатный доступ</span>`;
+      el.textContent = "✓ Бесплатный";
+      el.style.color = "#4cd964";
     } else if (sub_status === "trial") {
-      const d = trial_ends_at ? new Date(trial_ends_at).toLocaleDateString("ru-RU", { day:"numeric", month:"long" }) : "";
-      statusHtml = `<span style="color:#ffd60a;font-weight:700">Пробный период</span>`;
-      expiryHtml = `<div style="font-size:13px;color:#aaa;margin-top:2px">До ${d}</div>`;
-      payHtml = _payButton();
+      const d = trial_ends_at
+        ? new Date(trial_ends_at).toLocaleDateString("ru-RU", { day: "numeric", month: "short" })
+        : "";
+      el.textContent = `Пробный · до ${d} →`;
+      el.style.color = "#ffd60a";
     } else if (sub_status === "active") {
-      const d = subscription_expires_at ? new Date(subscription_expires_at).toLocaleDateString("ru-RU", { day:"numeric", month:"long", year:"numeric" }) : "";
-      statusHtml = `<span style="color:#4cd964;font-weight:700">✓ Подписка активна</span>`;
-      expiryHtml = `<div style="font-size:13px;color:#aaa;margin-top:2px">До ${d}</div>`;
-      payHtml = _payButton("Продлить");
+      const d = subscription_expires_at
+        ? new Date(subscription_expires_at).toLocaleDateString("ru-RU", { day: "numeric", month: "short" })
+        : "";
+      el.textContent = `Активна · до ${d} →`;
+      el.style.color = "#4cd964";
     } else {
-      statusHtml = `<span style="color:#ff5a6a;font-weight:700">⚠ Подписка истекла</span>`;
-      expiryHtml = `<div style="font-size:13px;color:#aaa;margin-top:2px">Запись заблокирована</div>`;
-      payHtml = _payButton("Оплатить 49 ₾");
+      el.textContent = "⚠ Истекла →";
+      el.style.color = "#ff5a6a";
     }
-
-    el.innerHTML = `
-      <div style="padding:12px 0 4px">
-        <div>${statusHtml}</div>
-        ${expiryHtml}
-      </div>
-      ${payHtml}
-    `;
-  }
-
-  function _payButton(label) {
-    label = label || "Оплатить подписку";
-    return `
-      <a href="https://transfer.tbcbank.ge/?iban=GE49TB7114236010100048&amount=49&description=Checki"
-         target="_blank"
-         class="btn primary" style="display:block;text-align:center;text-decoration:none;margin-top:8px">
-        ${label} →
-      </a>
-      <div style="font-size:12px;color:#888;margin-top:8px;text-align:center">
-        После оплаты напишите нам в
-        <a href="https://t.me/checkilive" target="_blank" style="color:var(--accent)">Telegram @checkilive</a>
-      </div>
-    `;
   }
 
   /* ── referral code + copy button ── */
@@ -157,6 +132,12 @@ window.CHK = window.CHK || {};
 
   /* ── init ── */
   function init() {
+    const btnGoSubscription = $("btnGoSubscription");
+    if (btnGoSubscription) btnGoSubscription.onclick = () => {
+      CHK.nav.go("screenSubscription");
+      CHK.subscription?.load();
+    };
+
     const btnCatalog = $("btnGoCatalog");
     if (btnCatalog) btnCatalog.onclick = async () => {
       CHK.nav.go("screenCatalog");

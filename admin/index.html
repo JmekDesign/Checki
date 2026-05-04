@@ -206,9 +206,9 @@
             <button class="btn" id="btnLangKa" style="padding:4px 12px;font-size:13px;min-width:36px">ქა</button>
           </div>
         </div>
-        <div class="item" style="flex-direction:column;align-items:stretch;cursor:default">
-          <div style="font-weight:500;margin-bottom:4px" data-i18n="subscription">Subscription</div>
-          <div id="venueSubBlock"></div>
+        <div class="item" id="btnGoSubscription" style="cursor:pointer">
+          <span style="font-weight:500" data-i18n="subscription">Subscription</span>
+          <span id="venueSubRowValue" class="muted">→</span>
         </div>
         <div class="item" id="venueReferralRow" style="display:none;cursor:default">
           <span style="font-weight:500" data-i18n="referral_code">Referral code</span>
@@ -218,6 +218,15 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- SUBSCRIPTION -->
+    <div class="card cardless hide" id="screenSubscription">
+      <div style="margin-bottom:10px">
+        <button class="btn compact" id="btnBackFromSubscription" data-i18n="back">← Back</button>
+      </div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:14px" data-i18n="subscription">Subscription</div>
+      <div id="subscriptionContent"></div>
     </div>
 
     <!-- CASH REGISTER -->
