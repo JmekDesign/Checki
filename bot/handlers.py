@@ -11,9 +11,18 @@ import gpt
 router = Router()
 SUPPORT_GROUP_ID = int(os.environ["SUPPORT_GROUP_ID"])
 
+# In-memory set of tg_user_ids currently awaiting login input after /pay
+_awaiting_login: set[int] = set()
+
 # ── helpers ───────────────────────────────────────────────────────────────────
 
 def _lang(msg: Message) -> str:
+    text = msg.text or ""
+    # Detect by script first — more reliable than language_code
+    if any("\u10d0" <= c <= "\u10ff" for c in text):
+        return "ka"
+    if any("\u0400" <= c <= "\u04ff" for c in text):
+        return "ru"
     code = (msg.from_user.language_code or "en")[:2]
     return code if code in ("ru", "ka") else "en"
 
@@ -73,7 +82,7 @@ async def cmd_pay(msg: Message) -> None:
     db.update_thread(thread["id"], escalated=False)
     db.save_message(thread["id"], "user", "/pay")
     await msg.answer(prompts.get(lang, prompts["en"]))
-    db.update_thread(thread["id"], group_msg_id=None)  # reset escalation state, wait for login
+    _awaiting_login.add(msg.from_user.id)
 
 
 # ── incoming user messages ────────────────────────────────────────────────────
@@ -89,14 +98,13 @@ async def user_message(msg: Message) -> None:
     )
     db.save_message(thread["id"], "user", msg.text)
 
-    # Check if we're waiting for login (after /pay)
-    history = db.get_history(thread["id"])
-    last_bot = next((m for m in reversed(history[:-1]) if m["role"] == "bot"), None)
-    waiting_login = last_bot and "логин" in last_bot["text"].lower() or (last_bot and "login" in last_bot["text"].lower())
-
-    if waiting_login and not thread.get("venue_id"):
+    # Explicit state: user typed /pay and we're waiting for their login
+    if msg.from_user.id in _awaiting_login:
+        _awaiting_login.discard(msg.from_user.id)
         await _handle_login(msg, thread, lang)
         return
+
+    history = db.get_history(thread["id"])
 
     # GPT answer
     reply_text, should_escalate = await gpt.get_reply(history[:-1], msg.text)
