@@ -18,6 +18,9 @@ Open a check → tap the microphone button → speak the items (e.g. "Two beers 
 ## How to close a check (take payment)
 Open a check → tap "Close check" → choose payment method (cash / card / split) → confirm.
 
+## How to send a digital receipt to the guest (QR code)
+When closing a check, a QR code is shown in the payment confirmation screen. The guest can scan it with their phone camera to open a digital receipt at checki.ge/r/ — no app needed. This is a paperless receipt sent directly to the guest's phone.
+
 ## How to delete a check
 Open a check → tap the trash icon → confirm deletion. Only managers can delete closed checks from the archive.
 
