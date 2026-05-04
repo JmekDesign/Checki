@@ -92,6 +92,23 @@ services:
       - "traefik.http.routers.checki_api.tls.certresolver=mytlschallenge"
       - "traefik.http.routers.checki_api.service=checki_api_svc"
 
+  checki-bot:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    env_file: .env
+    environment:
+      DB_HOST: checki-db
+      DB_PORT: "5432"
+      DB_NAME: checki
+      DB_USER: checki
+    depends_on:
+      checki-db:
+        condition: service_healthy
+    networks:
+      - n8n_default
+
 volumes:
   checki_db:
 
