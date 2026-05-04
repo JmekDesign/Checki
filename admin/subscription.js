@@ -106,7 +106,7 @@ window.CHK = window.CHK || {};
 
       <div style="font-size:12px;color:#666;text-align:center;line-height:1.6">
         После перевода напишите в
-        <a href="https://t.me/checkilive" target="_blank" style="color:var(--accent)">Telegram @checkilive</a>
+        <a href="https://t.me/CheckiService_Bot" target="_blank" style="color:var(--accent)">Telegram @CheckiService_Bot</a>
         — подтвердим оплату
       </div>` : "";
 
