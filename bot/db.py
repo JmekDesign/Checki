@@ -111,7 +111,7 @@ def find_venue_by_login(login: str) -> dict[str, Any] | None:
             conn.close()
 
 
-def extend_subscription(venue_id: int, days: int = 30) -> None:
+def extend_subscription(venue_id: str, days: int = 30) -> None:
     conn = _conn()
     try:
         cur = conn.cursor()

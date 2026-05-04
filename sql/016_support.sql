@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS support_threads (
     tg_username     TEXT,
     tg_first_name   TEXT,
     language_code   TEXT NOT NULL DEFAULT 'en',
-    venue_id        INTEGER REFERENCES venues(id) ON DELETE SET NULL,
+    venue_id        UUID REFERENCES venues(id) ON DELETE SET NULL,
     group_msg_id    INTEGER,   -- last escalation message id in support group
     escalated       BOOLEAN NOT NULL DEFAULT FALSE,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),

@@ -231,7 +231,7 @@ async def extend_cb(cb: CallbackQuery) -> None:
         await cb.answer()
         return
 
-    venue_id, days = int(parts[1]), int(parts[2])
+    venue_id, days = parts[1], int(parts[2])
     db.extend_subscription(venue_id, days)
 
     ok_msgs = {
