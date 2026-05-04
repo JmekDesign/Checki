@@ -28,6 +28,9 @@ class Settings:
     auth_salt: str = "change-me"
     session_ttl_hours: int = 72
 
+    # Referral
+    referral_rate_pct: int = 30  # percent of plan amount credited to referrer
+
     # AI normalization
     openai_api_key: str = ""
 
@@ -55,6 +58,7 @@ def get_settings() -> Settings:
         db_password=os.getenv("DB_PASSWORD", "checki"),
         auth_salt=os.getenv("AUTH_SALT", "change-me"),
         session_ttl_hours=int(os.getenv("SESSION_TTL_HOURS", "72")),
+        referral_rate_pct=int(os.getenv("REFERRAL_RATE_PCT", "30")),
         openai_api_key=os.getenv("OPENAI_API_KEY", ""),
         smtp_host=os.getenv("SMTP_HOST", "smtp.beget.com"),
         smtp_port=int(os.getenv("SMTP_PORT", "465")),
@@ -81,6 +85,7 @@ DB_PASSWORD = _settings.db_password
 
 AUTH_SALT = _settings.auth_salt
 SESSION_TTL_HOURS = _settings.session_ttl_hours
+REFERRAL_RATE_PCT = _settings.referral_rate_pct
 OPENAI_API_KEY = _settings.openai_api_key
 
 SMTP_HOST = _settings.smtp_host

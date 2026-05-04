@@ -111,7 +111,12 @@ def find_venue_by_login(login: str) -> dict[str, Any] | None:
             conn.close()
 
 
-def extend_subscription(venue_id: str, days: int = 30) -> None:
+REFERRAL_RATE_PCT: int = int(os.environ.get("REFERRAL_RATE_PCT", "30"))
+_PLAN_AMOUNTS: dict[int, float] = {30: 49.0, 365: 490.0}
+
+
+def extend_subscription(venue_id: str, days: int = 30) -> float:
+    """Extend subscription and credit referral commission. Returns commission amount."""
     conn = _conn()
     try:
         cur = conn.cursor()
@@ -122,7 +127,19 @@ def extend_subscription(venue_id: str, days: int = 30) -> None:
                WHERE id = %s""",
             (days, venue_id),
         )
+        plan_amount = _PLAN_AMOUNTS.get(days, 49.0)
+        commission = round(plan_amount * REFERRAL_RATE_PCT / 100, 2)
+        cur.execute(
+            """UPDATE venues
+                  SET balance = balance + %s
+                WHERE referral_code = (
+                    SELECT referred_by_code FROM venues WHERE id = %s
+                )
+                  AND (SELECT referred_by_code FROM venues WHERE id = %s) IS NOT NULL""",
+            (commission, venue_id, venue_id),
+        )
         conn.commit()
+        return commission
     finally:
         with suppress(Exception):
             conn.close()

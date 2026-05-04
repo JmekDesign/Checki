@@ -6,6 +6,7 @@ from typing import Any
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 
+from ..core.billing import credit_referral_commission
 from ..core.security import hash_password, require_user
 from ..db.conn import db_conn, db_release
 
@@ -181,8 +182,13 @@ def super_extend(
             "UPDATE venues SET subscription_expires_at = %s WHERE id = %s;",
             (new_expiry, venue_id),
         )
+        commission = credit_referral_commission(cur, venue_id, payload.period)
         conn.commit()
-        return {"ok": True, "subscription_expires_at": new_expiry.isoformat()}
+        return {
+            "ok": True,
+            "subscription_expires_at": new_expiry.isoformat(),
+            "commission_credited": float(commission),
+        }
     finally:
         db_release(conn)
 

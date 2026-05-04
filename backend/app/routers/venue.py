@@ -33,7 +33,7 @@ def venue_get(
     try:
         cur = conn.cursor()
         cur.execute(
-            "SELECT id, slug, name, lang, referral_code, is_free, subscription_expires_at, created_at FROM venues WHERE id = %s;",
+            "SELECT id, slug, name, lang, referral_code, is_free, subscription_expires_at, created_at, balance FROM venues WHERE id = %s;",
             (venue_id,),
         )
         row = cur.fetchone()
@@ -59,7 +59,7 @@ def venue_get(
         open_row = cur.fetchone()
         assert open_row is not None
 
-        vid, slug, name, lang, referral_code, is_free, sub_expires, created_at = row
+        vid, slug, name, lang, referral_code, is_free, sub_expires, created_at, balance = row
         now = datetime.now(UTC)
         trial_end = created_at.astimezone(UTC) + timedelta(days=14)
         if is_free:
@@ -83,6 +83,7 @@ def venue_get(
                 "subscription_expires_at": sub_expires.isoformat() if sub_expires else None,
                 "trial_ends_at": trial_end.isoformat(),
                 "is_free": bool(is_free),
+                "balance": float(balance or 0),
             },
             "stats": {
                 "closed_today": int(closed_row[0]),

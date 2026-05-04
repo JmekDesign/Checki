@@ -33,6 +33,7 @@ window.CHK = window.CHK || {};
       how_2_pre:     "В поле «Сумма» введите",
       how_3_pre:     "После перевода напишите в",
       how_3_post:    "— подтвердим оплату",
+      balance_label: "Реферальный бонус на счёте",
     },
     en: {
       free:          "✓ Free access",
@@ -58,6 +59,7 @@ window.CHK = window.CHK || {};
       how_2_pre:     "In the «Amount» field enter",
       how_3_pre:     "After the transfer write to",
       how_3_post:    "— we will activate your subscription",
+      balance_label: "Referral bonus on account",
     },
     ka: {
       free:          "✓ უფასო წვდომა",
@@ -83,6 +85,7 @@ window.CHK = window.CHK || {};
       how_2_pre:     "«თანხა» ველში შეიყვანეთ",
       how_3_pre:     "გადარიცხვის შემდეგ დაწერეთ",
       how_3_post:    "— გავააქტიურებთ გამოწერას",
+      balance_label: "რეფერალური ბონუსი ანგარიშზე",
     },
   };
 
@@ -108,7 +111,7 @@ window.CHK = window.CHK || {};
     const v = CHK._venueData;
     if (!v) { el.innerHTML = "<p>—</p>"; return; }
 
-    const { sub_status, subscription_expires_at, trial_ends_at, is_free, name } = v;
+    const { sub_status, subscription_expires_at, trial_ends_at, is_free, name, balance } = v;
     const locale = _lang() === "ka" ? "ka-GE" : _lang() === "ru" ? "ru-RU" : "en-GB";
     const fmt = (iso) => iso ? new Date(iso).toLocaleDateString(locale, { day: "numeric", month: "long" }) : "";
     const fmtFull = (iso) => iso ? new Date(iso).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" }) : "";
@@ -131,6 +134,12 @@ window.CHK = window.CHK || {};
     }
 
     const showPay = !(is_free || sub_status === "free");
+    const bal = Number(balance || 0);
+    const balHtml = bal > 0 ? `
+      <div style="background:#1a1a22;border-radius:10px;padding:12px 14px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:#888">${_t("balance_label")}</span>
+        <span style="font-size:16px;font-weight:700;color:#4cd964">${bal.toFixed(2)} ₾</span>
+      </div>` : "";
 
     const planHtml = showPay ? `
       <div style="margin:20px 0 8px;font-size:13px;color:#888">${_t("plan_label")}</div>
@@ -182,7 +191,7 @@ window.CHK = window.CHK || {};
         <div style="color:${statusColor};font-weight:700;font-size:16px">${statusText}</div>
         ${expiryText ? `<div style="color:#aaa;margin-top:4px;font-size:14px">${expiryText}</div>` : ""}
       </div>
-      ${planHtml}${cardHtml}`;
+      ${balHtml}${planHtml}${cardHtml}`;
 
     if (showPay) {
       $("subPlanMonthly")?.addEventListener("click", () => { _plan = "monthly"; render(); });
