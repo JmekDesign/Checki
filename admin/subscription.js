@@ -6,11 +6,21 @@ window.CHK = window.CHK || {};
   const $ = (id) => document.getElementById(id);
 
   const TBC_IBAN = "GE49TB7114236010100048";
-  const TBC_URL  = `https://transfer.tbcbank.ge/?iban=${TBC_IBAN}&description=Checki`;
+  const TBC_URL  = `https://transfer.tbcbank.ge/?iban=${TBC_IBAN}`;
 
   let _plan = "monthly"; // "monthly" | "yearly"
 
-  function _planAmount() { return _plan === "yearly" ? "490" : "49"; }
+  function _amount()      { return _plan === "yearly" ? "490" : "49"; }
+  function _description() { return `Checki / ${CHK._venueData?.name || ""}`; }
+
+  function _copyText(text, btnId) {
+    const btn = $(btnId);
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        if (btn) { btn.textContent = "✓"; setTimeout(() => { btn.textContent = "Скопировать"; }, 2000); }
+      })
+      .catch(() => CHK.toast?.(text));
+  }
 
   function render() {
     const el = $("subscriptionContent");
@@ -18,9 +28,9 @@ window.CHK = window.CHK || {};
     const v = CHK._venueData;
     if (!v) { el.innerHTML = "<p>—</p>"; return; }
 
-    const { sub_status, subscription_expires_at, trial_ends_at, is_free } = v;
+    const { sub_status, subscription_expires_at, trial_ends_at, is_free, name } = v;
 
-    /* status block */
+    /* ── status ── */
     let statusHtml = "";
     if (is_free || sub_status === "free") {
       statusHtml = `<div style="color:#4cd964;font-weight:700;font-size:16px">✓ Бесплатный доступ</div>`;
@@ -44,74 +54,77 @@ window.CHK = window.CHK || {};
         <div style="color:#aaa;margin-top:4px;font-size:14px">Запись заблокирована</div>`;
     }
 
-    /* payment block (not shown for free accounts) */
     const showPay = !(is_free || sub_status === "free");
-    const payHtml = showPay ? `
+
+    /* ── plan selector ── */
+    const planHtml = showPay ? `
       <div style="margin:20px 0 8px;font-size:13px;color:#888">Выберите план:</div>
-      <div style="display:flex;gap:8px;margin-bottom:16px">
+      <div style="display:flex;gap:8px;margin-bottom:20px">
         <button class="btn${_plan === "monthly" ? " primary" : ""}" id="subPlanMonthly"
           style="flex:1;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:2px">
-          <span style="font-size:13px;color:#aaa">Месяц</span>
+          <span style="font-size:13px;color:inherit;opacity:.7">Месяц</span>
           <span style="font-size:20px;font-weight:700">49 ₾</span>
         </button>
         <button class="btn${_plan === "yearly" ? " primary" : ""}" id="subPlanYearly"
           style="flex:1;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:2px">
-          <span style="font-size:13px;color:#aaa">Год</span>
+          <span style="font-size:13px;color:inherit;opacity:.7">Год</span>
           <span style="font-size:20px;font-weight:700">490 ₾</span>
-          <span style="font-size:11px;color:#4cd964">−2 месяца в подарок</span>
+          <span style="font-size:11px;color:#4cd964">−2 месяца</span>
         </button>
-      </div>
+      </div>` : "";
 
-      <div style="background:#1a1a22;border-radius:10px;padding:14px;margin-bottom:14px">
-        <div style="font-size:12px;color:#888;margin-bottom:8px">Сумма к оплате:</div>
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:24px;font-weight:700" id="subAmountDisplay">${_planAmount()} ₾</div>
-          <button class="btn compact" id="subCopyAmount" style="padding:5px 12px;font-size:13px">
-            📋 Скопировать
-          </button>
+    /* ── payment card ── */
+    const cardHtml = showPay ? `
+      <div style="background:#1a1a22;border-radius:12px;padding:16px;margin-bottom:16px;position:relative">
+        <div style="font-weight:700;font-size:15px;margin-bottom:14px;font-family:monospace">Оплата Checki</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-family:monospace">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <span style="color:#888">Заведение: </span>${name || ""}
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <span style="color:#888">Сумма: </span>${_amount()} GEL
+            </div>
+            <button class="btn compact" id="subCopyAmount" style="font-size:12px;padding:3px 8px">Скопировать</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <div style="flex:1">
+              <span style="color:#888">Назначение: </span>${_description()}
+            </div>
+            <button class="btn compact" id="subCopyDesc" style="font-size:12px;padding:3px 8px;flex-shrink:0">Скопировать</button>
+          </div>
         </div>
       </div>
 
       <a href="${TBC_URL}" target="_blank" id="subPayBtn"
          class="btn primary"
-         style="display:block;text-align:center;text-decoration:none;margin-bottom:10px;padding:14px">
-        Перейти к оплате TBC →
+         style="display:block;text-align:center;text-decoration:none;padding:14px;margin-bottom:12px;font-size:15px">
+        Открыть оплату TBC →
       </a>
 
-      <div style="background:#1a1a22;border-radius:10px;padding:12px;font-size:13px;color:#888;line-height:1.6">
-        <div style="color:#fff;font-weight:600;margin-bottom:4px">Как оплатить:</div>
-        1. Нажмите кнопку выше — откроется форма TBC<br>
-        2. В поле «Сумма» введите <strong style="color:#fff">${_planAmount()} ₾</strong><br>
-        3. Сделайте перевод и напишите нам в
+      <div style="font-size:12px;color:#666;text-align:center;line-height:1.6">
+        После перевода напишите в
         <a href="https://t.me/checkilive" target="_blank" style="color:var(--accent)">Telegram @checkilive</a>
-        — мы активируем подписку
+        — подтвердим оплату
       </div>` : "";
 
     el.innerHTML = `
-      <div style="background:#1a1a22;border-radius:12px;padding:16px;margin-bottom:20px">
+      <div style="background:#1a1a22;border-radius:12px;padding:16px;margin-bottom:4px">
         ${statusHtml}
       </div>
-      ${payHtml}`;
+      ${planHtml}
+      ${cardHtml}`;
 
-    if (showPay) _bindPayEvents();
+    if (showPay) _bindEvents();
   }
 
-  function _bindPayEvents() {
+  function _bindEvents() {
     $("subPlanMonthly")?.addEventListener("click", () => { _plan = "monthly"; render(); });
     $("subPlanYearly")?.addEventListener("click",  () => { _plan = "yearly";  render(); });
-
-    $("subCopyAmount")?.addEventListener("click", () => {
-      const amount = _planAmount();
-      const btn = $("subCopyAmount");
-      navigator.clipboard.writeText(amount)
-        .then(() => {
-          if (btn) {
-            btn.textContent = "✓ Скопировано";
-            setTimeout(() => { btn.innerHTML = "📋 Скопировать"; }, 2000);
-          }
-        })
-        .catch(() => CHK.toast?.(amount));
-    });
+    $("subCopyAmount")?.addEventListener("click",  () => _copyText(_amount(), "subCopyAmount"));
+    $("subCopyDesc")?.addEventListener("click",    () => _copyText(_description(), "subCopyDesc"));
   }
 
   function init() {
