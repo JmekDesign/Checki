@@ -693,6 +693,9 @@
       <input id="fPassword" type="password" data-ph="ph_pass" autocomplete="new-password" />
     </div>
 
+    <input type="hidden" id="fRefCode" value="" />
+    <div id="fRefBadge" style="display:none;font-size:12px;color:#888;text-align:center;margin-bottom:8px;padding:6px 12px;background:rgba(255,255,255,.05);border-radius:8px"></div>
+
     <button class="btnSubmit" id="btnRegister" data-i="btn_reg">Создать аккаунт →</button>
     <div class="formMsg" id="formMsg"></div>
   </div>
@@ -1153,10 +1156,22 @@ document.querySelectorAll(".navDrawerLang").forEach(btn => {
 
 applyLang(lang);
 
+/* ── Referral code from URL ── */
+(function() {
+  const ref = new URLSearchParams(window.location.search).get("ref");
+  if (ref) {
+    const el = document.getElementById("fRefCode");
+    if (el) el.value = ref.toUpperCase();
+    const badge = document.getElementById("fRefBadge");
+    if (badge) { badge.style.display = "block"; badge.textContent = "🤝 Партнёрская ссылка: " + ref.toUpperCase(); }
+  }
+})();
+
 /* ── Registration ── */
 document.getElementById("btnRegister").onclick = async () => {
   const t           = T[lang];
   const venueName   = document.getElementById("fVenueName").value.trim();
+  const refCode     = (document.getElementById("fRefCode").value || "").trim() || null;
   const managerName = document.getElementById("fManagerName").value.trim();
   const email       = document.getElementById("fEmail").value.trim();
   const phone       = document.getElementById("fPhone").value.trim();
@@ -1180,7 +1195,7 @@ document.getElementById("btnRegister").onclick = async () => {
     const resp = await fetch(API + "/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ venue_name: venueName, manager_name: managerName, login, password, email, phone: phone || null, lang }),
+      body: JSON.stringify({ venue_name: venueName, manager_name: managerName, login, password, email, phone: phone || null, lang, ref_code: refCode }),
     });
     const data = await resp.json();
     if (!resp.ok) {

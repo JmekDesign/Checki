@@ -55,12 +55,17 @@ def generate_cash_report(
     period = _label_date(date_from) if date_from == date_to else f"{_label_date(date_from)} — {_label_date(date_to)}"
 
     # Header
-    bold(20); pdf.cell(W * 0.5, 10, "CHECKI", new_x="RIGHT", new_y="TOP")
-    bold(13); pdf.cell(W * 0.5, 10, venue_name, align="R", new_x="LMARGIN", new_y="NEXT")
-    reg(9); grey()
+    bold(20)
+    pdf.cell(W * 0.5, 10, "CHECKI", new_x="RIGHT", new_y="TOP")
+    bold(13)
+    pdf.cell(W * 0.5, 10, venue_name, align="R", new_x="LMARGIN", new_y="NEXT")
+    reg(9)
+    grey()
     pdf.cell(W, 5, period, new_x="LMARGIN", new_y="NEXT")
     pdf.cell(W, 5, datetime.now().strftime("Generated: %d %b %Y, %H:%M"), new_x="LMARGIN", new_y="NEXT")
-    black(); pdf.ln(3); rule()
+    black()
+    pdf.ln(3)
+    rule()
 
     # Summary
     opening = sum(m["amount"] for m in movements if m["type"] == "open")
@@ -68,16 +73,23 @@ def generate_cash_report(
     cash_out = sum(m["amount"] for m in movements if m["type"] == "out")
     balance = opening + cash_in - cash_out
 
-    bold(9); grey(); pdf.cell(W, 5, "SUMMARY", new_x="LMARGIN", new_y="NEXT"); black()
+    bold(9)
+    grey()
+    pdf.cell(W, 5, "SUMMARY", new_x="LMARGIN", new_y="NEXT")
+    black()
     col = W / 4
     bold(14)
     for val in [f"{_m(opening)} {_LARI}", f"+{_m(cash_in)} {_LARI}", f"−{_m(cash_out)} {_LARI}", f"{_m(balance)} {_LARI}"]:
         pdf.cell(col, 9, val, align="C")
     pdf.ln(9)
-    reg(8); grey()
+    reg(8)
+    grey()
     for lbl in ["Opening", "Income", "Withdrawal", "Balance"]:
         pdf.cell(col, 5, lbl, align="C")
-    pdf.ln(5); black(); pdf.ln(3); rule()
+    pdf.ln(5)
+    black()
+    pdf.ln(3)
+    rule()
 
     # Movements grouped by shift_date
     cur_day: str | None = None
@@ -85,7 +97,8 @@ def generate_cash_report(
         sd = m["shift_date"]
         if sd != cur_day:
             cur_day = sd
-            bold(9); grey()
+            bold(9)
+            grey()
             pdf.cell(W, 7, _label_date(sd), new_x="LMARGIN", new_y="NEXT")
             black()
         mtype   = str(m.get("type") or "")

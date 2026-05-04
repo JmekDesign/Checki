@@ -31,7 +31,7 @@ def venue_get(
     conn = db_conn()
     try:
         cur = conn.cursor()
-        cur.execute("SELECT id, slug, name, lang FROM venues WHERE id = %s;", (venue_id,))
+        cur.execute("SELECT id, slug, name, lang, referral_code FROM venues WHERE id = %s;", (venue_id,))
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="venue not found")
@@ -57,7 +57,7 @@ def venue_get(
 
         return {
             "ok": True,
-            "venue": {"id": str(row[0]), "slug": row[1], "name": row[2], "lang": row[3] or "en"},
+            "venue": {"id": str(row[0]), "slug": row[1], "name": row[2], "lang": row[3] or "en", "referral_code": row[4] or ""},
             "stats": {
                 "closed_today": int(closed_row[0]),
                 "revenue_today": float(closed_row[1]),

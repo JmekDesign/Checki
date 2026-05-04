@@ -66,6 +66,13 @@ window.CHK = window.CHK || {};
       </div>
     `;
     _updateLangButtons(r.venue.lang || "en");
+
+    const refEl = $("venueReferralCode");
+    if (refEl && r.venue.referral_code) {
+      refEl.textContent = r.venue.referral_code;
+      const row = $("venueReferralRow");
+      if (row) row.style.display = "";
+    }
   }
 
   function _updateLangButtons(activeLang) {

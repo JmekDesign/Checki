@@ -2,13 +2,34 @@
 window.CHK = window.CHK || {};
 
 (function(){
-  // Keep same base as legacy app.js for now (safe refactor step)
   const API_BASE = window.CHK.API_BASE || "https://api.checki.ge";
 
   function getToken(){ return localStorage.getItem("checki_token") || ""; }
   function setToken(t){
     if(t) localStorage.setItem("checki_token", t);
     else localStorage.removeItem("checki_token");
+  }
+
+  /* ── Subscription expired banner ── */
+  function _showExpiredBanner() {
+    if (document.getElementById("subExpiredBanner")) return;
+    const el = document.createElement("div");
+    el.id = "subExpiredBanner";
+    el.style.cssText = [
+      "position:fixed", "top:0", "left:0", "right:0", "z-index:9999",
+      "background:#ff5a6a", "color:#fff", "text-align:center",
+      "padding:10px 16px", "font-size:14px", "font-weight:600",
+      "display:flex", "align-items:center", "justify-content:center", "gap:12px",
+    ].join(";");
+    el.innerHTML = `
+      <span>Пробный период завершён — продлите подписку для работы</span>
+      <a href="https://transfer.tbcbank.ge/?iban=GE49TB7114236010100048&amount=49&description=Checki"
+         target="_blank"
+         style="background:#fff;color:#ff5a6a;padding:4px 12px;border-radius:8px;font-weight:700;text-decoration:none;white-space:nowrap">
+        Оплатить 49 ₾
+      </a>
+    `;
+    document.body.prepend(el);
   }
 
   async function api(path, opts){
@@ -21,6 +42,10 @@ window.CHK = window.CHK || {};
     const text = await res.text();
     let data = null;
     try{ data = text ? JSON.parse(text) : null; }catch(e){ data = {raw:text}; }
+    if (res.status === 402) {
+      _showExpiredBanner();
+      throw new Error("subscription_expired");
+    }
     if(!res.ok){
       const msg = (data && (data.detail || data.error || data.message))
         ? (data.detail || data.error || data.message)

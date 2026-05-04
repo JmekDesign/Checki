@@ -95,8 +95,8 @@ async def cash_add_movement(
         amount = float(data.get("amount", 0))
         if amount <= 0:
             raise ValueError
-    except (TypeError, ValueError):
-        raise HTTPException(status_code=400, detail="invalid amount")
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail="invalid amount") from exc
 
     today = date.today().isoformat()
     conn = db_conn()
@@ -180,9 +180,12 @@ def cash_movements(
 
     summary = {"opening": 0.0, "cash_in": 0.0, "cash_out": 0.0, "balance": 0.0}
     for m in rows:
-        if m["type"] == "open":   summary["opening"]  += m["amount"]
-        elif m["type"] == "in":   summary["cash_in"]  += m["amount"]
-        elif m["type"] == "out":  summary["cash_out"] += m["amount"]
+        if m["type"] == "open":
+            summary["opening"] += m["amount"]
+        elif m["type"] == "in":
+            summary["cash_in"] += m["amount"]
+        elif m["type"] == "out":
+            summary["cash_out"] += m["amount"]
     summary["balance"] = summary["opening"] + summary["cash_in"] - summary["cash_out"]
 
     return {

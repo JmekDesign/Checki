@@ -117,6 +117,7 @@
             <th>Checks</th>
             <th>Rev 30d</th>
             <th>Registered</th>
+            <th>Subscription</th>
             <th></th>
             <th></th>
           </tr>
@@ -138,6 +139,22 @@
     <div class="modalBtns" style="margin-top:12px">
       <button class="btn" id="resetCancel">Cancel</button>
       <button class="btn primary" id="resetOk">Set password</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXTEND MODAL -->
+<div class="modalBack hide" id="extendModal">
+  <div class="modal">
+    <div class="modalTitle">Extend subscription</div>
+    <div class="modalBody" id="extendBody">—</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="btn primary" style="flex:1" id="extendMonth">+30 days</button>
+      <button class="btn primary" style="flex:1" id="extendYear">+365 days</button>
+    </div>
+    <div class="errMsg" id="extendErr"></div>
+    <div class="modalBtns">
+      <button class="btn" id="extendCancel">Cancel</button>
     </div>
   </div>
 </div>
@@ -298,6 +315,10 @@ function renderTable(q) {
       </td>
       <td>${v.revenue_30d > 0 ? v.revenue_30d.toFixed(2) + ' ₾' : '<span class="muted">—</span>'}</td>
       <td class="muted">${fmtDate(v.created_at)}</td>
+      <td>
+        ${subBadge(v)}
+        ${v.referral_code ? `<div class="muted" style="font-size:10px;margin-top:2px">ref: ${esc(v.referral_code)}</div>` : ''}
+      </td>
       <td><span class="dot ${v.is_active ? 'dotOn' : 'dotOff'}" title="${v.is_active ? 'Active' : 'Blocked'}"></span></td>
       <td style="white-space:nowrap">
         <button class="iconBtn ${v.is_active ? 'danger' : 'primary'}" data-id="${esc(v.id)}" data-name="${esc(v.name)}" data-active="${v.is_active}" title="${v.is_active ? 'Block venue' : 'Unblock venue'}">
@@ -305,6 +326,12 @@ function renderTable(q) {
         </button>
         <button class="iconBtn" data-reset-id="${esc(v.id)}" data-reset-name="${esc(v.name)}" data-reset-login="${esc(v.manager_login||'')}" title="Reset password">
           🔑
+        </button>
+        <button class="iconBtn primary" data-extend-id="${esc(v.id)}" data-extend-name="${esc(v.name)}" data-extend-sub="${esc(v.subscription_expires_at||'')}" title="Extend subscription">
+          ⏱
+        </button>
+        <button class="iconBtn ${v.is_free ? 'danger' : ''}" data-free-id="${esc(v.id)}" data-free-name="${esc(v.name)}" data-is-free="${v.is_free}" title="${v.is_free ? 'Remove free access' : 'Give free access'}">
+          🎁
         </button>
       </td>
     </tr>
@@ -315,6 +342,12 @@ function renderTable(q) {
   });
   tbody.querySelectorAll("button[data-reset-id]").forEach(btn => {
     btn.onclick = () => openResetModal(btn.dataset.resetId, btn.dataset.resetName, btn.dataset.resetLogin);
+  });
+  tbody.querySelectorAll("button[data-extend-id]").forEach(btn => {
+    btn.onclick = () => openExtendModal(btn.dataset.extendId, btn.dataset.extendName, btn.dataset.extendSub);
+  });
+  tbody.querySelectorAll("button[data-free-id]").forEach(btn => {
+    btn.onclick = () => toggleFree(btn.dataset.freeId, btn.dataset.freeName, btn.dataset.isFree === "true");
   });
 }
 
@@ -372,6 +405,62 @@ function openResetModal(id, name, login) {
       $("resetOk").disabled = false;
     }
   };
+}
+
+/* ── SUBSCRIPTION BADGE ── */
+function subBadge(v) {
+  const colors = { trial: '#f0a500', active: '#49d17c', expired: '#ff5a6a', free: '#7c83ff' };
+  const labels = { trial: 'Trial', active: 'Active', expired: 'Expired', free: 'Free' };
+  const s = v.sub_status || 'expired';
+  const expiry = v.subscription_expires_at
+    ? `<div class="muted" style="font-size:10px">${fmtDate(v.subscription_expires_at)}</div>`
+    : (s === 'trial' ? `<div class="muted" style="font-size:10px">until ${fmtDate(v.trial_ends_at)}</div>` : '');
+  return `<span style="color:${colors[s]};font-weight:700;font-size:12px">${labels[s]}</span>${expiry}`;
+}
+
+/* ── EXTEND SUBSCRIPTION ── */
+function openExtendModal(id, name, currentSub) {
+  const modal = $("extendModal");
+  $("extendBody").textContent = currentSub
+    ? `${name} — expires ${fmtDate(currentSub)}`
+    : `${name} — no active subscription`;
+  $("extendErr").textContent = "";
+  modal.classList.remove("hide");
+
+  const doExtend = async (period) => {
+    $("extendMonth").disabled = $("extendYear").disabled = true;
+    $("extendErr").textContent = "";
+    try {
+      const r = await apiCall(`/api/super/venues/${id}/extend`, {
+        method: "POST", body: JSON.stringify({ period }),
+      });
+      modal.classList.add("hide");
+      alert(`Extended! New expiry: ${fmtDate(r.subscription_expires_at)}`);
+      await loadVenues();
+    } catch (e) {
+      $("extendErr").textContent = e.message;
+    } finally {
+      $("extendMonth").disabled = $("extendYear").disabled = false;
+    }
+  };
+
+  $("extendMonth").onclick = () => doExtend("month");
+  $("extendYear").onclick  = () => doExtend("year");
+  $("extendCancel").onclick = () => modal.classList.add("hide");
+}
+
+/* ── TOGGLE FREE ── */
+async function toggleFree(id, name, isFree) {
+  const msg = isFree
+    ? `Remove free access from "${name}"?`
+    : `Give permanent free access to "${name}"?`;
+  if (!confirm(msg)) return;
+  try {
+    await apiCall(`/api/super/venues/${id}/toggle-free`, { method: "POST" });
+    await loadVenues();
+  } catch (e) {
+    alert("Error: " + e.message);
+  }
 }
 
 /* ── HELPERS ── */

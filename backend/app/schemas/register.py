@@ -11,3 +11,4 @@ class RegisterIn(BaseModel):
     email: str | None = None
     phone: str | None = None
     lang: str | None = None
+    ref_code: str | None = None

@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import contextlib
 import logging
+from collections.abc import Awaitable, Callable
+from datetime import UTC, datetime, timedelta
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from .core.config import get_settings
 from .core.errors import (
@@ -12,9 +16,10 @@ from .core.errors import (
     unhandled_exception_handler,
     validation_exception_handler,
 )
+from .db.conn import db_conn, db_release
 from .routers.auth import router as auth_router
-from .routers.cash import router as cash_router
 from .routers.bootstrap import router as bootstrap_router
+from .routers.cash import router as cash_router
 from .routers.catalog_scan import router as catalog_scan_router
 from .routers.checks_archive import router as checks_archive_router
 from .routers.checks_close import router as checks_close_router
@@ -60,6 +65,76 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Paths exempt from subscription check (auth, public, superadmin)
+_EXEMPT_PREFIXES = (
+    "/api/auth/",
+    "/api/register",
+    "/api/health",
+    "/api/super/",
+    "/api/password",
+    "/api/receipt",
+    "/api/bootstrap",
+)
+
+_TRIAL_DAYS = 14
+
+
+@app.middleware("http")
+async def subscription_check(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[JSONResponse]],
+) -> JSONResponse:
+    # Only check write operations; skip preflight
+    if request.method in ("GET", "HEAD", "OPTIONS"):
+        return await call_next(request)
+
+    path = request.url.path
+    if any(path.startswith(p) for p in _EXEMPT_PREFIXES):
+        return await call_next(request)
+
+    auth = request.headers.get("Authorization", "")
+    if not auth.startswith("Bearer "):
+        return await call_next(request)
+
+    token = auth[7:]
+    with contextlib.suppress(Exception):
+        conn = db_conn()
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                SELECT v.subscription_expires_at, v.is_free, v.created_at
+                FROM sessions s
+                JOIN users u ON u.id = s.user_id
+                JOIN venues v ON v.id = u.venue_id
+                WHERE s.token = %s AND s.expires_at > NOW()
+                LIMIT 1;
+                """,
+                (token,),
+            )
+            row = cur.fetchone()
+        finally:
+            db_release(conn)
+
+        if row:
+            sub_expires, is_free, created_at = row
+            if not is_free:
+                now = datetime.now(UTC)
+                trial_end = created_at.astimezone(UTC) + timedelta(days=_TRIAL_DAYS)
+                if sub_expires is None and now > trial_end:
+                    return JSONResponse(
+                        {"detail": "subscription_expired", "trial_ended": True},
+                        status_code=402,
+                    )
+                if sub_expires is not None and now > sub_expires.astimezone(UTC):
+                    return JSONResponse(
+                        {"detail": "subscription_expired", "trial_ended": False},
+                        status_code=402,
+                    )
+
+    return await call_next(request)
+
 
 app.include_router(health_router)
 app.include_router(register_router)
