@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException
@@ -31,7 +32,10 @@ def venue_get(
     conn = db_conn()
     try:
         cur = conn.cursor()
-        cur.execute("SELECT id, slug, name, lang, referral_code FROM venues WHERE id = %s;", (venue_id,))
+        cur.execute(
+            "SELECT id, slug, name, lang, referral_code, is_free, subscription_expires_at, created_at FROM venues WHERE id = %s;",
+            (venue_id,),
+        )
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="venue not found")
@@ -55,9 +59,31 @@ def venue_get(
         open_row = cur.fetchone()
         assert open_row is not None
 
+        vid, slug, name, lang, referral_code, is_free, sub_expires, created_at = row
+        now = datetime.now(UTC)
+        trial_end = created_at.astimezone(UTC) + timedelta(days=14)
+        if is_free:
+            sub_status = "free"
+        elif sub_expires and sub_expires.astimezone(UTC) > now:
+            sub_status = "active"
+        elif sub_expires is None and now <= trial_end:
+            sub_status = "trial"
+        else:
+            sub_status = "expired"
+
         return {
             "ok": True,
-            "venue": {"id": str(row[0]), "slug": row[1], "name": row[2], "lang": row[3] or "en", "referral_code": row[4] or ""},
+            "venue": {
+                "id": str(vid),
+                "slug": slug,
+                "name": name,
+                "lang": lang or "en",
+                "referral_code": referral_code or "",
+                "sub_status": sub_status,
+                "subscription_expires_at": sub_expires.isoformat() if sub_expires else None,
+                "trial_ends_at": trial_end.isoformat(),
+                "is_free": bool(is_free),
+            },
             "stats": {
                 "closed_today": int(closed_row[0]),
                 "revenue_today": float(closed_row[1]),

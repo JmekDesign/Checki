@@ -206,12 +206,16 @@
             <button class="btn" id="btnLangKa" style="padding:4px 12px;font-size:13px;min-width:36px">ქა</button>
           </div>
         </div>
-        <div class="item" style="opacity:.3;cursor:default">
-          <span data-i18n="subscription">Subscription</span><span class="muted">→</span>
+        <div class="item" style="flex-direction:column;align-items:stretch;cursor:default">
+          <div style="font-weight:500;margin-bottom:4px" data-i18n="subscription">Subscription</div>
+          <div id="venueSubBlock"></div>
         </div>
         <div class="item" id="venueReferralRow" style="display:none;cursor:default">
           <span style="font-weight:500" data-i18n="referral_code">Referral code</span>
-          <span id="venueReferralCode" style="font-family:monospace;font-size:15px;letter-spacing:1px;color:var(--accent)"></span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span id="venueReferralCode" style="font-family:monospace;font-size:15px;letter-spacing:1px;color:var(--accent)"></span>
+            <button id="venueReferralCopy" class="btn compact" title="Copy referral link" style="padding:2px 8px;font-size:16px;line-height:1">📋</button>
+          </div>
         </div>
       </div>
     </div>
