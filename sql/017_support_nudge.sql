@@ -1,0 +1,1 @@
+ALTER TABLE support_threads ADD COLUMN IF NOT EXISTS nudged_at TIMESTAMPTZ;

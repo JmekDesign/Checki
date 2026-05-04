@@ -92,17 +92,28 @@ def get_history(thread_id: int, limit: int = 10) -> list[dict[str, Any]]:
 
 # ── venue lookup ──────────────────────────────────────────────────────────────
 
-def find_venue_by_login(login: str) -> dict[str, Any] | None:
+def find_venue(query: str) -> dict[str, Any] | None:
+    """Find venue by manager login, email, or venue name (case-insensitive)."""
     conn = _conn()
     try:
         cur = conn.cursor()
+        q = query.strip().lower()
         cur.execute(
             """SELECT v.id, v.name, v.subscription_expires_at, v.is_free,
                       u.login, u.role
                FROM users u JOIN venues v ON v.id = u.venue_id
-               WHERE lower(u.login) = lower(%s) AND u.role IN ('manager','superadmin')
+               WHERE u.role IN ('manager','superadmin')
+                 AND (
+                   lower(u.login) = %s
+                   OR lower(u.email) = %s
+                   OR lower(v.name) LIKE %s
+                 )
+               ORDER BY
+                 CASE WHEN lower(u.login) = %s THEN 0
+                      WHEN lower(u.email) = %s THEN 1
+                      ELSE 2 END
                LIMIT 1""",
-            (login,),
+            (q, q, f"%{q}%", q, q),
         )
         row = cur.fetchone()
         return dict(row) if row else None
@@ -113,6 +124,60 @@ def find_venue_by_login(login: str) -> dict[str, Any] | None:
 
 REFERRAL_RATE_PCT: int = int(os.environ.get("REFERRAL_RATE_PCT", "30"))
 _PLAN_AMOUNTS: dict[int, float] = {30: 49.0, 365: 490.0}
+
+
+def get_threads_to_nudge(no_reply_minutes: int = 15) -> list[dict[str, Any]]:
+    """Escalated threads with no agent reply and no nudge sent yet."""
+    conn = _conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            """SELECT t.* FROM support_threads t
+               WHERE t.escalated = TRUE
+                 AND t.nudged_at IS NULL
+                 AND t.updated_at < NOW() - make_interval(mins => %s)
+                 AND NOT EXISTS (
+                   SELECT 1 FROM support_messages m
+                   WHERE m.thread_id = t.id AND m.role = 'agent'
+                     AND m.created_at > t.updated_at - make_interval(mins => %s)
+                 )""",
+            (no_reply_minutes, no_reply_minutes),
+        )
+        return [dict(r) for r in cur.fetchall()]
+    finally:
+        with suppress(Exception):
+            conn.close()
+
+
+def get_threads_to_close(idle_hours: int = 2) -> list[dict[str, Any]]:
+    """Escalated threads with no activity for idle_hours."""
+    conn = _conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            """SELECT * FROM support_threads
+               WHERE escalated = TRUE
+                 AND updated_at < NOW() - make_interval(hours => %s)""",
+            (idle_hours,),
+        )
+        return [dict(r) for r in cur.fetchall()]
+    finally:
+        with suppress(Exception):
+            conn.close()
+
+
+def close_thread(thread_id: int) -> None:
+    conn = _conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE support_threads SET escalated=FALSE, group_msg_id=NULL, nudged_at=NULL WHERE id=%s",
+            (thread_id,),
+        )
+        conn.commit()
+    finally:
+        with suppress(Exception):
+            conn.close()
 
 
 def extend_subscription(venue_id: str, days: int = 30) -> float:

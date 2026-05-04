@@ -80,9 +80,9 @@ async def cmd_pay(msg: Message) -> None:
     db.save_message(thread["id"], "user", "/pay")
     _pay_state[msg.from_user.id] = None  # waiting for login
     prompts = {
-        "ru": "Введите ваш логин от Checki (тот, что используете для входа):",
-        "en": "Enter your Checki login (the one you use to sign in):",
-        "ka": "შეიყვანეთ თქვენი Checki-ს ლოგინი:",
+        "ru": "Введите логин, email или название заведения:",
+        "en": "Enter your login, email or venue name:",
+        "ka": "შეიყვანეთ ლოგინი, ელ.ფოსტა ან დაწესებულების სახელი:",
     }
     await msg.answer(prompts.get(lang, prompts["en"]))
 
@@ -125,11 +125,11 @@ async def _handle_payment_photo(msg: Message, thread: dict, lang: str, login: st
     result = await payment_verify.analyze_screenshot(photo_bytes)
 
     if result.get("valid"):
-        venue = db.find_venue_by_login(login)
+        venue = db.find_venue(login)
         if not venue:
-            not_found = {"ru": "Логин не найден. Проверьте и попробуйте ещё раз (/pay).",
-                         "en": "Login not found. Please check and try again (/pay).",
-                         "ka": "ლოგინი ვერ მოიძებნა. სცადეთ ისევ (/pay)."}
+            not_found = {"ru": "Заведение не найдено. Попробуйте ещё раз (/pay).",
+                         "en": "Venue not found. Try again (/pay).",
+                         "ka": "ვერ მოიძებნა. სცადეთ ისევ (/pay)."}
             await msg.answer(not_found.get(lang, not_found["en"]))
             _pay_state.pop(msg.from_user.id, None)
             return
@@ -238,12 +238,12 @@ async def user_message(msg: Message) -> None:
 
 
 async def _handle_pay_login(msg: Message, thread: dict, lang: str) -> None:
-    venue = db.find_venue_by_login(msg.text.strip())
+    venue = db.find_venue(msg.text.strip())
     if not venue:
         not_found = {
-            "ru": "Логин не найден. Попробуйте ещё раз или напишите /pay.",
-            "en": "Login not found. Try again or type /pay.",
-            "ka": "ლოგინი ვერ მოიძებნა. სცადეთ ისევ ან /pay.",
+            "ru": "Заведение не найдено. Попробуйте логин, email или точное название заведения.",
+            "en": "Venue not found. Try your login, email or exact venue name.",
+            "ka": "ვერ მოიძებნა. სცადეთ ლოგინი, ელ.ფოსტა ან დაწ. სახელი.",
         }
         await msg.answer(not_found.get(lang, not_found["en"]))
         return
@@ -273,6 +273,25 @@ async def _handle_pay_login(msg: Message, thread: dict, lang: str) -> None:
             "ka": f"დაწ.: *{venue['name']}*\nგამოწერა აქტიურია {exp_str}-მდე.",
         }
         await msg.answer(ok_msgs.get(lang, ok_msgs["en"]), parse_mode="Markdown")
+
+
+# ── /close in group ──────────────────────────────────────────────────────────
+
+@router.message(F.chat.id == SUPPORT_GROUP_ID, Command("close"), F.reply_to_message)
+async def group_close(msg: Message) -> None:
+    thread = _find_thread_by_group_msg(msg.reply_to_message.message_id)
+    if not thread:
+        await msg.reply("Thread not found.")
+        return
+    db.close_thread(thread["id"])
+    lang = thread.get("language_code", "en")
+    bye_msgs = {
+        "ru": "✅ Вопрос решён! Если появятся новые — пишите, всегда поможем.",
+        "en": "✅ Issue resolved! Feel free to write again if you have more questions.",
+        "ka": "✅ საკითხი მოგვარებულია! თუ კითხვები გექნებათ — მოგვმართეთ.",
+    }
+    await msg.bot.send_message(thread["tg_user_id"], bye_msgs.get(lang, bye_msgs["en"]))
+    await msg.reply(f"✅ Thread #{thread['id']} closed. Bot mode restored.")
 
 
 # ── group reply → forward to user ─────────────────────────────────────────────
