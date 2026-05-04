@@ -7,6 +7,7 @@ from aiogram.filters import CommandStart, Command
 
 import db
 import gpt
+from gpt import PAYMENT_KEYWORDS
 
 router = Router()
 SUPPORT_GROUP_ID = int(os.environ["SUPPORT_GROUP_ID"])
@@ -102,6 +103,18 @@ async def user_message(msg: Message) -> None:
     if msg.from_user.id in _awaiting_login:
         _awaiting_login.discard(msg.from_user.id)
         await _handle_login(msg, thread, lang)
+        return
+
+    # Payment intent: "я оплатил" → trigger login flow automatically
+    lower = msg.text.lower()
+    if any(kw in lower for kw in PAYMENT_KEYWORDS) and not thread.get("venue_id"):
+        prompts = {
+            "ru": "Отлично! Введите ваш логин от Checki — продлим подписку автоматически:",
+            "en": "Great! Enter your Checki login and we'll extend your subscription automatically:",
+            "ka": "კარგი! შეიყვანეთ Checki-ს ლოგინი — გავახანგრძლივებთ გამოწერას:",
+        }
+        await msg.answer(prompts.get(lang, prompts["en"]))
+        _awaiting_login.add(msg.from_user.id)
         return
 
     history = db.get_history(thread["id"])

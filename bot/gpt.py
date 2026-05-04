@@ -10,6 +10,10 @@ _KB = (pathlib.Path(__file__).parent / "support_kb.md").read_text()
 ESCALATION_KEYWORDS = {"человек", "оператор", "помогите", "баг", "bug", "помоги", "support",
                        "operator", "human", "ადამიანი", "დახმარება"}
 
+PAYMENT_KEYWORDS = {"оплатил", "заплатил", "оплатила", "заплатила", "оплачено",
+                    "paid", "i paid", "გადავიხადე", "გადახდილია", "перевел", "перевела",
+                    "сделал перевод", "сделала перевод"}
+
 SYSTEM_PROMPT = f"""You are a friendly support assistant for Checki — a web app for bars, cafes and restaurants.
 Answer questions based on the knowledge base below. Be concise (2-4 sentences max).
 If you are not confident or the question is outside the knowledge base, reply ONLY with the word: ESCALATE

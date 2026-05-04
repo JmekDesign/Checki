@@ -48,6 +48,13 @@ Venue Settings → Cash register. Record cash movements (deposits/withdrawals). 
 ## How to use supplies / procurement
 Venue Settings → Supplies. Record purchased supplies with cost. Track spending over time.
 
+## How to get a PDF report
+In the Archive screen: set date filters → tap the PDF button (download icon, top right). The report includes all closed checks with items and totals for the selected period.
+In the Cash register screen: set date range → tap PDF button. The report shows all cash movements and balance.
+
+## How to see today's statistics
+On the main venue screen (tap the gear icon) you can see 4 cards: open checks right now, checks closed today, revenue today, and cash balance. These update every time you open the screen.
+
 ## Subscription and pricing
 Checki costs 49 GEL/month or 490 GEL/year. New venues get a 14-day free trial. To pay: go to Venue Settings → Subscription → choose plan → follow TBC payment instructions. After payment write to @CheckiService_Bot.
 
