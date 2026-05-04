@@ -89,22 +89,16 @@ window.CHK = window.CHK || {};
     }
   }
 
-  /* ── referral code + copy button ── */
+  /* ── referral row (compact) ── */
   function _renderReferral(v) {
-    const row = $("venueReferralRow");
+    const row = $("btnGoReferral");
     if (!row || !v.referral_code) return;
     row.style.display = "";
-    const codeEl = $("venueReferralCode");
-    if (codeEl) codeEl.textContent = v.referral_code;
-    const copyBtn = $("venueReferralCopy");
-    if (copyBtn) {
-      copyBtn.onclick = () => {
-        const link = "https://checki.ge/?ref=" + v.referral_code;
-        navigator.clipboard.writeText(link).then(() => {
-          copyBtn.textContent = "✓";
-          setTimeout(() => { copyBtn.textContent = "📋"; }, 2000);
-        }).catch(() => { CHK.toast?.(link); });
-      };
+    const val = $("venueReferralRowValue");
+    if (val) {
+      val.textContent = v.referral_code + " →";
+      val.style.color = "var(--accent)";
+      val.style.fontFamily = "monospace";
     }
   }
 
@@ -136,6 +130,12 @@ window.CHK = window.CHK || {};
     if (btnGoSubscription) btnGoSubscription.onclick = () => {
       CHK.nav.go("screenSubscription");
       CHK.subscription?.load();
+    };
+
+    const btnGoReferral = $("btnGoReferral");
+    if (btnGoReferral) btnGoReferral.onclick = () => {
+      CHK.nav.go("screenReferral");
+      CHK.referral?.load();
     };
 
     const btnCatalog = $("btnGoCatalog");

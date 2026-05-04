@@ -210,12 +210,9 @@
           <span style="font-weight:500" data-i18n="subscription">Subscription</span>
           <span id="venueSubRowValue" class="muted">→</span>
         </div>
-        <div class="item" id="venueReferralRow" style="display:none;cursor:default">
-          <span style="font-weight:500" data-i18n="referral_code">Referral code</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span id="venueReferralCode" style="font-family:monospace;font-size:15px;letter-spacing:1px;color:var(--accent)"></span>
-            <button id="venueReferralCopy" class="btn compact" title="Copy referral link" style="padding:2px 8px;font-size:16px;line-height:1">📋</button>
-          </div>
+        <div class="item" id="btnGoReferral" style="display:none;cursor:pointer">
+          <span style="font-weight:500" data-i18n="referral_code">Referral</span>
+          <span id="venueReferralRowValue" class="muted">→</span>
         </div>
       </div>
     </div>
@@ -227,6 +224,15 @@
       </div>
       <div style="font-size:17px;font-weight:700;margin-bottom:14px" data-i18n="subscription">Subscription</div>
       <div id="subscriptionContent"></div>
+    </div>
+
+    <!-- REFERRAL -->
+    <div class="card cardless hide" id="screenReferral">
+      <div style="margin-bottom:10px">
+        <button class="btn compact" id="btnBackFromReferral" data-i18n="back">← Back</button>
+      </div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:14px" data-i18n="referral_code">Referral</div>
+      <div id="referralContent"></div>
     </div>
 
     <!-- CASH REGISTER -->

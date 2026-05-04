@@ -95,6 +95,43 @@ def venue_get(
             db_release(conn)
 
 
+@router.get("/api/referral/stats")
+def referral_stats(
+    authorization: str | None = Header(default=None, alias="Authorization"),
+) -> dict[str, Any]:
+    user = _require_manager(authorization)
+    venue_id = user["venue_id"]
+    if not venue_id:
+        raise HTTPException(status_code=400, detail="user has no venue")
+
+    conn = db_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT referral_code, balance FROM venues WHERE id = %s;",
+            (venue_id,),
+        )
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="venue not found")
+        referral_code, balance = row
+        cur.execute(
+            "SELECT COUNT(*) FROM venues WHERE referred_by_code = %s;",
+            (referral_code,),
+        )
+        count_row = cur.fetchone()
+        assert count_row is not None
+        return {
+            "ok": True,
+            "referral_code": referral_code or "",
+            "referred_count": int(count_row[0]),
+            "balance": float(balance or 0),
+        }
+    finally:
+        with contextlib.suppress(Exception):
+            db_release(conn)
+
+
 class VenueLangIn(BaseModel):
     lang: str
 
