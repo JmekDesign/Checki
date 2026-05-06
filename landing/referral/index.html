@@ -202,26 +202,34 @@
     }
 
     /* ── CALCULATOR ── */
+    .calcWrap {
+      display: flex; justify-content: center;
+    }
     .calcBox {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 32px; max-width: 560px;
+      border-radius: 20px; padding: 28px 24px;
+      width: min(100%, 420px);
     }
-    .calcTitle { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
-    .calcSub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
-    .calcRow {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; margin-bottom: 16px;
+    .calcTitle { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .calcSub { font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+    .calcGroup { margin-bottom: 12px; }
+    .calcGroup label {
+      display: block; font-size: 12px; font-weight: 600;
+      margin-bottom: 5px; color: var(--muted);
     }
-    .calcLabel { font-size: 14px; color: var(--muted); flex: 1; }
     .calcInput {
-      width: 80px; background: rgba(255,255,255,.06);
-      border: 1px solid var(--border); color: var(--text);
-      font-size: 15px; font-weight: 700; font-family: inherit;
-      border-radius: 10px; padding: 8px 12px; text-align: right;
-      outline: none;
+      width: 100%; background: rgba(255,255,255,.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text); font-size: 15px; padding: 11px 13px;
+      outline: none; transition: border-color .15s;
+      font-family: inherit; -webkit-appearance: none;
     }
-    .calcInput:focus { border-color: var(--accent); }
-    .calcDivider { height: 1px; background: var(--border); margin: 24px 0; }
+    .calcInput:focus { border-color: rgba(73,209,124,.5); }
+    .calcDivider {
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted);
+      margin: 18px 0 14px; padding-top: 18px; border-top: 1px solid var(--border);
+    }
     .calcResult { display: flex; flex-direction: column; gap: 12px; }
     .calcResultRow {
       display: flex; justify-content: space-between; align-items: center;
@@ -615,60 +623,66 @@
       <span data-langinline="ka">გამოთვალეთ თქვენი პოტენციური შემოსავალი</span>
     </h2>
 
+    <div class="calcWrap">
     <div class="calcBox">
       <div class="calcTitle">
-        <span data-langinline="ru">Мой портфель</span>
-        <span data-langinline="en">My portfolio</span>
-        <span data-langinline="ka">ჩემი პორტფელი</span>
+        <span data-langinline="ru">Посчитайте свой доход</span>
+        <span data-langinline="en">Calculate your income</span>
+        <span data-langinline="ka">გამოთვალეთ შემოსავალი</span>
       </div>
       <div class="calcSub">
-        <span data-langinline="ru">Введите количество заведений по каждому плану</span>
-        <span data-langinline="en">Enter the number of venues per plan</span>
-        <span data-langinline="ka">შეიყვანეთ დაწესებულებების რაოდენობა თითოეული გეგმის მიხედვით</span>
+        <span data-langinline="ru">Сколько заведений вы планируете привести?</span>
+        <span data-langinline="en">How many venues are you planning to refer?</span>
+        <span data-langinline="ka">რამდენი დაწესებულების მოყვანას გეგმავთ?</span>
       </div>
 
-      <div class="calcRow">
-        <span class="calcLabel">
-          <span data-langinline="ru">Заведений с месячной подпиской (49 ₾)</span>
-          <span data-langinline="en">Venues on monthly plan (49 ₾)</span>
-          <span data-langinline="ka">დაწესებულება თვიური გამოწერით (49 ₾)</span>
-        </span>
+      <div class="calcGroup">
+        <label>
+          <span data-langinline="ru">Заведений на месячном плане (49 ₾/мес)</span>
+          <span data-langinline="en">Venues on monthly plan (49 ₾/mo)</span>
+          <span data-langinline="ka">დაწესებულება თვიურ გეგმაზე (49 ₾/თვე)</span>
+        </label>
         <input class="calcInput" id="cMonthly" type="number" min="0" value="5" />
       </div>
-      <div class="calcRow">
-        <span class="calcLabel">
-          <span data-langinline="ru">Заведений с годовой подпиской (490 ₾/год)</span>
-          <span data-langinline="en">Venues on annual plan (490 ₾/year)</span>
-          <span data-langinline="ka">დაწესებულება წლიური გამოწერით (490 ₾/წელი)</span>
-        </span>
+      <div class="calcGroup">
+        <label>
+          <span data-langinline="ru">Заведений на годовом плане (490 ₾/год)</span>
+          <span data-langinline="en">Venues on annual plan (490 ₾/yr)</span>
+          <span data-langinline="ka">დაწესებულება წლიურ გეგმაზე (490 ₾/წელი)</span>
+        </label>
         <input class="calcInput" id="cAnnual" type="number" min="0" value="2" />
       </div>
 
-      <div class="calcDivider"></div>
+      <div class="calcDivider">
+        <span data-langinline="ru">Ваш доход</span>
+        <span data-langinline="en">Your income</span>
+        <span data-langinline="ka">თქვენი შემოსავალი</span>
+      </div>
 
       <div class="calcResult">
         <div class="calcResultRow">
           <span class="calcResultLabel">
-            <span data-langinline="ru">Ежемесячный доход</span>
-            <span data-langinline="en">Monthly income</span>
-            <span data-langinline="ka">თვიური შემოსავალი</span>
+            <span data-langinline="ru">Ежемесячно</span>
+            <span data-langinline="en">Monthly</span>
+            <span data-langinline="ka">ყოველთვიურად</span>
           </span>
           <span class="calcResultVal big" id="resMonthly">—</span>
         </div>
         <div class="calcResultRow">
           <span class="calcResultLabel">
-            <span data-langinline="ru">Годовой доход</span>
-            <span data-langinline="en">Annual income</span>
-            <span data-langinline="ka">წლიური შემოსავალი</span>
+            <span data-langinline="ru">В год</span>
+            <span data-langinline="en">Annually</span>
+            <span data-langinline="ka">წელიწადში</span>
           </span>
           <span class="calcResultVal" id="resAnnual">—</span>
         </div>
       </div>
       <div class="calcNote">
-        <span data-langinline="ru">* Комиссия 30% начисляется автоматически при каждой оплате. Годовая подписка считается как разовое поступление раз в год.</span>
-        <span data-langinline="en">* 30% commission is credited automatically on every payment. Annual subscription counts as a one-time receipt per year.</span>
-        <span data-langinline="ka">* 30% კომისია ავტომატურად ირიცხება ყოველი გადახდისას. წლიური გამოწერა ითვლება ერთჯერად შემოსავლად წელიწადში.</span>
+        <span data-langinline="ru">* 30% начисляется при каждой оплате заведения. Годовая — разовое поступление раз в год.</span>
+        <span data-langinline="en">* 30% is credited on every payment. Annual plan counts as a one-time receipt per year.</span>
+        <span data-langinline="ka">* 30% ირიცხება ყოველ გადახდაზე. წლიური — ერთჯერადი შემოსავალი წელიწადში.</span>
       </div>
+    </div>
     </div>
   </div>
 </section>
