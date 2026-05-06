@@ -224,20 +224,36 @@
     .calcNote { font-size: 12px; color: var(--muted); margin-top: 16px; opacity: .7; line-height: 1.5; }
 
     /* ── FAQ ── */
-    .faq { display: flex; flex-direction: column; gap: 4px; max-width: 680px; }
-    .faqItem { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
-    .faqQ {
-      width: 100%; text-align: left; background: var(--surface); border: none;
-      color: var(--text); font-family: inherit; font-size: 15px; font-weight: 700;
-      padding: 18px 20px; cursor: pointer;
-      display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      transition: background .1s;
+    .faqSteps { display: flex; flex-direction: column; gap: 0; max-width: 680px; }
+    .faqStep { display: flex; gap: 20px; align-items: flex-start; padding: 22px 0; border-bottom: 1px solid var(--border); }
+    .faqStep:last-child { border-bottom: none; }
+    .faqMark {
+      flex: 0 0 38px; height: 38px; border-radius: 10px;
+      background: rgba(73,209,124,.12); border: 1px solid rgba(73,209,124,.2);
+      color: var(--accent); font-size: 18px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .faqQ:hover { background: rgba(255,255,255,.04); }
-    .faqChevron { flex-shrink: 0; transition: transform .2s; color: var(--muted); font-size: 18px; line-height: 1; }
-    .faqItem.open .faqChevron { transform: rotate(180deg); }
-    .faqA { display: none; padding: 0 20px 18px; background: var(--surface); font-size: 14px; color: var(--muted); line-height: 1.65; }
-    .faqItem.open .faqA { display: block; }
+    .faqStepQ { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+    .faqStepA { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ── STEPPER ── */
+    .calcStepper {
+      display: flex; align-items: center;
+      background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 12px;
+    }
+    .calcStepBtn {
+      width: 44px; height: 44px; background: none; border: none; color: var(--text);
+      font-size: 20px; font-weight: 400; cursor: pointer; transition: background .1s;
+      font-family: inherit; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; -webkit-tap-highlight-color: transparent; line-height: 1;
+    }
+    .calcStepBtn:hover { background: rgba(255,255,255,.08); }
+    .calcStepBtn:first-child { border-radius: 12px 0 0 12px; }
+    .calcStepBtn:last-child  { border-radius: 0 12px 12px 0; }
+    .calcStepVal {
+      flex: 1; text-align: center; font-size: 17px; font-weight: 800; color: var(--text);
+      padding: 0 8px; pointer-events: none; user-select: none;
+    }
 
     /* ── CTA ── */
     .ctaSection {
@@ -332,23 +348,23 @@
   </div>
 
   <h1 class="heroTitle">
-    <span data-li="ru">Привели бар — <span class="heroAccent">получаете деньги каждый раз,</span> когда они платят</span>
-    <span data-li="en">Refer a bar — <span class="heroAccent">earn every single time</span> they pay</span>
-    <span data-li="ka">მოიყვანეთ ბარი — <span class="heroAccent">გამოიმუშავეთ ყოველ ჯერზე,</span> როცა ისინი იხდიან</span>
+    <span data-li="ru">Привели бар, кафе или пекарню — <span class="heroAccent">получаете деньги каждый раз,</span> когда они платят</span>
+    <span data-li="en">Refer a bar, cafe or bakery — <span class="heroAccent">earn every single time</span> they pay</span>
+    <span data-li="ka">მოიყვანეთ ბარი, კაფე ან პურის ფუნცი — <span class="heroAccent">გამოიმუშავეთ ყოველ ჯერზე,</span> როცა ისინი იხდიან</span>
   </h1>
 
   <p class="heroSub">
-    <span data-li="ru">Не разово. Каждый месяц, пока заведение работает.<br>
-    <strong>30%</strong> — если привели бар напрямую. Ещё <strong>+10%</strong> — если привели партнёра, который привёл баров.<br>
-    Для этого не нужно владеть заведением.</span>
+    <span data-li="ru">Checki — система учёта чеков для небольших заведений: баров, кафе, кофеен, пекарен, ресторанов. Работает на обычном телефоне, без кассы и оборудования. Стоит 49 ₾ в месяц.<br><br>
+    Вы рекомендуете Checki владельцу заведения. Они подключаются по вашей ссылке. Каждый раз, когда платят подписку — <strong>вам автоматически 30%</strong>. Не один раз — каждый раз, навсегда.<br><br>
+    Если вы ещё и привели партнёра, который сам приводит заведения — <strong>вам ещё +10%</strong> с их платежей поверх ваших 30%. Без потолка, без срока действия.</span>
 
-    <span data-li="en">Not once. Every month, as long as the venue operates.<br>
-    <strong>30%</strong> when you refer a venue directly. Another <strong>+10%</strong> when a partner you referred brings venues.<br>
-    You don't need to own a venue to participate.</span>
+    <span data-li="en">Checki is a tab management system for small venues: bars, cafes, coffee shops, bakeries, restaurants. Runs on any phone, no hardware or cash register needed. Costs 49 ₾ per month.<br><br>
+    You recommend Checki to a venue owner. They sign up via your link. Every time they pay their subscription — <strong>you automatically get 30%</strong>. Not once — every single time, forever.<br><br>
+    If you also referred a partner who brings in their own venues — <strong>you get an extra +10%</strong> from their venue payments on top of your 30%. No cap, no expiry.</span>
 
-    <span data-li="ka">არა ერთჯერადად. ყოველ თვე, სანამ დაწესებულება მუშაობს.<br>
-    <strong>30%</strong> — თუ პირდაპირ მოიყვანეთ ბარი. კიდევ <strong>+10%</strong> — თუ მოიყვანეთ პარტნიორი, რომელმაც ბარები მოიყვანა.<br>
-    ამისთვის საჭირო არ არის დაწესებულების ქონა.</span>
+    <span data-li="ka">Checki არის ჩეკების აღრიცხვის სისტემა პატარა დაწ.-სთვის: ბარები, კაფეები, ყავის მაღაზიები, პურის ფუნცები, რესტორნები. მუშაობს ჩვეულებრივ ტელეფონზე, სალარო აპარატის გარეშე. ღირს 49 ₾ თვეში.<br><br>
+    თქვენ Checki-ს ურჩევთ დაწ. მფლობელს. ისინი თქვენი ბმულით რეგისტრირდებიან. ყოველ ჯერ, როცა გამოწერას იხდიან — <strong>ავტომატურად 30%</strong> თქვენთვის. ერთხელ კი არა — ყოველ ჯერზე, სამუდამოდ.<br><br>
+    თუ პარტნიორიც მოიყვანეთ, ვინც თავად მოიყვანს დაწ.-ებს — <strong>კიდევ +10%</strong> მათი გადახდებიდან, თქვენი 30%-ის გარდა. ლიმიტი არ არის, ვადა არ არის.</span>
   </p>
 </div>
 
@@ -448,53 +464,53 @@
       <span data-li="ka">ვისთვის არის ეს</span>
     </div>
     <h2 class="sectionTitle">
-      <span data-li="ru">Для этого не нужно владеть баром</span>
-      <span data-li="en">You don't need to own a bar</span>
-      <span data-li="ka">ამისთვის ბარის ქონა საჭირო არ არის</span>
+      <span data-li="ru">Для этого не нужно владеть заведением</span>
+      <span data-li="en">You don't need to own a venue</span>
+      <span data-li="ka">ამისთვის საჭირო არ არის დაწ. ქონა</span>
     </h2>
     <p class="sectionSub">
-      <span data-li="ru">Достаточно знать людей, у которых есть заведение, или тех, кто с ними работает.</span>
-      <span data-li="en">You just need to know people who own venues, or people who work with them.</span>
-      <span data-li="ka">საკმარისია იცნობდეთ ადამიანებს, რომლებსაც დაწესებულება აქვთ, ან მათთან მომუშავეებს.</span>
+      <span data-li="ru">Достаточно знать людей, у которых есть бар, кафе, пекарня, кофейня или любое небольшое заведение — или тех, кто с ними регулярно работает.</span>
+      <span data-li="en">You just need to know people who own a bar, cafe, bakery, coffee shop or any small venue — or people who work with them regularly.</span>
+      <span data-li="ka">საკმარისია იცნობდეთ ადამიანებს, რომლებსაც ბარი, კაფე, პურის ფუნცი ან სხვა პატარა დაწ. აქვთ — ან მათთან რეგულარულად მომუშავეებს.</span>
     </p>
     <div class="whoGrid">
       <div class="whoCard">
         <div class="whoIcon">&#127866;</div>
         <div class="whoTitle">
-          <span data-li="ru">Вы знаете баров</span>
-          <span data-li="en">You know bar owners</span>
-          <span data-li="ka">თქვენ იცნობთ ბარების მფლობელებს</span>
+          <span data-li="ru">Вы знаете владельцев заведений</span>
+          <span data-li="en">You know venue owners</span>
+          <span data-li="ka">თქვენ იცნობთ დაწ. მფლობელებს</span>
         </div>
         <div class="whoDesc">
-          <span data-li="ru">Поговорили один раз, они подключились — и вы получаете деньги каждый месяц, пока они работают. Без повторных усилий.</span>
-          <span data-li="en">You talk to them once, they join — and you earn every month while they operate. No repeated effort needed.</span>
-          <span data-li="ka">ერთხელ ესაუბრეთ, ისინი შეუერთდნენ — და თქვენ ყოველ თვე გამოიმუშავებთ სანამ ისინი მუშაობენ. განმეორებითი ძალისხმევა საჭირო არ არის.</span>
+          <span data-li="ru">Расскажите про Checki владельцу бара, кафе или пекарни. Если они подключатся — будете получать 30% с каждой их оплаты. Один разговор, пассивный доход навсегда.</span>
+          <span data-li="en">Tell a bar, cafe or bakery owner about Checki. If they sign up — you earn 30% from every payment they make. One conversation, passive income forever.</span>
+          <span data-li="ka">მოუყვეთ ბარის, კაფეს ან პურის ფუნცის მფლობელს Checki-ს შესახებ. თუ დარეგისტრირდებიან — 30%-ს იღებთ მათი ყოველი გადახდიდან. ერთი საუბარი, პასიური შემოსავალი სამუდამოდ.</span>
         </div>
       </div>
       <div class="whoCard">
         <div class="whoIcon">&#128188;</div>
         <div class="whoTitle">
-          <span data-li="ru">Вы работаете в сфере</span>
-          <span data-li="en">You work in the industry</span>
-          <span data-li="ka">თქვენ სფეროში მუშაობთ</span>
+          <span data-li="ru">Вы работаете в смежной сфере</span>
+          <span data-li="en">You work in a related field</span>
+          <span data-li="ka">თქვენ მომიჯნავე სფეროში მუშაობთ</span>
         </div>
         <div class="whoDesc">
-          <span data-li="ru">Поставщики, дизайнеры, бухгалтеры, консультанты — те, кто регулярно общается с владельцами баров и кафе. Рекомендация в контексте доверия работает лучше всего.</span>
-          <span data-li="en">Suppliers, designers, accountants, consultants — anyone who regularly communicates with bar and cafe owners. A recommendation from a trusted contact converts best.</span>
-          <span data-li="ka">მომწოდებლები, დიზაინერები, ბუღალტრები, კონსულტანტები — ვინც რეგულარულად კომუნიკაციაშია ბარებისა და კაფეების მფლობელებთან. სანდო გარემოში რეკომენდაცია ყველაზე კარგად მუშაობს.</span>
+          <span data-li="ru">Поставщики алкоголя и продуктов, дизайнеры интерьеров, бухгалтеры, IT-специалисты, консультанты по открытию заведений — все, кто регулярно общается с владельцами. Рекомендация от знакомого конвертируется лучше любой рекламы.</span>
+          <span data-li="en">Alcohol and food suppliers, interior designers, accountants, IT specialists, venue opening consultants — anyone who regularly talks to owners. A recommendation from someone they know converts better than any ad.</span>
+          <span data-li="ka">ალკოჰოლისა და პროდუქტის მომწოდებლები, ინტერიერის დიზაინერები, ბუღალტრები, IT სპეციალისტები, კონსულტანტები — ვინც მფლობელებს რეგულარულად ესაუბრება. ნაცნობის რეკომენდაცია ნებისმიერ რეკლამაზე უკეთ მუშაობს.</span>
         </div>
       </div>
       <div class="whoCard">
         <div class="whoIcon">&#127760;</div>
         <div class="whoTitle">
-          <span data-li="ru">Вы строите сеть</span>
-          <span data-li="en">You build a network</span>
-          <span data-li="ka">თქვენ ქსელს ქმნით</span>
+          <span data-li="ru">Вы хотите построить сеть</span>
+          <span data-li="en">You want to build a network</span>
+          <span data-li="ka">გსურთ ქსელის შექმნა</span>
         </div>
         <div class="whoDesc">
-          <span data-li="ru">Привлекаете других партнёров, обучаете их, строите портфель. Со временем сеть работает сама — вы получаете 10% с каждого заведения, которое привёл ваш партнёр.</span>
-          <span data-li="en">You recruit and train other partners, build a portfolio. Over time the network runs itself — you earn 10% from every venue your partners bring in.</span>
-          <span data-li="ka">იზიდავთ სხვა პარტნიორებს, ავარჯიშებთ მათ, ქმნით პორტფელს. დროთა განმავლობაში ქსელი თავად მუშაობს — 10%-ს იღებთ თქვენი პარტნიორების მოყვანილი თითოეული დაწესებულებიდან.</span>
+          <span data-li="ru">Привлекаете других партнёров, они сами приводят заведения — вы получаете 10% с каждого их платежа поверх своих 30%. Со временем портфель растёт, а активных усилий требуется всё меньше. Это и есть пассивный доход в классическом смысле.</span>
+          <span data-li="en">You recruit other partners, they bring venues — you get 10% from every payment of their venues on top of your 30%. Over time the portfolio grows while the effort required decreases. That's passive income in the classic sense.</span>
+          <span data-li="ka">ახალ პარტნიორებს იზიდავთ, ისინი თავად მოიყვანენ დაწ.-ებს — 10%-ს იღებთ მათი ყოველი გადახდიდან, საკუთარი 30%-ის გარდა. დროთა განმავლობაში პორტფელი იზრდება, ძალისხმევა კი მცირდება. ეს არის პასიური შემოსავალი კლასიკური გაგებით.</span>
         </div>
       </div>
     </div>
@@ -717,7 +733,11 @@
             <span data-li="en">Your venues on monthly plan (L1, 49 ₾)</span>
             <span data-li="ka">თქვენი დაწ. თვიურ გეგმაზე (L1, 49 ₾)</span>
           </label>
-          <input class="calcInput" id="cL1m" type="number" min="0" value="5" />
+          <div class="calcStepper">
+            <button class="calcStepBtn" data-id="cL1m" data-d="-1">−</button>
+            <span class="calcStepVal" id="cL1m">5</span>
+            <button class="calcStepBtn" data-id="cL1m" data-d="1">+</button>
+          </div>
         </div>
         <div class="calcGroup">
           <label>
@@ -725,7 +745,11 @@
             <span data-li="en">Your venues on annual plan (L1, 490 ₾)</span>
             <span data-li="ka">თქვენი დაწ. წლიურ გეგმაზე (L1, 490 ₾)</span>
           </label>
-          <input class="calcInput" id="cL1y" type="number" min="0" value="2" />
+          <div class="calcStepper">
+            <button class="calcStepBtn" data-id="cL1y" data-d="-1">−</button>
+            <span class="calcStepVal" id="cL1y">2</span>
+            <button class="calcStepBtn" data-id="cL1y" data-d="1">+</button>
+          </div>
         </div>
         <div class="calcGroup">
           <label>
@@ -733,7 +757,11 @@
             <span data-li="en">Partners' venues on monthly plan (L2, 49 ₾)</span>
             <span data-li="ka">პარტნიორების დაწ. თვიურ გეგმაზე (L2, 49 ₾)</span>
           </label>
-          <input class="calcInput" id="cL2m" type="number" min="0" value="10" />
+          <div class="calcStepper">
+            <button class="calcStepBtn" data-id="cL2m" data-d="-1">−</button>
+            <span class="calcStepVal" id="cL2m">10</span>
+            <button class="calcStepBtn" data-id="cL2m" data-d="1">+</button>
+          </div>
         </div>
         <div class="calcDivider">
           <span data-li="ru">Ваш доход</span>
@@ -777,65 +805,45 @@
       <span data-li="en">Common questions</span>
       <span data-li="ka">ხშირი კითხვები</span>
     </h2>
-    <div class="faq">
+    <div class="faqSteps">
 
-      <div class="faqItem">
-        <button class="faqQ">
-          <span><span data-li="ru">Нужно ли владеть заведением, чтобы участвовать?</span><span data-li="en">Do I need to own a venue to participate?</span><span data-li="ka">საჭიროა დაწ. ქონა მონაწილეობისთვის?</span></span>
-          <span class="faqChevron">&#8964;</span>
-        </button>
-        <div class="faqA">
-          <span data-li="ru">Нет. Реферальная ссылка доступна всем зарегистрированным пользователям Checki — в том числе тем, кто пока на бесплатном периоде. Но чтобы получить ссылку, нужно зарегистрировать хотя бы одно заведение на checki.ge.</span>
-          <span data-li="en">No. The referral link is available to all registered Checki users — including those on a free trial. But to get the link, you need to register at least one venue at checki.ge.</span>
-          <span data-li="ka">არა. რეფერალური ბმული ხელმისაწვდომია Checki-ს ყველა რეგისტრირებული მომხმარებლისთვის — მათ შორის უფასო გამოცდაზე მყოფებისთვის. მაგრამ ბმულის მისაღებად, checki.ge-ზე მინიმუმ ერთი დაწესებულება უნდა დაარეგისტრიროთ.</span>
+      <div class="faqStep">
+        <div class="faqMark">?</div>
+        <div>
+          <div class="faqStepQ"><span data-li="ru">Нужно ли владеть заведением, чтобы участвовать?</span><span data-li="en">Do I need to own a venue to participate?</span><span data-li="ka">საჭიროა დაწ. ქონა მონაწილეობისთვის?</span></div>
+          <div class="faqStepA"><span data-li="ru">Нет. Реферальная ссылка доступна всем зарегистрированным пользователям Checki — в том числе тем, кто на бесплатном периоде. Чтобы получить ссылку, нужно зарегистрировать хотя бы одно заведение на checki.ge. Занимает 2 минуты.</span><span data-li="en">No. The referral link is available to all registered Checki users, including those on a free trial. To get the link, register at least one venue at checki.ge. Takes 2 minutes.</span><span data-li="ka">არა. რეფერალური ბმული ხელმისაწვდომია Checki-ს ყველა რეგ. მომხმარებლისთვის. ბმულის მისაღებად, checki.ge-ზე მინ. ერთი დაწ. დაარეგ. 2 წუთი სჭირდება.</span></div>
         </div>
       </div>
 
-      <div class="faqItem">
-        <button class="faqQ">
-          <span><span data-li="ru">30% — это разово или с каждого платежа?</span><span data-li="en">Is the 30% one-time or on every payment?</span><span data-li="ka">30% — ერთჯერადია თუ ყოველ გადახდაზე?</span></span>
-          <span class="faqChevron">&#8964;</span>
-        </button>
-        <div class="faqA">
-          <span data-li="ru">С каждого платежа, всегда. Когда заведение продлевает подписку — вы получаете 30%. Через месяц они платят снова — вы снова получаете 30%. Пока заведение пользуется Checki, вы зарабатываете.</span>
-          <span data-li="en">On every payment, always. When a venue renews their subscription — you get 30%. Next month they pay again — you get 30% again. As long as the venue uses Checki, you earn.</span>
-          <span data-li="ka">ყოველ გადახდაზე, ყოველთვის. როდესაც დაწ. განაახლებს გამოწერას — 30%-ს იღებთ. მომავალ თვეს ისევ იხდის — ისევ 30%-ს იღებთ. სანამ დაწ. Checki-ს იყენებს, თქვენ შოულობთ.</span>
+      <div class="faqStep">
+        <div class="faqMark">?</div>
+        <div>
+          <div class="faqStepQ"><span data-li="ru">30% — это разово или с каждого платежа?</span><span data-li="en">Is the 30% one-time or on every payment?</span><span data-li="ka">30% — ერთჯერადია თუ ყოველ გადახდაზე?</span></div>
+          <div class="faqStepA"><span data-li="ru">С каждого платежа, всегда. Заведение платит подписку в январе — вы получаете 30%. В феврале платит снова — снова 30%. И так пока они пользуются Checki. Никаких исключений, никаких ограничений по времени.</span><span data-li="en">On every single payment, always. The venue pays in January — you get 30%. They pay again in February — 30% again. This continues as long as they use Checki. No exceptions, no time limits.</span><span data-li="ka">ყოველ გადახდაზე, ყოველთვის. იანვარში იხდის — 30%-ს იღებთ. თებერვალში ისევ — ისევ 30%. ასე გრძელდება სანამ Checki-ს იყენებენ. გამონაკლისი არ არის, ვადა არ არის.</span></div>
         </div>
       </div>
 
-      <div class="faqItem">
-        <button class="faqQ">
-          <span><span data-li="ru">Что такое L2 и как он работает?</span><span data-li="en">What is L2 and how does it work?</span><span data-li="ka">რა არის L2 და როგორ მუშაობს?</span></span>
-          <span class="faqChevron">&#8964;</span>
-        </button>
-        <div class="faqA">
-          <span data-li="ru">Если вы привели партнёра (назовём его Гио), и Гио привёл бар — вы получаете 10% с каждого платежа этого бара. Гио при этом получает свои 30%. Два уровня работают одновременно и не конкурируют друг с другом.</span>
-          <span data-li="en">If you referred a partner (let's call him Gio), and Gio referred a bar — you get 10% from every payment of that bar. Gio still gets his 30%. The two levels work simultaneously and don't compete with each other.</span>
-          <span data-li="ka">თუ მოიყვანეთ პარტნიორი (ვუწოდოთ გიო), და გიომ მოიყვანა ბარი — 10%-ს იღებთ ამ ბარის ყოველი გადახდიდან. გიო კი თავის 30%-ს იღებს. ორი დონე ერთდროულად მუშაობს და ერთმანეთთან არ კონკურირებს.</span>
+      <div class="faqStep">
+        <div class="faqMark">?</div>
+        <div>
+          <div class="faqStepQ"><span data-li="ru">Что такое L2 и как он работает?</span><span data-li="en">What is L2 and how does it work?</span><span data-li="ka">რა არის L2 და როგორ მუშაობს?</span></div>
+          <div class="faqStepA"><span data-li="ru">L2 — это второй уровень. Вы привели партнёра Гио. Гио сам привёл кафе. Когда это кафе платит подписку: Гио получает 30% (он L1 для кафе), а вы получаете 10% (вы L2). Оба получают одновременно. Два уровня не конкурируют — они работают параллельно.</span><span data-li="en">L2 is the second level. You referred a partner, Gio. Gio referred a cafe. When that cafe pays: Gio gets 30% (he's L1 for the cafe), you get 10% (you're L2). Both get paid at the same time. The two levels don't compete — they work in parallel.</span><span data-li="ka">L2 არის მეორე დონე. თქვენ მოიყვანეთ პარტნიორი გიო. გიომ მოიყვანა კაფე. როდესაც კაფე იხდის: გიო იღებს 30%-ს (ის L1-ია), თქვენ — 10%-ს (თქვენ L2-ხართ). ორივე ერთდროულად იღებს. ორი დონე პარალელურად მუშაობს.</span></div>
         </div>
       </div>
 
-      <div class="faqItem">
-        <button class="faqQ">
-          <span><span data-li="ru">Где видно мой баланс?</span><span data-li="en">Where can I see my balance?</span><span data-li="ka">სად ვხედავ ჩემს ბალანსს?</span></span>
-          <span class="faqChevron">&#8964;</span>
-        </button>
-        <div class="faqA">
-          <span data-li="ru">В приложении Checki в разделе настроек заведения. Там же — ваш реферальный код и ссылка. Накопленный баланс автоматически вычитается из следующей оплаты подписки.</span>
-          <span data-li="en">In the Checki app under venue settings. Your referral code and link are there too. Accumulated balance is automatically deducted from your next subscription payment.</span>
-          <span data-li="ka">Checki-ს აპლიკაციაში, დაწ. პარამეტრების განყოფილებაში. იქვეა თქვენი რეფერალური კოდი და ბმული. დაგროვილი ბალანსი ავტომატურად გამოიქვითება შემდეგი გამოწერის გადახდიდან.</span>
+      <div class="faqStep">
+        <div class="faqMark">?</div>
+        <div>
+          <div class="faqStepQ"><span data-li="ru">Где видно мой баланс и реферальную ссылку?</span><span data-li="en">Where can I see my balance and referral link?</span><span data-li="ka">სად ვხედავ ბალანსსა და ბმულს?</span></div>
+          <div class="faqStepA"><span data-li="ru">В настройках заведения в приложении Checki. Там отображается ваш реферальный код, готовая ссылка для копирования и текущий баланс. Баланс автоматически засчитывается при следующей оплате вашей собственной подписки.</span><span data-li="en">In venue settings in the Checki app. There you'll find your referral code, a ready-to-copy link, and your current balance. Balance is automatically applied to your next subscription payment.</span><span data-li="ka">Checki-ს აპლიკაციაში, დაწ. პარამეტრებში. იქ ნახავთ რეფერ. კოდს, ბმულს და მიმდინარე ბალანსს. ბალანსი ავტომ. ჩაითვლება შემდეგ გამოწ. გადახდაში.</span></div>
         </div>
       </div>
 
-      <div class="faqItem">
-        <button class="faqQ">
-          <span><span data-li="ru">Есть ли лимит на количество заведений?</span><span data-li="en">Is there a limit on the number of venues?</span><span data-li="ka">არის შეზღუდვა დაწ. რაოდენობაზე?</span></span>
-          <span class="faqChevron">&#8964;</span>
-        </button>
-        <div class="faqA">
-          <span data-li="ru">Никакого лимита. Приводите сколько угодно — доход растёт линейно. Чем больше заведений в портфеле, тем стабильнее и предсказуемее ежемесячный доход.</span>
-          <span data-li="en">No limit at all. Refer as many as you want — income grows linearly. The more venues in your portfolio, the more stable and predictable your monthly income.</span>
-          <span data-li="ka">შეზღუდვა არ არის. მოიყვანეთ რამდენიც გსურთ — შემოსავალი წრფივად იზრდება. რაც მეტი დაწ. პორტფელში, მით უფრო სტაბილური და პროგნოზირებადია თვიური შემოსავალი.</span>
+      <div class="faqStep">
+        <div class="faqMark">?</div>
+        <div>
+          <div class="faqStepQ"><span data-li="ru">Есть ли лимит на количество заведений или партнёров?</span><span data-li="en">Is there a limit on venues or partners?</span><span data-li="ka">არის შეზღ. დაწ. ან პარტნ. რაოდ.-ზე?</span></div>
+          <div class="faqStepA"><span data-li="ru">Никакого. Приводите сколько угодно заведений и партнёров — доход растёт линейно. 50 заведений L1 = 735 ₾ в месяц пассивно. Добавьте L2-сеть — и цифра кратно вырастет. Потолка нет.</span><span data-li="en">None at all. Refer as many venues and partners as you want — income grows linearly. 50 L1 venues = 735 ₾/month passively. Add an L2 network and the number grows significantly. No cap.</span><span data-li="ka">საერთოდ არ არის. მოიყვანეთ რამდენი გსურთ — შემოსავალი წრფივად იზრდება. 50 L1 დაწ. = 735 ₾/თვე პასიურად. L2 ქსელი რომ დაამატოთ, რიცხვი მნიშვნ. გაიზრდება. ჭერი არ არის.</span></div>
         </div>
       </div>
 
@@ -914,28 +922,16 @@
   var saved = localStorage.getItem('checki_lang');
   if (saved && LANGS[saved]) setLang(saved);
 
-  // ── FAQ ──
-  document.querySelectorAll('.faqQ').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var item = btn.parentElement;
-      var isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faqItem.open').forEach(function(i) { i.classList.remove('open'); });
-      if (!isOpen) item.classList.add('open');
-    });
-  });
-
-  // ── Calculator ──
+  // ── Calculator stepper ──
+  var calcState = { cL1m: 5, cL1y: 2, cL2m: 10 };
   var suffixes = {
     month: { ru: '₾/мес', en: '₾/mo', ka: '₾/თვე' },
     annual: { ru: '₾', en: '₾', ka: '₾' }
   };
 
   function calcUpdate() {
-    var l1m = parseInt(document.getElementById('cL1m').value) || 0;
-    var l1y = parseInt(document.getElementById('cL1y').value) || 0;
-    var l2m = parseInt(document.getElementById('cL2m').value) || 0;
-    var monthly = +(l1m * 49 * 0.30 + l2m * 49 * 0.10).toFixed(2);
-    var annual  = +(l1y * 490 * 0.30).toFixed(2);
+    var monthly = +(calcState.cL1m * 49 * 0.30 + calcState.cL2m * 49 * 0.10).toFixed(2);
+    var annual  = +(calcState.cL1y * 490 * 0.30).toFixed(2);
     var l = lang;
     document.getElementById('resMonthly').textContent =
       monthly.toLocaleString('ru-RU', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + suffixes.month[l];
@@ -943,8 +939,14 @@
       annual.toLocaleString('ru-RU', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + suffixes.annual[l];
   }
 
-  ['cL1m','cL1y','cL2m'].forEach(function(id) {
-    document.getElementById(id).addEventListener('input', calcUpdate);
+  document.querySelectorAll('.calcStepBtn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = btn.dataset.id;
+      var d  = parseInt(btn.dataset.d);
+      calcState[id] = Math.max(0, (calcState[id] || 0) + d);
+      document.getElementById(id).textContent = calcState[id];
+      calcUpdate();
+    });
   });
   calcUpdate();
 </script>
