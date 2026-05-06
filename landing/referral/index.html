@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141418'/><text y='23' x='2' font-size='22' font-family='system-ui,sans-serif' font-weight='900' fill='white'>C</text><circle cx='23' cy='24' r='3.5' fill='%2349d17c'/></svg>" />
+
+  <title>Реферальная программа Checki — зарабатывайте вместе с нами</title>
+  <meta name="description" content="Получайте 30% с каждой оплаты заведений, которые вы привели в Checki. 14.70 ₾ с месячной подписки, 147 ₾ с годовой — регулярно, каждый раз." />
+  <link rel="canonical" href="https://checki.ge/referral/" />
+
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://checki.ge/referral/" />
+  <meta property="og:title"       content="Реферальная программа Checki — 30% с каждой оплаты" />
+  <meta property="og:description" content="Приведите бар или кафе в Checki — и получайте 30% комиссии с каждой их оплаты. Пассивный доход от портфеля заведений." />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0f1116;
+      --surface: #161b24;
+      --border:  rgba(255,255,255,.10);
+      --text:    #f0f2f5;
+      --muted:   #7a8497;
+      --accent:  #49d17c;
+      --accent2: #2eb865;
+      --gold:    #f0b429;
+      --gold-bg: rgba(240,180,41,.10);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px;
+      background: rgba(15,17,22,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .navLogo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+    .navLogoText { font-size: 17px; font-weight: 800; color: var(--text); }
+    .navRight { display: flex; align-items: center; gap: 8px; }
+    .navBtn {
+      box-sizing: border-box; display: block; line-height: 1;
+      padding: 10px 14px; border-radius: 10px;
+      font-family: inherit; font-weight: 700; font-size: 13px;
+      white-space: nowrap; text-decoration: none; cursor: pointer;
+      flex-shrink: 0; -webkit-tap-highlight-color: transparent;
+    }
+    .navLogin {
+      background: none; border: 1px solid var(--border);
+      color: var(--text); transition: border-color .15s;
+    }
+    .navLogin:hover { border-color: rgba(255,255,255,.3); }
+    .navCta {
+      background: var(--accent); color: #0f1116;
+      padding-left: 18px; padding-right: 18px;
+      transition: background .15s;
+    }
+    .navCta:hover { background: var(--accent2); }
+    .langDrop { position: relative; }
+    .langDropBtn {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); font-size: 12px; font-weight: 700;
+      padding: 10px 10px; border-radius: 10px; cursor: pointer;
+      letter-spacing: .04em; transition: all .15s;
+      display: flex; align-items: center; gap: 4px;
+      box-sizing: border-box; line-height: 1; flex-shrink: 0;
+      font-family: inherit;
+    }
+    .langDropBtn:hover { color: var(--text); }
+    .langDropMenu {
+      display: none; position: absolute; top: calc(100% + 6px); right: 0;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; min-width: 110px; z-index: 200;
+    }
+    .langDropMenu.open { display: block; }
+    .langOpt {
+      display: block; width: 100%; text-align: left;
+      background: none; border: none; padding: 9px 14px;
+      color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background .1s; font-family: inherit;
+    }
+    .langOpt:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .langOpt.active { color: var(--text); }
+
+    /* ── LAYOUT ── */
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 20px 60px;
+      text-align: center;
+    }
+    .heroBadge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--gold-bg); border: 1px solid rgba(240,180,41,.25);
+      color: var(--gold); border-radius: 100px;
+      font-size: 12px; font-weight: 700; letter-spacing: .05em;
+      padding: 5px 12px; margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+    .heroTitle {
+      font-size: clamp(28px, 6vw, 48px); font-weight: 900; line-height: 1.15;
+      letter-spacing: -.02em; margin-bottom: 16px;
+    }
+    .heroAccent { color: var(--accent); }
+    .heroSub {
+      font-size: clamp(15px, 2.5vw, 18px); color: var(--muted);
+      max-width: 560px; margin: 0 auto 36px;
+    }
+    .heroCta {
+      display: inline-block;
+      background: var(--accent); color: #0f1116;
+      font-size: 16px; font-weight: 800;
+      padding: 16px 36px; border-radius: 14px;
+      transition: background .15s; text-decoration: none;
+    }
+    .heroCta:hover { background: var(--accent2); }
+    .heroNote { font-size: 13px; color: var(--muted); margin-top: 12px; }
+
+    /* ── COMMISSION HIGHLIGHT ── */
+    .commBlock {
+      display: flex; gap: 16px; justify-content: center;
+      flex-wrap: wrap; padding: 0 20px 64px;
+    }
+    .commCard {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px 28px; text-align: center; flex: 1;
+      min-width: 180px; max-width: 260px;
+    }
+    .commAmt { font-size: 36px; font-weight: 900; color: var(--accent); letter-spacing: -.02em; }
+    .commLabel { font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+    .commNote { font-size: 11px; color: var(--muted); margin-top: 8px; opacity: .7; }
+
+    /* ── SECTION ── */
+    section { padding: 64px 20px; }
+    section + section { padding-top: 0; }
+    .sectionTag {
+      font-size: 11px; font-weight: 800; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+    .sectionTitle {
+      font-size: clamp(22px, 4vw, 32px); font-weight: 900;
+      line-height: 1.2; letter-spacing: -.02em; margin-bottom: 12px;
+    }
+    .sectionSub { font-size: 15px; color: var(--muted); max-width: 560px; margin-bottom: 40px; }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: flex; flex-direction: column; gap: 0; max-width: 620px; }
+    .step {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 24px 0; border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .stepNum {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: rgba(73,209,124,.12); border: 1px solid rgba(73,209,124,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 900; color: var(--accent); flex-shrink: 0;
+    }
+    .stepTitle { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .stepDesc { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+    /* ── SCENARIOS ── */
+    .scenarios { display: flex; gap: 20px; flex-wrap: wrap; }
+    .scenCard {
+      flex: 1; min-width: 280px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px; position: relative; overflow: hidden;
+    }
+    .scenCard.featured {
+      border-color: rgba(73,209,124,.3);
+      background: linear-gradient(135deg, rgba(73,209,124,.06) 0%, var(--surface) 60%);
+    }
+    .scenIcon { font-size: 28px; margin-bottom: 16px; }
+    .scenTitle { font-size: 20px; font-weight: 900; margin-bottom: 6px; letter-spacing: -.01em; }
+    .scenDesc { font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+    .scenNumbers { display: flex; flex-direction: column; gap: 10px; }
+    .scenRow {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,.04); border-radius: 10px; padding: 10px 14px;
+    }
+    .scenRowLabel { font-size: 13px; color: var(--muted); }
+    .scenRowVal { font-size: 15px; font-weight: 800; color: var(--accent); }
+    .scenBadge {
+      position: absolute; top: 20px; right: 20px;
+      background: var(--gold-bg); border: 1px solid rgba(240,180,41,.25);
+      color: var(--gold); font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 100px; letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    /* ── CALCULATOR ── */
+    .calcBox {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px; max-width: 560px;
+    }
+    .calcTitle { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .calcSub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .calcRow {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; margin-bottom: 16px;
+    }
+    .calcLabel { font-size: 14px; color: var(--muted); flex: 1; }
+    .calcInput {
+      width: 80px; background: rgba(255,255,255,.06);
+      border: 1px solid var(--border); color: var(--text);
+      font-size: 15px; font-weight: 700; font-family: inherit;
+      border-radius: 10px; padding: 8px 12px; text-align: right;
+      outline: none;
+    }
+    .calcInput:focus { border-color: var(--accent); }
+    .calcDivider { height: 1px; background: var(--border); margin: 24px 0; }
+    .calcResult { display: flex; flex-direction: column; gap: 12px; }
+    .calcResultRow {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .calcResultLabel { font-size: 14px; color: var(--muted); }
+    .calcResultVal { font-size: 18px; font-weight: 900; color: var(--accent); }
+    .calcResultVal.big { font-size: 28px; }
+    .calcNote { font-size: 12px; color: var(--muted); margin-top: 16px; opacity: .7; }
+
+    /* ── FAQ ── */
+    .faq { display: flex; flex-direction: column; gap: 4px; max-width: 680px; }
+    .faqItem {
+      border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    }
+    .faqQ {
+      width: 100%; text-align: left; background: var(--surface);
+      border: none; color: var(--text); font-family: inherit;
+      font-size: 15px; font-weight: 700; padding: 18px 20px;
+      cursor: pointer; display: flex; justify-content: space-between;
+      align-items: center; gap: 12px; transition: background .1s;
+    }
+    .faqQ:hover { background: rgba(255,255,255,.04); }
+    .faqChevron { flex-shrink: 0; transition: transform .2s; color: var(--muted); font-size: 18px; line-height: 1; }
+    .faqItem.open .faqChevron { transform: rotate(180deg); }
+    .faqA {
+      display: none; padding: 0 20px 18px;
+      background: var(--surface);
+      font-size: 14px; color: var(--muted); line-height: 1.6;
+    }
+    .faqItem.open .faqA { display: block; }
+
+    /* ── CTA SECTION ── */
+    .ctaSection {
+      text-align: center; padding: 80px 20px;
+      background: linear-gradient(180deg, transparent 0%, rgba(73,209,124,.05) 50%, transparent 100%);
+    }
+    .ctaTitle { font-size: clamp(24px, 5vw, 40px); font-weight: 900; letter-spacing: -.02em; margin-bottom: 14px; }
+    .ctaSub { font-size: 16px; color: var(--muted); max-width: 480px; margin: 0 auto 32px; }
+    .ctaBtnGroup { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .ctaBtn {
+      display: inline-block; padding: 16px 36px; border-radius: 14px;
+      font-size: 15px; font-weight: 800; text-decoration: none;
+      transition: all .15s; font-family: inherit;
+    }
+    .ctaBtnPrimary { background: var(--accent); color: #0f1116; }
+    .ctaBtnPrimary:hover { background: var(--accent2); }
+    .ctaBtnSecondary {
+      background: none; border: 1px solid var(--border); color: var(--text);
+      cursor: pointer;
+    }
+    .ctaBtnSecondary:hover { border-color: rgba(255,255,255,.3); }
+    .ctaRegistered {
+      margin-top: 28px; font-size: 14px; color: var(--muted);
+    }
+    .ctaRegistered a { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footerLeft { font-size: 13px; color: var(--muted); }
+    .footerRight { display: flex; gap: 16px; }
+    .footerLink { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .footerLink:hover { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 12px 16px; }
+      .hero { padding: 56px 16px 40px; }
+      .commBlock { padding: 0 16px 48px; gap: 10px; }
+      .commCard { padding: 18px 16px; min-width: 140px; }
+      .commAmt { font-size: 28px; }
+      section { padding: 48px 16px; }
+      .calcBox { padding: 20px; }
+      .calcRow { flex-wrap: wrap; gap: 8px; }
+      .calcInput { width: 100px; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ── LANG HIDDEN ── */
+    [data-lang] { display: none; }
+    .lang-ru [data-lang="ru"] { display: block; }
+    .lang-en [data-lang="en"] { display: block; }
+    .lang-ka [data-lang="ka"] { display: block; }
+    [data-langinline] { display: none; }
+    .lang-ru [data-langinline="ru"] { display: inline; }
+    .lang-en [data-langinline="en"] { display: inline; }
+    .lang-ka [data-langinline="ka"] { display: inline; }
+  </style>
+</head>
+<body class="lang-ru">
+
+<!-- NAV -->
+<nav>
+  <a href="https://checki.ge/" class="navLogo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#141418"/>
+      <text y="23" x="2" font-size="22" font-family="system-ui,sans-serif" font-weight="900" fill="white">C</text>
+      <circle cx="23" cy="24" r="3.5" fill="#49d17c"/>
+    </svg>
+    <span class="navLogoText">Checki</span>
+  </a>
+  <div class="navRight">
+    <div class="langDrop">
+      <button class="langDropBtn" id="langBtn">
+        <span id="langLabel">RU</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <div class="langDropMenu" id="langMenu">
+        <button class="langOpt active" data-l="ru">RU — Русский</button>
+        <button class="langOpt" data-l="en">EN — English</button>
+        <button class="langOpt" data-l="ka">KA — ქართული</button>
+      </div>
+    </div>
+    <a href="https://checki.ge/app/" class="navBtn navLogin">
+      <span data-langinline="ru">Войти</span>
+      <span data-langinline="en">Log in</span>
+      <span data-langinline="ka">შესვლა</span>
+    </a>
+    <a href="https://checki.ge/app/" class="navBtn navCta">
+      <span data-langinline="ru">Начать</span>
+      <span data-langinline="en">Get started</span>
+      <span data-langinline="ka">დაწყება</span>
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="heroBadge">
+    <span data-langinline="ru">Реферальная программа</span>
+    <span data-langinline="en">Referral program</span>
+    <span data-langinline="ka">რეფერალური პროგრამა</span>
+  </div>
+
+  <h1 class="heroTitle">
+    <span data-langinline="ru">Зарабатывайте<br>вместе с <span class="heroAccent">Checki</span></span>
+    <span data-langinline="en">Earn with<br><span class="heroAccent">Checki</span></span>
+    <span data-langinline="ka">გამოიმუშავეთ<br><span class="heroAccent">Checki</span>-სთან ერთად</span>
+  </h1>
+
+  <p class="heroSub">
+    <span data-langinline="ru">Приведите бар или кафе — и получайте 30% с каждой их оплаты. Не один раз, а каждый раз.</span>
+    <span data-langinline="en">Refer a bar or cafe and earn 30% of every payment they make. Not once — every time.</span>
+    <span data-langinline="ka">მოიყვანეთ ბარი ან კაფე და მიიღეთ 30% მათი ყოველი გადახდიდან. არა ერთჯერადად — ყოველ ჯერზე.</span>
+  </p>
+
+  <a href="https://checki.ge/app/" class="heroCta">
+    <span data-langinline="ru">Получить реферальную ссылку</span>
+    <span data-langinline="en">Get your referral link</span>
+    <span data-langinline="ka">მიიღეთ რეფერალური ბმული</span>
+  </a>
+
+  <p class="heroNote">
+    <span data-langinline="ru">Доступно в настройках заведения после регистрации</span>
+    <span data-langinline="en">Available in venue settings after registration</span>
+    <span data-langinline="ka">ხელმისაწვდომია დასარეგისტრირებლის შემდეგ</span>
+  </p>
+</div>
+
+<!-- COMMISSION PILLS -->
+<div class="commBlock">
+  <div class="commCard">
+    <div class="commAmt">14.70 ₾</div>
+    <div class="commLabel">
+      <span data-langinline="ru">с каждой месячной подписки<br>49 ₾ × 30%</span>
+      <span data-langinline="en">per monthly subscription<br>49 ₾ × 30%</span>
+      <span data-langinline="ka">ყოველი თვიური გამოწერიდან<br>49 ₾ × 30%</span>
+    </div>
+    <div class="commNote">
+      <span data-langinline="ru">каждый месяц</span>
+      <span data-langinline="en">every month</span>
+      <span data-langinline="ka">ყოველ თვე</span>
+    </div>
+  </div>
+  <div class="commCard">
+    <div class="commAmt">147 ₾</div>
+    <div class="commLabel">
+      <span data-langinline="ru">с каждой годовой подписки<br>490 ₾ × 30%</span>
+      <span data-langinline="en">per annual subscription<br>490 ₾ × 30%</span>
+      <span data-langinline="ka">ყოველი წლიური გამოწერიდან<br>490 ₾ × 30%</span>
+    </div>
+    <div class="commNote">
+      <span data-langinline="ru">каждый год</span>
+      <span data-langinline="en">every year</span>
+      <span data-langinline="ka">ყოველ წელს</span>
+    </div>
+  </div>
+  <div class="commCard">
+    <div class="commAmt">30%</div>
+    <div class="commLabel">
+      <span data-langinline="ru">комиссия с каждого платежа,<br>всегда</span>
+      <span data-langinline="en">commission on every payment,<br>forever</span>
+      <span data-langinline="ka">კომისია ყოველი გადახდიდან,<br>ყოველთვის</span>
+    </div>
+    <div class="commNote">
+      <span data-langinline="ru">пока заведение платит — вы зарабатываете</span>
+      <span data-langinline="en">you earn as long as they pay</span>
+      <span data-langinline="ka">სანამ ისინი იხდიან — თქვენ გამოიმუშავებთ</span>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="wrap">
+    <div class="sectionTag">
+      <span data-langinline="ru">Как это работает</span>
+      <span data-langinline="en">How it works</span>
+      <span data-langinline="ka">როგორ მუშაობს</span>
+    </div>
+    <h2 class="sectionTitle">
+      <span data-langinline="ru">Три шага до первой выплаты</span>
+      <span data-langinline="en">Three steps to your first payout</span>
+      <span data-langinline="ka">სამი ნაბიჯი პირველ გადახდამდე</span>
+    </h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="stepNum">1</div>
+        <div>
+          <div class="stepTitle">
+            <span data-langinline="ru">Зарегистрируйтесь и получите ссылку</span>
+            <span data-langinline="en">Sign up and get your link</span>
+            <span data-langinline="ka">დარეგისტრირდით და მიიღეთ ბმული</span>
+          </div>
+          <div class="stepDesc">
+            <span data-langinline="ru">В настройках заведения Checki есть ваш личный реферальный код. Поделитесь ссылкой с владельцем бара или кафе.</span>
+            <span data-langinline="en">In your Checki venue settings you'll find a personal referral code. Share the link with any bar or cafe owner.</span>
+            <span data-langinline="ka">Checki-ს პარამეტრებში მოიძებნება თქვენი პირადი რეფერალური კოდი. გაუზიარეთ ბმული ბარის ან კაფეს მფლობელს.</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="stepNum">2</div>
+        <div>
+          <div class="stepTitle">
+            <span data-langinline="ru">Они регистрируются по вашей ссылке</span>
+            <span data-langinline="en">They sign up through your link</span>
+            <span data-langinline="ka">ისინი რეგისტრირდებიან თქვენი ბმულით</span>
+          </div>
+          <div class="stepDesc">
+            <span data-langinline="ru">Заведение начинает работу с Checki. 14 дней бесплатно, потом оплачивают подписку — и вы сразу получаете комиссию.</span>
+            <span data-langinline="en">The venue starts using Checki. 14 days free, then they pay — and you immediately receive your commission.</span>
+            <span data-langinline="ka">დაწესებულება იწყებს Checki-ს გამოყენებას. 14 დღე უფასოდ, შემდეგ ისინი იხდიან — და თქვენ მაშინვე იღებთ კომისიას.</span>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="stepNum">3</div>
+        <div>
+          <div class="stepTitle">
+            <span data-langinline="ru">Получайте комиссию с каждой оплаты</span>
+            <span data-langinline="en">Earn on every payment</span>
+            <span data-langinline="ka">მიიღეთ კომისია ყოველი გადახდიდან</span>
+          </div>
+          <div class="stepDesc">
+            <span data-langinline="ru">30% зачисляется на ваш баланс автоматически — при каждом продлении. Используйте баланс для оплаты своей подписки.</span>
+            <span data-langinline="en">30% is credited to your balance automatically with every renewal. Use your balance to pay for your own subscription.</span>
+            <span data-langinline="ka">30% ავტომატურად ჩაირიცხება თქვენს ბალანსზე ყოველი განახლებისას. გამოიყენეთ ბალანსი საკუთარი გამოწერის გადასახდელად.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCENARIOS -->
+<section>
+  <div class="wrap">
+    <div class="sectionTag">
+      <span data-langinline="ru">Сценарии заработка</span>
+      <span data-langinline="en">Ways to earn</span>
+      <span data-langinline="ka">შემოსავლის სცენარები</span>
+    </div>
+    <h2 class="sectionTitle">
+      <span data-langinline="ru">Разовый доход или пассивный — вы выбираете</span>
+      <span data-langinline="en">One-time deals or passive income — your choice</span>
+      <span data-langinline="ka">ერთჯერადი შემოსავალი ან პასიური — თქვენ ირჩევთ</span>
+    </h2>
+    <p class="sectionSub">
+      <span data-langinline="ru">Оба сценария работают одновременно. Закрываете сделки — получаете с каждой. Растёте в портфель — доход масштабируется сам.</span>
+      <span data-langinline="en">Both scenarios work at the same time. Close deals — earn from each. Grow a portfolio — income scales automatically.</span>
+      <span data-langinline="ka">ორივე სცენარი ერთდროულად მუშაობს. დახურეთ გარიგებები — გამოიმუშავეთ თითოეულიდან. გაზარდეთ პორტფელი — შემოსავალი ავტომატურად ვიზრდება.</span>
+    </p>
+
+    <div class="scenarios">
+      <!-- Scenario 1: Agent -->
+      <div class="scenCard">
+        <div class="scenIcon">&#128200;</div>
+        <div class="scenTitle">
+          <span data-langinline="ru">Агент / консультант</span>
+          <span data-langinline="en">Agent / consultant</span>
+          <span data-langinline="ka">აგენტი / კონსულტანტი</span>
+        </div>
+        <div class="scenDesc">
+          <span data-langinline="ru">Вы знаете баров и кафе, которым нужна автоматизация. Рассказываете о Checki — они регистрируются. Каждая закрытая сделка приносит доход снова и снова.</span>
+          <span data-langinline="en">You know bars and cafes that need automation. You tell them about Checki — they sign up. Every closed deal keeps earning for you over and over.</span>
+          <span data-langinline="ka">თქვენ იცნობთ ბარებს და კაფეებს, რომლებსაც ავტომატიზაცია სჭირდება. ეუბნებით Checki-ს შესახებ — ისინი რეგისტრირდებიან. ყოველი დახურული გარიგება კვლავ და კვლავ შემოსავალს მოაქვს.</span>
+        </div>
+        <div class="scenNumbers">
+          <div class="scenRow">
+            <span class="scenRowLabel">
+              <span data-langinline="ru">1 заведение × месяц</span>
+              <span data-langinline="en">1 venue × monthly</span>
+              <span data-langinline="ka">1 დაწესებულება × თვე</span>
+            </span>
+            <span class="scenRowVal">14.70 ₾/мес</span>
+          </div>
+          <div class="scenRow">
+            <span class="scenRowLabel">
+              <span data-langinline="ru">1 заведение × год</span>
+              <span data-langinline="en">1 venue × annual</span>
+              <span data-langinline="ka">1 დაწესებულება × წელი</span>
+            </span>
+            <span class="scenRowVal">147 ₾ разово</span>
+          </div>
+          <div class="scenRow">
+            <span class="scenRowLabel">
+              <span data-langinline="ru">5 годовых контрактов</span>
+              <span data-langinline="en">5 annual contracts</span>
+              <span data-langinline="ka">5 წლიური კონტრაქტი</span>
+            </span>
+            <span class="scenRowVal">735 ₾</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scenario 2: Portfolio -->
+      <div class="scenCard featured">
+        <div class="scenBadge">
+          <span data-langinline="ru">Пассивный доход</span>
+          <span data-langinline="en">Passive income</span>
+          <span data-langinline="ka">პასიური შემოსავალი</span>
+        </div>
+        <div class="scenIcon">&#127757;</div>
+        <div class="scenTitle">
+          <span data-langinline="ru">Партнёр / сетевик</span>
+          <span data-langinline="en">Partner / network builder</span>
+          <span data-langinline="ka">პარტნიორი / ქსელის მშენებელი</span>
+        </div>
+        <div class="scenDesc">
+          <span data-langinline="ru">Постепенно собираете портфель заведений. Каждое платит каждый месяц — и вы получаете пассивно. 10 баров уже дают стабильный ежемесячный доход.</span>
+          <span data-langinline="en">You gradually build a portfolio of venues. Each one pays every month — and you earn passively. 10 bars already give you stable monthly income.</span>
+          <span data-langinline="ka">თანდათან ქმნით დაწესებულებების პორტფელს. ყოველი იხდის ყოველ თვე — და თქვენ პასიურად შოულობთ. 10 ბარი უკვე სტაბილური თვიური შემოსავალია.</span>
+        </div>
+        <div class="scenNumbers">
+          <div class="scenRow">
+            <span class="scenRowLabel">
+              <span data-langinline="ru">5 заведений × месяц</span>
+              <span data-langinline="en">5 venues × monthly</span>
+              <span data-langinline="ka">5 დაწესებულება × თვე</span>
+            </span>
+            <span class="scenRowVal">73.50 ₾/мес</span>
+          </div>
+          <div class="scenRow">
+            <span class="scenRowLabel">
+              <span data-langinline="ru">10 заведений × месяц</span>
+              <span data-langinline="en">10 venues × monthly</span>
+              <span data-langinline="ka">10 დაწესებულება × თვე</span>
+            </span>
+            <span class="scenRowVal">147 ₾/мес</span>
+          </div>
+          <div class="scenRow">
+            <span class="scenRowLabel">
+              <span data-langinline="ru">50 заведений × месяц</span>
+              <span data-langinline="en">50 venues × monthly</span>
+              <span data-langinline="ka">50 დაწესებულება × თვე</span>
+            </span>
+            <span class="scenRowVal">735 ₾/мес</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section>
+  <div class="wrap">
+    <div class="sectionTag">
+      <span data-langinline="ru">Калькулятор дохода</span>
+      <span data-langinline="en">Income calculator</span>
+      <span data-langinline="ka">შემოსავლის კალკულატორი</span>
+    </div>
+    <h2 class="sectionTitle">
+      <span data-langinline="ru">Посчитайте свой потенциальный доход</span>
+      <span data-langinline="en">Calculate your potential income</span>
+      <span data-langinline="ka">გამოთვალეთ თქვენი პოტენციური შემოსავალი</span>
+    </h2>
+
+    <div class="calcBox">
+      <div class="calcTitle">
+        <span data-langinline="ru">Мой портфель</span>
+        <span data-langinline="en">My portfolio</span>
+        <span data-langinline="ka">ჩემი პორტფელი</span>
+      </div>
+      <div class="calcSub">
+        <span data-langinline="ru">Введите количество заведений по каждому плану</span>
+        <span data-langinline="en">Enter the number of venues per plan</span>
+        <span data-langinline="ka">შეიყვანეთ დაწესებულებების რაოდენობა თითოეული გეგმის მიხედვით</span>
+      </div>
+
+      <div class="calcRow">
+        <span class="calcLabel">
+          <span data-langinline="ru">Заведений с месячной подпиской (49 ₾)</span>
+          <span data-langinline="en">Venues on monthly plan (49 ₾)</span>
+          <span data-langinline="ka">დაწესებულება თვიური გამოწერით (49 ₾)</span>
+        </span>
+        <input class="calcInput" id="cMonthly" type="number" min="0" value="5" />
+      </div>
+      <div class="calcRow">
+        <span class="calcLabel">
+          <span data-langinline="ru">Заведений с годовой подпиской (490 ₾/год)</span>
+          <span data-langinline="en">Venues on annual plan (490 ₾/year)</span>
+          <span data-langinline="ka">დაწესებულება წლიური გამოწერით (490 ₾/წელი)</span>
+        </span>
+        <input class="calcInput" id="cAnnual" type="number" min="0" value="2" />
+      </div>
+
+      <div class="calcDivider"></div>
+
+      <div class="calcResult">
+        <div class="calcResultRow">
+          <span class="calcResultLabel">
+            <span data-langinline="ru">Ежемесячный доход</span>
+            <span data-langinline="en">Monthly income</span>
+            <span data-langinline="ka">თვიური შემოსავალი</span>
+          </span>
+          <span class="calcResultVal big" id="resMonthly">—</span>
+        </div>
+        <div class="calcResultRow">
+          <span class="calcResultLabel">
+            <span data-langinline="ru">Годовой доход</span>
+            <span data-langinline="en">Annual income</span>
+            <span data-langinline="ka">წლიური შემოსავალი</span>
+          </span>
+          <span class="calcResultVal" id="resAnnual">—</span>
+        </div>
+      </div>
+      <div class="calcNote">
+        <span data-langinline="ru">* Комиссия 30% начисляется автоматически при каждой оплате. Годовая подписка считается как разовое поступление раз в год.</span>
+        <span data-langinline="en">* 30% commission is credited automatically on every payment. Annual subscription counts as a one-time receipt per year.</span>
+        <span data-langinline="ka">* 30% კომისია ავტომატურად ირიცხება ყოველი გადახდისას. წლიური გამოწერა ითვლება ერთჯერად შემოსავლად წელიწადში.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <div class="sectionTag">FAQ</div>
+    <h2 class="sectionTitle">
+      <span data-langinline="ru">Частые вопросы</span>
+      <span data-langinline="en">Common questions</span>
+      <span data-langinline="ka">ხშირი კითხვები</span>
+    </h2>
+
+    <div class="faq">
+      <div class="faqItem">
+        <button class="faqQ">
+          <span>
+            <span data-langinline="ru">Как получить реферальную ссылку?</span>
+            <span data-langinline="en">How do I get my referral link?</span>
+            <span data-langinline="ka">როგორ მივიღო რეფერალური ბმული?</span>
+          </span>
+          <span class="faqChevron">&#8964;</span>
+        </button>
+        <div class="faqA">
+          <span data-langinline="ru">Зарегистрируйтесь на checki.ge. После создания заведения откройте настройки — там будет ваш реферальный код и готовая ссылка для копирования.</span>
+          <span data-langinline="en">Register at checki.ge. After creating a venue, open settings — your referral code and a ready-to-copy link will be there.</span>
+          <span data-langinline="ka">დარეგისტრირდით checki.ge-ზე. დაწესებულების შექმნის შემდეგ გახსენით პარამეტრები — იქ იქნება თქვენი რეფერალური კოდი და ბმული.</span>
+        </div>
+      </div>
+      <div class="faqItem">
+        <button class="faqQ">
+          <span>
+            <span data-langinline="ru">Комиссия начисляется только за первый платёж?</span>
+            <span data-langinline="en">Is the commission only for the first payment?</span>
+            <span data-langinline="ka">კომისია ერიცხება მხოლოდ პირველ გადახდაზე?</span>
+          </span>
+          <span class="faqChevron">&#8964;</span>
+        </button>
+        <div class="faqA">
+          <span data-langinline="ru">Нет. Комиссия 30% начисляется с каждого платежа заведения — при каждом продлении подписки. Пока они платят, вы зарабатываете.</span>
+          <span data-langinline="en">No. The 30% commission is earned on every payment — every subscription renewal. As long as they pay, you earn.</span>
+          <span data-langinline="ka">არა. 30% კომისია ირიცხება ყოველ გადახდაზე — ყოველ განახლებაზე. სანამ ისინი იხდიან, თქვენ შოულობთ.</span>
+        </div>
+      </div>
+      <div class="faqItem">
+        <button class="faqQ">
+          <span>
+            <span data-langinline="ru">Как использовать накопленный баланс?</span>
+            <span data-langinline="en">How do I use my accumulated balance?</span>
+            <span data-langinline="ka">როგორ გამოვიყენო დაგროვილი ბალანსი?</span>
+          </span>
+          <span class="faqChevron">&#8964;</span>
+        </button>
+        <div class="faqA">
+          <span data-langinline="ru">Баланс используется для продления вашей собственной подписки. Оплатите продление через бота @CheckiService_Bot — и комиссия спишется автоматически.</span>
+          <span data-langinline="en">Your balance is used to extend your own subscription. Pay for renewal via @CheckiService_Bot — the commission will be applied automatically.</span>
+          <span data-langinline="ka">ბალანსი გამოიყენება საკუთარი გამოწერის გასახანგრძლივებლად. გადაიხადეთ განახლება @CheckiService_Bot-ის გავლით — კომისია ავტომატურად ჩამოიჭრება.</span>
+        </div>
+      </div>
+      <div class="faqItem">
+        <button class="faqQ">
+          <span>
+            <span data-langinline="ru">Нужно ли платить за Checki, чтобы участвовать?</span>
+            <span data-langinline="en">Do I need to pay for Checki to participate?</span>
+            <span data-langinline="ka">საჭიროა Checki-ს გადახდა პროგრამაში მონაწილეობისთვის?</span>
+          </span>
+          <span class="faqChevron">&#8964;</span>
+        </button>
+        <div class="faqA">
+          <span data-langinline="ru">Нет. Реферальная ссылка доступна всем зарегистрированным пользователям, включая тех, кто на бесплатном периоде.</span>
+          <span data-langinline="en">No. The referral link is available to all registered users, including those on a free trial.</span>
+          <span data-langinline="ka">არა. რეფერალური ბმული ხელმისაწვდომია ყველა რეგისტრირებული მომხმარებლისთვის, მათ შორის უფასო გამოცდაზე მყოფებისთვის.</span>
+        </div>
+      </div>
+      <div class="faqItem">
+        <button class="faqQ">
+          <span>
+            <span data-langinline="ru">Есть ли ограничение на количество приглашений?</span>
+            <span data-langinline="en">Is there a limit on referrals?</span>
+            <span data-langinline="ka">არის თუ არა შეზღუდვა მოსაწვევების რაოდენობაზე?</span>
+          </span>
+          <span class="faqChevron">&#8964;</span>
+        </button>
+        <div class="faqA">
+          <span data-langinline="ru">Никаких ограничений. Приглашайте сколько угодно заведений — доход растёт вместе с вашим портфелем.</span>
+          <span data-langinline="en">No limits. Invite as many venues as you want — income grows with your portfolio.</span>
+          <span data-langinline="ka">შეზღუდვა არ არის. მოიწვიეთ რამდენი დაწესებულებაც გსურთ — შემოსავალი იზრდება პორტფელთან ერთად.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="ctaSection">
+  <div class="wrap">
+    <h2 class="ctaTitle">
+      <span data-langinline="ru">Хотите стать партнёром?</span>
+      <span data-langinline="en">Want to become a partner?</span>
+      <span data-langinline="ka">გსურთ პარტნიორი გახდეთ?</span>
+    </h2>
+    <p class="ctaSub">
+      <span data-langinline="ru">Напишите нам — расскажем подробнее и поможем начать.</span>
+      <span data-langinline="en">Write to us — we'll explain the details and help you get started.</span>
+      <span data-langinline="ka">მოგვწერეთ — დაგეხმარებით დაწყებაში.</span>
+    </p>
+    <div class="ctaBtnGroup">
+      <a href="https://t.me/CheckiService_Bot" target="_blank" class="ctaBtn ctaBtnPrimary">
+        <span data-langinline="ru">Написать в Telegram</span>
+        <span data-langinline="en">Message us on Telegram</span>
+        <span data-langinline="ka">მოგვწერეთ Telegram-ში</span>
+      </a>
+      <a href="mailto:hello@checki.ge" class="ctaBtn ctaBtnSecondary">
+        <span data-langinline="ru">hello@checki.ge</span>
+        <span data-langinline="en">hello@checki.ge</span>
+        <span data-langinline="ka">hello@checki.ge</span>
+      </a>
+    </div>
+    <p class="ctaRegistered">
+      <span data-langinline="ru">Уже зарегистрированное заведение? Реферальная ссылка доступна сразу — в настройках заведения. <a href="https://checki.ge/app/">Войти</a></span>
+      <span data-langinline="en">Already a registered venue? Your referral link is ready in venue settings. <a href="https://checki.ge/app/">Log in</a></span>
+      <span data-langinline="ka">უკვე რეგისტრირებული ხართ? რეფერალური ბმული უკვე ხელმისაწვდომია პარამეტრებში. <a href="https://checki.ge/app/">შესვლა</a></span>
+    </p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footerLeft">
+    <span data-langinline="ru">&copy; 2025 Checki &mdash; управление заведением с телефона</span>
+    <span data-langinline="en">&copy; 2025 Checki &mdash; venue management from your phone</span>
+    <span data-langinline="ka">&copy; 2025 Checki &mdash; დაწესებულების მართვა ტელეფონიდან</span>
+  </div>
+  <div class="footerRight">
+    <a href="https://checki.ge/" class="footerLink">checki.ge</a>
+    <a href="mailto:hello@checki.ge" class="footerLink">hello@checki.ge</a>
+  </div>
+</footer>
+
+<script>
+  // ── Language switcher ──
+  const LANGS = { ru: 'RU', en: 'EN', ka: 'KA' };
+  let currentLang = 'ru';
+
+  function setLang(l) {
+    currentLang = l;
+    document.body.className = 'lang-' + l;
+    document.documentElement.lang = l;
+    document.getElementById('langLabel').textContent = LANGS[l];
+    document.querySelectorAll('.langOpt').forEach(function(o) {
+      o.classList.toggle('active', o.dataset.l === l);
+    });
+    localStorage.setItem('checki_lang', l);
+    calcUpdate();
+  }
+
+  document.getElementById('langBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('langMenu').classList.toggle('open');
+  });
+  document.querySelectorAll('.langOpt').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      setLang(btn.dataset.l);
+      document.getElementById('langMenu').classList.remove('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    document.getElementById('langMenu').classList.remove('open');
+  });
+
+  var saved = localStorage.getItem('checki_lang');
+  if (saved && LANGS[saved]) setLang(saved);
+
+  // ── FAQ accordion ──
+  document.querySelectorAll('.faqQ').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = btn.parentElement;
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faqItem.open').forEach(function(i) { i.classList.remove('open'); });
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // ── Calculator ──
+  var labels = {
+    monthly: { ru: '₾/мес', en: '₾/mo', ka: '₾/თვე' },
+    annual:  { ru: '₾/год', en: '₾/yr', ka: '₾/წელი' }
+  };
+
+  function calcUpdate() {
+    var monthly = parseInt(document.getElementById('cMonthly').value) || 0;
+    var annual  = parseInt(document.getElementById('cAnnual').value)  || 0;
+    var monthlyIncome = +(monthly * 49 * 0.3).toFixed(2);
+    var annualFromMonthly = +(monthly * 49 * 0.3 * 12).toFixed(2);
+    var annualFromAnnual  = +(annual  * 490 * 0.3).toFixed(2);
+    var totalAnnual = +(annualFromMonthly + annualFromAnnual).toFixed(2);
+    var l = currentLang;
+    document.getElementById('resMonthly').textContent = monthlyIncome.toLocaleString('ru-RU', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + labels.monthly[l];
+    document.getElementById('resAnnual').textContent  = totalAnnual.toLocaleString('ru-RU', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + labels.annual[l];
+  }
+
+  document.getElementById('cMonthly').addEventListener('input', calcUpdate);
+  document.getElementById('cAnnual').addEventListener('input', calcUpdate);
+  calcUpdate();
+</script>
+
+</body>
+</html>
